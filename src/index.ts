@@ -1,5 +1,5 @@
-import 'dotenv/config'
-import { Client, ActivityType } from 'discord.js';
+import { ActivityType, Client } from 'discord.js';
+import 'dotenv/config';
 
 const client = new Client({
     intents: ['Guilds', 'GuildMessages', 'GuildMembers', 'MessageContent']
