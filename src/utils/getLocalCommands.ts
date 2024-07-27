@@ -1,6 +1,8 @@
 import path from 'path';
 // import { getAllFiles } from './getAllFiles';
 
+/*
+
 export const getLocalCommands = (exceptions = []) => {
     let localCommands = [];
 
@@ -24,3 +26,4 @@ export const getLocalCommands = (exceptions = []) => {
 
     return localCommands;
 }
+*/
