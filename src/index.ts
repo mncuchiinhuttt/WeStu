@@ -8,8 +8,8 @@ const client = new Client({
 client.on('ready', () => {
     console.log(`${process.env.BOT_NAME} is ready!\n`);
     client.user?.setActivity({
-        name: 'FUCK YOUR MOM',
-        type: ActivityType.Listening
+        name: 'YOUR MOM',
+        type: ActivityType.Playing
     });
 });
 
