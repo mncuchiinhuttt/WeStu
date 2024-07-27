@@ -1,5 +1,16 @@
-// Add libraries
-import { Client } from 'discord.js';
+import 'dotenv/config'
+import { Client, ActivityType } from 'discord.js';
 
-// Main function
-console.log('CC Khang');
+const client = new Client({
+    intents: ['Guilds', 'GuildMessages', 'GuildMembers', 'MessageContent']
+});
+
+client.on('ready', () => {
+    console.log('Bot is ready');
+    client.user?.setActivity({
+        name: 'FUCK YOUR MOM',
+        type: ActivityType.Listening
+    });
+});
+
+client.login(process.env.TOKEN);
