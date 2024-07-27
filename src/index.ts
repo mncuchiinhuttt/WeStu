@@ -6,7 +6,7 @@ const client = new Client({
 });
 
 client.on('ready', () => {
-    console.log('Bot is ready');
+    console.log(`${process.env.BOT_NAME} is ready!\n`);
     client.user?.setActivity({
         name: 'FUCK YOUR MOM',
         type: ActivityType.Listening
