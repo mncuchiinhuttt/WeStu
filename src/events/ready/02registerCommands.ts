@@ -9,11 +9,10 @@ import getLocalCommands from '../../utils/getLocalCommands';
 import getApplicationCommands from '../../utils/getApplicationCommands';
 import areCommandsDifferent from '../../utils/commandDifferentChecker';
 
-const registerCommands = async (client: Client) => {
+module.exports = async (client: Client) => {
 	try {
 		const localCommands = getLocalCommands();
 		const applicationCommands = await getApplicationCommands(client, testServerID);
-		const channel = client.channels.cache.get('1266707322361610333') as TextChannel;
 
 		for (const localCommand of localCommands) {
 			const { name, description, options } = localCommand;
@@ -25,7 +24,6 @@ const registerCommands = async (client: Client) => {
 				if (localCommand.removed) {
 					await applicationCommands.delete(existingCommand.id);
 					console.log(`🗑️ Removed command ${name}.`);
-					channel.send(`🗑️ Removed command ${name}.`);
 					continue;
 				}
 
@@ -36,12 +34,10 @@ const registerCommands = async (client: Client) => {
 					});
 
 					console.log(`✍🏻 Edited command ${name}.`);
-					channel.send(`✍🏻 Edited command ${name}.`);
 				}
 			} else {
 				if (localCommand.removed) {
 					console.log(`⏭️ Skipping registering command ${name} as it's set to delete.`);
-					channel.send(`⏭️ Skipping registering command ${name} as it's set to delete.`);
 					continue;
 				}
 
@@ -52,12 +48,11 @@ const registerCommands = async (client: Client) => {
 				});
 
 				console.log(`✅ Registered command ${name}.`);
-				channel.send(`✅ Registered command ${name}.`);
 			}
 		}
 	} catch (error) {
-		console.log(`There was an error: ${error}`);
+		console.log(`There was an error ${error}`);
 	}
 };
 
-export default registerCommands;
+// export default registerCommands;
