@@ -1,4 +1,4 @@
-export const getApplicationCommands = async (client: any, guildID: any) => {
+const getApplicationCommands = async (client: any, guildID: any) => {
 	let applicationCommands;
 	if(guildID) {
 		const guild = await client.guilds.fetch(guildID);
@@ -11,3 +11,5 @@ export const getApplicationCommands = async (client: any, guildID: any) => {
 	
 	return applicationCommands;
 }
+
+export default getApplicationCommands;

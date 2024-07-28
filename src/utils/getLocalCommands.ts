@@ -1,23 +1,26 @@
 import path from 'path';
-// import { getAllFiles } from './getAllFiles';
+import getAllFiles from './getAllFiles';
 
-/*
+interface CommandObject {
+    name: string;
+    [key: string]: any;
+}
 
-export const getLocalCommands = (exceptions = []) => {
-    let localCommands = [];
+const getLocalCommands = (exceptions: string[] = []): CommandObject[] => {
+    let localCommands: CommandObject[] = [];
 
-    const commandCatagories = getAllFiles(
+    const commandCategories = getAllFiles(
         path.join(__dirname, '..', 'commands'),
         true
     );
 
-    for (const commandCatagory of commandCatagories) {
-        const commandFiles = getAllFiles(commandCatagory);
-        
-        for (const commandFile of commandFiles) {
-            const commandObject = require(commandFile);
+    for (const commandCategory of commandCategories) {
+        const commandFiles = getAllFiles(commandCategory);
 
-            if(exceptions.includes(commandObject.name)) {
+        for (const commandFile of commandFiles) {
+            const commandObject: CommandObject = require(commandFile);
+
+            if (exceptions.includes(commandObject.name)) {
                 continue;
             }
             localCommands.push(commandObject);
@@ -25,5 +28,6 @@ export const getLocalCommands = (exceptions = []) => {
     }
 
     return localCommands;
-}
-*/
+};
+
+export default getLocalCommands;

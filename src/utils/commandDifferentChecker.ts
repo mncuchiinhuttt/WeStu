@@ -1,4 +1,4 @@
-export const commandDifferentChecker = (existingCommand: any, localCommand: any) => {
+const commandDifferentChecker = (existingCommand: any, localCommand: any) => {
     const areChoicesDifferent = (existingChoices: any, localChoices: any) => {
 		for (const localChoice of localChoices) {
 			const existingChoice = existingChoices?.find(
@@ -53,3 +53,5 @@ export const commandDifferentChecker = (existingCommand: any, localCommand: any)
   
     return false;
 };
+
+export default commandDifferentChecker;

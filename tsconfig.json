@@ -1,16 +1,19 @@
 {
     "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "target": "ES2022",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "target": "ES6",
         "strict": true,
         "noImplicitAny": true,
         "declaration": false,
         "skipLibCheck": true,
         "strictNullChecks": true,
         "resolveJsonModule": true,
-        "sourceMap": true,
+        "sourceMap": false,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
     },
     "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts"]
 }
