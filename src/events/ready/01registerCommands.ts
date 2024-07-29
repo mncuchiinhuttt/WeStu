@@ -1,9 +1,11 @@
 import { 
-    testServerID 
+	testServerID 
 } from '../../config.json';
-import getLocalCommands from '../../utils/getLocalCommands';
-import getApplicationCommands from '../../utils/getApplicationCommands';
+import {
+	getLocalCommands
+} from '../../utils/getLocalCommands';
 import commandDifferentChecker from '../../utils/commandDifferentChecker';
+import getApplicationCommands from '../../utils/getApplicationCommands';
 
 module.exports = async (client: any) => {
 	try {
@@ -37,7 +39,7 @@ module.exports = async (client: any) => {
 					console.log(`⏭️ Skipping registering command ${name} as it's set to delete.`);
 					continue;
 				}
-
+				
 				await applicationCommands.create({
 					name,
 					description,

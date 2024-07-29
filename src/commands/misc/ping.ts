@@ -1,19 +1,14 @@
-import { 
-    Client, 
-    CommandInteraction 
-} from 'discord.js';
-
-export default {
+module.exports = {
     name: 'ping',
     description: 'Pong!',
+    options: [],
     // removed: true
     // devOnly: true,
     // testOnly: true,
-    options: [],
     // permissionsRequired: [],
     // botPermissions: [],
 
-    callback: (client: Client, interaction: CommandInteraction) => {
+    callback: (client: any, interaction: any) => {
         interaction.reply(`Pong! ${client.ws.ping}ms.`);
     },
 };

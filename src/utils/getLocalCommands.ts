@@ -1,7 +1,7 @@
 import path from 'path';
 import getAllFiles from './getAllFiles';
 
-const getLocalCommands = (exceptions: string[] = []) => {
+export const getLocalCommands = (exceptions: string[] = []) => {
 	let localCommands = [];
 
 	const commandCatagories = getAllFiles(
@@ -24,5 +24,3 @@ const getLocalCommands = (exceptions: string[] = []) => {
 
 	return localCommands;
 }
-
-export default getLocalCommands;

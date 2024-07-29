@@ -2,9 +2,11 @@ import {
     testServerID, 
     developers 
 } from '../../config.json';
-import getLocalCommands from '../../utils/getLocalCommands';
+import {
+	getLocalCommands
+} from '../../utils/getLocalCommands';
 
-const eventHandler = async (client: any, interaction: any) => {
+module.exports = async (client: any, interaction: any) => {
 	if(!interaction.isChatInputCommand()) 
 		return;
 
@@ -69,5 +71,3 @@ const eventHandler = async (client: any, interaction: any) => {
 			console.log(`There was an error running this command: ${error}.`);
 		}
 };
-
-export default eventHandler;
