@@ -3,7 +3,7 @@ import {
     ActivityType 
 } from 'discord.js';
 
-module.exports = (client: Client) => {
+const onClientReady = (client: Client) => {
     console.log(`${client.user?.tag} is online now.`);
 
     // Set Activity
@@ -20,4 +20,4 @@ module.exports = (client: Client) => {
     console.log(`Started time: ${d.getUTCHours()}:${d.getUTCMinutes()}:${d.getUTCSeconds()} ${d.getUTCDate()} ${months[d.getUTCMonth()]} ${d.getUTCFullYear()} (UTC+7)`);
 };
 
-// export default onClientReady;
+export default onClientReady;

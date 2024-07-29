@@ -1,57 +1,57 @@
-const commandDifferentChecker = (existingCommand: any, localCommand: any) => {
-    const areChoicesDifferent = (existingChoices: any, localChoices: any) => {
+const commandDifferentChecker = (existingCommand: any, localCommand: any): boolean => {
+	const areChoicesDifferent = (existingChoices: any, localChoices: any): boolean => {
 		for (const localChoice of localChoices) {
-			const existingChoice = existingChoices?.find(
+		  const existingChoice = existingChoices.find(
 				(choice: any) => choice.name === localChoice.name
-			);
-	
-			if (!existingChoice) {
+		  );
+	  
+		  if (!existingChoice) {
 				return true;
-			}
-	
-			if (localChoice.value !== existingChoice.value) {
+		  }
+	  
+		  if (localChoice.value !== existingChoice.value) {
 				return true;
-			}
+		  }
 		}
 		return false;
-    };
-  
-    const areOptionsDifferent = (existingOptions: any, localOptions: any) => {
-    	for (const localOption of localOptions) {
-			const existingOption = existingOptions?.find(
+	};
+	  
+	const areOptionsDifferent = (existingOptions: any, localOptions: any): boolean => {
+		for (const localOption of localOptions) {
+		  const existingOption = existingOptions.find(
 				(option: any) => option.name === localOption.name
-			);
-	
-			if (!existingOption) {
+		  );
+	  
+		  if (!existingOption) {
 				return true;
-			}
-	
-			if (
+		  }
+	  
+		  if (
 				localOption.description !== existingOption.description ||
 				localOption.type !== existingOption.type ||
 				(localOption.required || false) !== existingOption.required ||
 				(localOption.choices?.length || 0) !==
-					(existingOption.choices?.length || 0) ||
+			  (existingOption.choices?.length || 0) ||
 				areChoicesDifferent(
 					localOption.choices || [],
 					existingOption.choices || []
 				)
-			) {
+		  ) {
 				return true;
-        	}
+		  }
 		}
 		return false;
-    };
+	};
+
+	if (
+	  existingCommand.description !== localCommand.description ||
+	  existingCommand.options?.length !== (localCommand.options?.length || 0) ||
+	  areOptionsDifferent(existingCommand.options || [], localCommand.options || [])
+	) {
+	  return true;
+	}
   
-    if (
-		existingCommand.description !== localCommand.description ||
-		existingCommand.options?.length !== (localCommand.options?.length || 0) ||
-		areOptionsDifferent(existingCommand.options, localCommand.options || [])
-    ) {
-      	return true;
-    }
-  
-    return false;
+	return false;
 };
 
 export default commandDifferentChecker;
