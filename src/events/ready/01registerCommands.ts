@@ -1,9 +1,7 @@
 import { 
 	testServerID 
 } from '../../config.json';
-import {
-	getLocalCommands
-} from '../../utils/getLocalCommands';
+import { getLocalCommands } from '../../utils/getLocalCommands';
 import commandDifferentChecker from '../../utils/commandDifferentChecker';
 import getApplicationCommands from '../../utils/getApplicationCommands';
 
