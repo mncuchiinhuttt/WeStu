@@ -20,10 +20,8 @@ const client = new Client({
         await mongoose.connect(process.env.DATABASE_URI as string);
         console.log(`Connected to MongoDB`);
         eventHandler(client);
+        client.login(process.env.TOKEN);
     } catch (error) {
         console.log(`Error connecting to MongoDB: ${error}`);
     }
 })();
-
-
-client.login(process.env.TOKEN);
