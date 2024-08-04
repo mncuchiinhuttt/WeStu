@@ -1,23 +1,14 @@
-import { ApplicationCommandOptionType, Client, ChatInputCommandInteraction as Interaction } from 'discord.js';
+import { 
+  ApplicationCommandOptionType, 
+  Client, 
+  ChatInputCommandInteraction as Interaction 
+} from 'discord.js';
 
-interface CommandOption {
-    name: string; 
-    description?: string; 
-    type: ApplicationCommandOptionType;
-    required?: boolean,
-};
-
-interface CommandCallback {
-  (client: Client, interaction: Interaction): void
-}
-
-interface CommandData {
-  name: string;
-  description: string;
-  options: CommandOption[];
-  callback: CommandCallback;
-}
-
+import { 
+  CommandData, 
+  SlashCommandProps, 
+  CommandOptions 
+} from 'commandkit';
 
 async function getFromDictionary(word: string) {
   try {
@@ -31,8 +22,8 @@ async function getFromDictionary(word: string) {
     console.log(`Looked up word ${word}`);
 
     return data;
-  } catch (error: any) {
-    console.log(`ERROR:\n${error.message}`); //can be console.error
+  } catch (error) {
+    console.log(`ERROR:\n${error}`); //can be console.error
     return false;
   }
 }
@@ -60,26 +51,34 @@ function commandCallback (client: Client, interaction: Interaction) {
     })
 
 
-    // interaction.reply(`Phonetic: ${information}`)
-
   } catch (error) {
     console.log(error)
   }
 }
 
-
-module.exports = {
+export const data: CommandData = {
   name: 'lookup',
-  description: "Lookup a word in the Dictionary API (dictionaryapi.dev)",
+  description: "Lookup a word in the Dictionary API (dictionaryapi.dev).",
   options: [
     {
-      name: "word",
-      description: "Word to lookup",
+      name: 'word',
+      description: 'The word to lookup',
+      required: true,
       type: ApplicationCommandOptionType.String,
-      required: true
-    }
+    },
   ],
+};
 
-  callback: commandCallback
-  }
+export function run({
+  interaction, 
+  client, 
+  handler,
+}: SlashCommandProps) {
+  handler.reloadCommands();
+  commandCallback(client, interaction);
+}
 
+export const options: CommandOptions = {
+  devOnly: false,
+  testOnly: false,
+}
