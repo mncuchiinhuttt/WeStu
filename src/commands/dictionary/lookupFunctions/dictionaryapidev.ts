@@ -152,7 +152,7 @@ export function dictionaryapidev({
 			
 			(async () => {
 				if (totalPageNumber === 1) {
-					interaction.reply(replyMessage.get(0));
+					await interaction.reply(replyMessage.get(0));
 				} else {
 					await interaction.reply(replyMessage.get(0) + `-# Page 1/${totalPageNumber}`);
 					for (let i = 1, _n = replyMessage.length(); i < _n; i++) {
