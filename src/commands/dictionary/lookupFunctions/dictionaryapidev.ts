@@ -124,8 +124,9 @@ export function dictionaryapidev({
 					if (meaning.antonyms !== undefined && meaning.antonyms.length > 0) {
 						replyMessage.push(`- **Antonyms:** ${meaning.antonyms.join(", ")}\n`);
 					}
-
-					sourceURLs.add(eachValue.sourceUrls);
+					for(const sourceURL of eachValue.sourceUrls) {
+						sourceURLs.add(sourceURL);
+					}
 				}
 			}
 
