@@ -6,12 +6,6 @@ import {
 } from 'discord.js';
 
 import { 
-  CommandData, 
-  SlashCommandProps, 
-  CommandOptions 
-} from 'commandkit';
-
-import { 
   dictionaryapidev
 } from './lookupFunctions/dictionaryapidev';
 

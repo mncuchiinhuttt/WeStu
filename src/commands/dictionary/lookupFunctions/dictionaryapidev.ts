@@ -29,15 +29,21 @@ export function dictionaryapidev({
 
 	try {
 		var information = getFromDictionary(<string>word);
-	
+
 		if (!(information)) {
 			interaction.reply("Error: Internal error");
 			return;
 		}
 	
 		information.then((value) => {
-			interaction.reply(`Phonetic: ${value[0].phonetic}`);
-			// console.log(value);
+			if(value.title === "No Definitions Found") {
+				interaction.reply("No definitions found.");
+				return;
+			}
+			
+			interaction.reply(
+				`# ${value[0].word}\nPhonetic: ${value[0].phonetics[0].text}\nMeaning: ${value[0].meanings[0].definitions[0].definition}`
+			);
 		})
 	} catch (error) {
 		console.log(`ERROR:\n${error}`);

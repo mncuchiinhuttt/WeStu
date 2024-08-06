@@ -12,7 +12,6 @@ export const data: CommandData = {
 export function run({
     interaction, 
     client, 
-    handler,
 }: SlashCommandProps) {
     interaction.reply(`Pong! ${client.ws.ping}ms.`);
 }
