@@ -1,5 +1,5 @@
-import { 
-	Interaction, 
+import {
+	Interaction,
 	Message
 } from 'discord.js';
 
@@ -7,26 +7,27 @@ class messageArray {
 	mainArray: string[] = [""];
 
 	push = (item: string) => {
-			if (item.length >= 2000) {
-					throw new Error("Cannot append this string because its length is greater than 2000 characters.")
-			}
-			
-			const currentLength = this.mainArray.length;
-			const lastItem = this.mainArray[currentLength - 1];
-			if (item.length + lastItem.length >= 1900) {
-					this.mainArray.push(item);
-			} else {
-					this.mainArray.pop();
-					this.mainArray.push(lastItem + item);
-			}
+		if (item.length >= 2000) {
+			throw new Error("Cannot append this string because its length is greater than 2000 characters.");
+		}
+
+		const currentLength = this.mainArray.length;
+		const lastItem = this.mainArray[currentLength - 1];
+
+		if (item.length + lastItem.length >= 1850) {
+			this.mainArray.push(item);
+		} else {
+			this.mainArray.pop();
+			this.mainArray.push(lastItem + item);
+		}
 	};
 
 	length = () => {
-			return this.mainArray.length;
+		return this.mainArray.length;
 	};
 
 	get = (index: number) => {
-			return this.mainArray[index];
+		return this.mainArray[index];
 	};
 };
 
@@ -52,16 +53,18 @@ async function getFromDictionary(word: string) {
 	}
 }
 
-export function dictionaryapidev({ 
-	interaction 
+export function dictionaryapidev({
+	interaction
 }: any) {
 	const option = interaction.options.get("word");
 	if (!(option)) {
 		interaction.reply("Error: Internal error");
 		return;
 	}
-	
+
 	const word = option.value;
+
+	// interaction.deferReply(`Looking up word ${word}...`);
 
 	try {
 		var information = getFromDictionary(<string>word);
@@ -70,37 +73,49 @@ export function dictionaryapidev({
 			interaction.reply("Error: Internal error");
 			return;
 		}
-	
+
 		information.then((value) => {
-			if(value.title === "No Definitions Found") {
+			if (value.title === "No Definitions Found") {
 				interaction.reply("No definitions found.");
 				return;
 			}
-			
+
 			let replyMessage = new messageArray();
 			let sourceURLs = new Set<string>();
 
-			replyMessage.push(`# ${value[0].word}\n## Phonetics\n`);
-
 			const regex = /https:\/\/api\.dictionaryapi\.dev\/media\/pronunciations\/en\/(.+)/;
-			for (const phonetic of value[0].phonetics) {
-				replyMessage.push(`- ${phonetic.text}`);
-				if (phonetic.audio !== "") {
-					const audioFileName = phonetic.audio.match(regex)[1];
-					const audioURL = phonetic.audio;
-					replyMessage.push(` - [${audioFileName}](${audioURL})\n`);
-				} else {
-					replyMessage.push("\n");
-				}
-			}
-
-
-			replyMessage.push("## Definitions\n");
+			const multipleEtymology = (value.length >= 2);
+			let currentEtymology = 0;
 
 			for (const eachValue of value) {
-				for (const meaning of eachValue.meanings)
-				{
+				++currentEtymology;
+
+				if (multipleEtymology) {
+					replyMessage.push(`# ${eachValue.word} (Etymology ${currentEtymology})\n`);
+				} else {
+					replyMessage.push(`# ${eachValue.word}\n`);
+				}
+
+				if (currentEtymology === 1) {
+					replyMessage.push("## Phonetics\n");
+
+					for (const phonetic of eachValue.phonetics) {
+						replyMessage.push(`- ${phonetic.text}`);
+						if (phonetic.audio !== "") {
+							const audioFileName = phonetic.audio.match(regex)[1];
+							const audioURL = phonetic.audio;
+							replyMessage.push(` - [${audioFileName}](${audioURL})\n`);
+						} else {
+							replyMessage.push("\n");
+						}
+					}
+				}
+
+				replyMessage.push("## Definitions\n");
+
+				for (const meaning of eachValue.meanings) {
 					replyMessage.push(`**${meaning.partOfSpeech}**\n`);
+
 					for (const definition of meaning.definitions) {
 						replyMessage.push(`- ${definition.definition}\n`);
 
@@ -120,11 +135,11 @@ export function dictionaryapidev({
 					if (meaning.synonyms !== undefined && meaning.synonyms.length > 0) {
 						replyMessage.push(`- **Synonyms:** ${meaning.synonyms.join(", ")}\n`);
 					}
-					
+
 					if (meaning.antonyms !== undefined && meaning.antonyms.length > 0) {
 						replyMessage.push(`- **Antonyms:** ${meaning.antonyms.join(", ")}\n`);
 					}
-					for(const sourceURL of eachValue.sourceUrls) {
+					for (const sourceURL of eachValue.sourceUrls) {
 						sourceURLs.add(sourceURL);
 					}
 				}
@@ -135,12 +150,16 @@ export function dictionaryapidev({
 				replyMessage.push(`- ${sourceURL}\n`);
 			}
 
-			interaction.reply(replyMessage.get(0));
-			if (replyMessage.length() > 1) {
+			const totalPageNumber = replyMessage.length();
+
+			if (totalPageNumber === 1) {
+				interaction.reply(replyMessage.get(0));
+			} else {
+				interaction.reply(replyMessage.get(0) + `-# Page 1/${totalPageNumber}`);
 				(async () => {
 					await delay(3000);
 					for (let i = 1, _n = replyMessage.length(); i < _n; i++) {
-						interaction.followUp(replyMessage.get(i));
+						interaction.followUp(replyMessage.get(i) + `-# Page ${i + 1}/${totalPageNumber}`);
 					}
 				})();
 			}
