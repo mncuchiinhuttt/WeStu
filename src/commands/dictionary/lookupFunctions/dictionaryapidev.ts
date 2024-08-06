@@ -42,6 +42,11 @@ async function getFromDictionary(word: string) {
 		console.log('Status Code:', response.status);
 		console.log('Date in Response header:', headerDate);
 
+		if (response.status === 404) {
+			console.log(`Word ${word} not found`);
+			return false;
+		}
+
 		const data = await response.json();
 
 		console.log(`Looked up word ${word}`);
@@ -73,7 +78,7 @@ export function dictionaryapidev({
 		}
 
 		information.then((value) => {
-			if (value.title === "No Definitions Found") {
+			if (value === false || value.title === "No Definitions Found") {
 				interaction.reply("No definitions found.");
 				return;
 			}
