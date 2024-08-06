@@ -3,6 +3,37 @@ import {
 	Message
 } from 'discord.js';
 
+class messageArray {
+	mainArray: string[] = [""];
+
+	push = (item: string) => {
+			if (item.length >= 2000) {
+					throw new Error("Cannot append this string because its length is greater than 2000 characters.")
+			}
+			
+			const currentLength = this.mainArray.length;
+			const lastItem = this.mainArray[currentLength - 1];
+			if (item.length + lastItem.length >= 1900) {
+					this.mainArray.push(item);
+			} else {
+					this.mainArray.pop();
+					this.mainArray.push(lastItem + item);
+			}
+	};
+
+	length = () => {
+			return this.mainArray.length;
+	};
+
+	get = (index: number) => {
+			return this.mainArray[index];
+	};
+};
+
+function delay(ms: number) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function getFromDictionary(word: string) {
 	try {
 		const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
@@ -46,71 +77,74 @@ export function dictionaryapidev({
 				return;
 			}
 			
-			let replyMessage: String = `# ${value[0].word}\n## Phonetics\n`;
-			let splitMode: Boolean = false;
+			let replyMessage = new messageArray();
+			let sourceURLs = new Set<string>();
+
+			replyMessage.push(`# ${value[0].word}\n## Phonetics\n`);
 
 			const regex = /https:\/\/api\.dictionaryapi\.dev\/media\/pronunciations\/en\/(.+)/;
 			for (const phonetic of value[0].phonetics) {
-				replyMessage += `- ${phonetic.text}`;
+				replyMessage.push(`- ${phonetic.text}`);
 				if (phonetic.audio !== "") {
 					const audioFileName = phonetic.audio.match(regex)[1];
 					const audioURL = phonetic.audio;
-					replyMessage += ` - [${audioFileName}](${audioURL})\n`;
+					replyMessage.push(` - [${audioFileName}](${audioURL})\n`);
 				} else {
-					replyMessage += "\n";
+					replyMessage.push("\n");
 				}
 			}
 
-			replyMessage += "## Definitions\n";
+
+			replyMessage.push("## Definitions\n");
 
 			for (const eachValue of value) {
 				for (const meaning of eachValue.meanings)
 				{
-					replyMessage += `**${meaning.partOfSpeech}**\n`;
+					replyMessage.push(`**${meaning.partOfSpeech}**\n`);
 					for (const definition of meaning.definitions) {
-						replyMessage += `- ${definition.definition}\n`;
+						replyMessage.push(`- ${definition.definition}\n`);
 
 						if (definition.example !== undefined) {
-							replyMessage += `  - *Example:* ${definition.example}\n`;
+							replyMessage.push(`  - *Example:* ${definition.example}\n`);
 						}
 
 						if (definition.synonyms !== undefined && definition.synonyms.length > 0) {
-							replyMessage += `  - *Synonyms:* ${definition.synonyms.join(", ")}\n`;
+							replyMessage.push(`  - *Synonyms:* ${definition.synonyms.join(", ")}\n`);
 						}
 
 						if (definition.antonyms !== undefined && definition.antonyms.length > 0) {
-							replyMessage += `  - *Antonyms:* ${definition.antonyms.join(", ")}\n`;
-						}
-					}
-
-					if (replyMessage.length > 1900) {
-						if (splitMode === true) {
-							interaction.followUp(replyMessage);
-							replyMessage = "";
-						} else {
-							interaction.reply(replyMessage);
-							replyMessage = "";
-							splitMode = true;
+							replyMessage.push(`  - *Antonyms:* ${definition.antonyms.join(", ")}\n`);
 						}
 					}
 
 					if (meaning.synonyms !== undefined && meaning.synonyms.length > 0) {
-						replyMessage += `- **Synonyms:** ${meaning.synonyms.join(", ")}\n`;
+						replyMessage.push(`- **Synonyms:** ${meaning.synonyms.join(", ")}\n`);
 					}
 					
 					if (meaning.antonyms !== undefined && meaning.antonyms.length > 0) {
-						replyMessage += `- **Antonyms:** ${meaning.antonyms.join(", ")}\n`;
+						replyMessage.push(`- **Antonyms:** ${meaning.antonyms.join(", ")}\n`);
 					}
+
+					sourceURLs.add(eachValue.sourceUrls);
 				}
 			}
 
-			if (splitMode === true) {
-				interaction.followUp(replyMessage);
-			} else {
-				interaction.reply(replyMessage);
+			replyMessage.push("## Source URLs\n");
+			for (const sourceURL of sourceURLs) {
+				replyMessage.push(`- ${sourceURL}\n`);
+			}
+
+			interaction.reply(replyMessage.get(0));
+			if (replyMessage.length() > 1) {
+				(async () => {
+					await delay(3000);
+					for (let i = 1, _n = replyMessage.length(); i < _n; i++) {
+						interaction.followUp(replyMessage.get(i));
+					}
+				})();
 			}
 		});
 	} catch (error) {
-		console.log(`ERROR:\n${error}`);
+		console.log(`ERROR: ${error}`);
 	}
 }
