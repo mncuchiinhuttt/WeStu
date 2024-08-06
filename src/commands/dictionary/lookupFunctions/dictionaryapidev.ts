@@ -64,8 +64,6 @@ export function dictionaryapidev({
 
 	const word = option.value;
 
-	// interaction.deferReply(`Looking up word ${word}...`);
-
 	try {
 		var information = getFromDictionary(<string>word);
 
@@ -151,18 +149,17 @@ export function dictionaryapidev({
 			}
 
 			const totalPageNumber = replyMessage.length();
-
-			if (totalPageNumber === 1) {
-				interaction.reply(replyMessage.get(0));
-			} else {
-				interaction.reply(replyMessage.get(0) + `-# Page 1/${totalPageNumber}`);
-				(async () => {
-					await delay(3000);
+			
+			(async () => {
+				if (totalPageNumber === 1) {
+					interaction.reply(replyMessage.get(0));
+				} else {
+					await interaction.reply(replyMessage.get(0) + `-# Page 1/${totalPageNumber}`);
 					for (let i = 1, _n = replyMessage.length(); i < _n; i++) {
-						interaction.followUp(replyMessage.get(i) + `-# Page ${i + 1}/${totalPageNumber}`);
+						await interaction.followUp(replyMessage.get(i) + `-# Page ${i + 1}/${totalPageNumber}`);
 					}
-				})();
-			}
+				}
+			})();
 		});
 	} catch (error) {
 		console.log(`ERROR: ${error}`);
