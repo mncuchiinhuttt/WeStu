@@ -1,12 +1,9 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import path from 'path';
-import { 
-    Client 
-} from 'discord.js';
-import {
-    CommandKit
-} from 'commandkit';
+import { Client } from 'discord.js';
+import { CommandKit } from 'commandkit';
+import wiktionaryLanguages from './data/wiktionarLanguages.json';
 
 const client = new Client({
     intents: [
