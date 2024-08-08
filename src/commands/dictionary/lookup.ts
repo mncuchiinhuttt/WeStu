@@ -12,7 +12,6 @@ function run ({
       interaction
     });
   } else if (subCommand === 'wiktionary') {
-    
     wiktionary({
       interaction, 
       wiktionaryLanguages

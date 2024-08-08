@@ -23,7 +23,6 @@ const client = new Client({
             client,
             commandsPath: path.join(__dirname, 'commands'),
             eventsPath: path.join(__dirname, 'events'),
-            // validationsPath: path.join(__dirname, 'validations'),
             devGuildIds: ['1266707126831812679'],
             devUserIds: ['936234981167104031', '1021628192215289856'],
             bulkRegister: true,

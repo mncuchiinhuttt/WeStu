@@ -58,7 +58,7 @@ export function wiktionary({
   wiktionaryLanguages
 }: any) {
 	const lookUpWord = interaction.options.get("word");
-	const lookUpLanguage = interaction.options.get("language");
+	const language: string = interaction.options.getString("language");
 	
 	if (!(lookUpWord)) {
 		interaction.reply("Error: Internal error");
@@ -67,7 +67,6 @@ export function wiktionary({
 	
 	try {
 		const word = lookUpWord.value;
-		const language = lookUpLanguage.value;
 		const information = fetchFromWiktionary(<string>lookUpWord.value.trim().replace(/\s+/g, "_"));
 
 		if (!(information)) {
