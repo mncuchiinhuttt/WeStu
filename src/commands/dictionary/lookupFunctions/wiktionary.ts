@@ -144,7 +144,7 @@ export function wiktionary({
 				return;
 			} else {
 				const languageName = wiktionaryLanguages.find((lang: any) => lang.id === language).name;
-				await interaction.reply(`Word ${word} does not exist in ${languageName}`);
+				await interaction.reply(`Word \`${word}\` does not exist in ${languageName}`);
 				return;
 			}
 		});

@@ -1,12 +1,9 @@
 import wiktionaryLanguages from '../../data/wiktionarLanguages.json';
 import { Interaction } from 'discord.js';
 
-async function wiktionaryAutoComplete(interaction: any) {
-	if (!interaction.isAutocomplete()) return;
-	if (interaction.commandName !== 'lookup') return;
+const autoCompleteCommandName = ['lookup'];
 
-	const focusedValue = interaction.options.getFocused(true);
-
+async function wiktionaryAutoComplete(interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'language') {
 		const filteredLanguages = wiktionaryLanguages.filter((language: any) => 
 			language.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
@@ -24,5 +21,9 @@ async function wiktionaryAutoComplete(interaction: any) {
 }
 
 export default async function (interaction: Interaction) {	
-	await wiktionaryAutoComplete(interaction);
+	if (!interaction.isAutocomplete()) return;
+	if (!autoCompleteCommandName.includes(interaction.commandName)) return;
+
+	const focusedValue = interaction.options.getFocused(true);
+	await wiktionaryAutoComplete(interaction, focusedValue);
 };
