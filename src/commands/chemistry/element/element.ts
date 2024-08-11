@@ -1,5 +1,10 @@
 import { ChatInputCommandInteraction as Interaction, SlashCommandBuilder } from 'discord.js';
-import { lookupFromAtomicNumber, lookupFromGroupAndPeriod, lookupFromElementName, properCase } from '../../../data/chemical-elements/elementLookupHelper';
+import {
+	lookupFromAtomicNumber,
+	lookupFromGroupAndPeriod,
+	lookupFromElementName,
+	lookupFromElementSymbol
+} from '../../../data/chemical-elements/elementLookupHelper';
 import { groupCommandOptions } from '../../../data/chemical-elements/groupCommandOptions';
 
 
@@ -126,7 +131,17 @@ function constructPlainReplyArrayFromAtomicNumber(atomicNumber: number) {
 
 function constructPlainReplyArrayFromElementName(name: string) {
 	const element = lookupFromElementName(name);
-	if (element) { 
+	if (element) {
+		return constructPlainReplyArray(element);
+	} else {
+		return [];
+	}
+}
+
+
+function constructPlainReplyArrayFromElementSymbol(symbol: string) {
+	const element = lookupFromElementSymbol(symbol);
+	if (element) {
 		return constructPlainReplyArray(element);
 	} else {
 		return [];
@@ -195,6 +210,35 @@ export function run({ interaction }: { interaction: Interaction; }) {
 				interaction.reply(
 					{
 						content: `No such element with name **${name}**.`,
+						ephemeral: true
+					}
+				);
+				return;
+			}
+
+			break;
+		}
+
+
+		case 'symbol': {
+			const symbol = interaction.options.getString('symbol');
+
+			if (!(symbol)) {
+				interaction.reply(
+					{
+						content: "Cannot retrieve element symbol.\n**This should not happen. There might have been an internal error. Please report this error to the developer.**",
+						ephemeral: true
+					}
+				);
+				return;
+			}
+
+			var plainReplyArray = constructPlainReplyArrayFromElementSymbol(symbol);
+
+			if (!plainReplyArray.length) {
+				interaction.reply(
+					{
+						content: `No such element with symbol **${symbol}**.`,
 						ephemeral: true
 					}
 				);
@@ -278,6 +322,18 @@ export const data = new SlashCommandBuilder()
 			.setName("name")
 			.setDescription("The name of the element to find")
 			.setDescriptionLocalization('vi', "Tên của nguyên tố hoá học cần tìm")
+			.setRequired(true)
+		)
+	)
+
+	.addSubcommand(subcommand => subcommand
+		.setName('symbol')
+		.setDescription("Search for element(s) with the given symbol")
+		.setDescriptionLocalization('vi', "Tìm kiếm nguyên tố hoá học với ký hiệu hoá học đã cho")
+		.addStringOption(option => option
+			.setName("symbol")
+			.setDescription("The symbol of the element to find")
+			.setDescriptionLocalization('vi', "Ký hiệu của nguyên tố hoá học cần tìm")
 			.setRequired(true)
 		)
 	)
