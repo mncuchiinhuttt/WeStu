@@ -1,8 +1,3 @@
-import {
-	Interaction,
-	Message
-} from 'discord.js';
-
 class messageArray {
 	mainArray: string[] = [""];
 
@@ -70,7 +65,7 @@ export function dictionaryapidev({
 	const word = option.value;
 
 	try {
-		var information = getFromDictionary(<string>word);
+		const information = getFromDictionary(<string>word);
 
 		if (!(information)) {
 			interaction.reply("Error: Internal error");

@@ -3,7 +3,7 @@ import {
     ActivityType 
 } from 'discord.js';
 
-module.exports = (client: Client) => {
+export default function (client: Client<true>) {
     console.log(`${client.user?.tag} is online now.`);
 
     // Set Activity
