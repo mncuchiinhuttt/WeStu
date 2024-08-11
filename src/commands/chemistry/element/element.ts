@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction as Interaction, SlashCommandBuilder } from 'discord.js';
-import { lookupFromAtomicNumber, lookupFromGroupAndPeriod, groupOptions } from '../../../data/elementLookupHelper';
+import { lookupFromAtomicNumber, lookupFromGroupAndPeriod, lookupFromElementName, properCase } from '../../../data/chemical-elements/elementLookupHelper';
+import { groupCommandOptions } from '../../../data/chemical-elements/groupCommandOptions';
 
 
 interface ElementData {
@@ -91,7 +92,7 @@ function constructPlainReplyArray(elementData: ElementData) {
 	const oxidationStatesString: string[] = [];
 	if (oxidationStates) {
 		for (const oxidationState of oxidationStates) {
-			oxidationStatesString.push(oxidationState < 0 ? String(oxidationState) : `+${oxidationState}`)
+			oxidationStatesString.push(oxidationState < 0 ? String(oxidationState) : `+${oxidationState}`);
 		}
 	}
 
@@ -118,8 +119,18 @@ function constructPlainReplyArray(elementData: ElementData) {
 
 
 function constructPlainReplyArrayFromAtomicNumber(atomicNumber: number) {
-	const information = lookupFromAtomicNumber(atomicNumber);
-	return constructPlainReplyArray(information);
+	const element = lookupFromAtomicNumber(atomicNumber);
+	return constructPlainReplyArray(element);
+}
+
+
+function constructPlainReplyArrayFromElementName(name: string) {
+	const element = lookupFromElementName(name);
+	if (element) { 
+		return constructPlainReplyArray(element);
+	} else {
+		return [];
+	}
 }
 
 
@@ -164,6 +175,36 @@ export function run({ interaction }: { interaction: Interaction; }) {
 			break;
 		}
 
+
+		case 'name': {
+			const name = interaction.options.getString('name');
+
+			if (!(name)) {
+				interaction.reply(
+					{
+						content: "Cannot retrieve element name.\n**This should not happen. There might have been an internal error. Please report this error to the developer.**",
+						ephemeral: true
+					}
+				);
+				return;
+			}
+
+			var plainReplyArray = constructPlainReplyArrayFromElementName(name);
+
+			if (!plainReplyArray.length) {
+				interaction.reply(
+					{
+						content: `No such element with name **${name}**.`,
+						ephemeral: true
+					}
+				);
+				return;
+			}
+
+			break;
+		}
+
+
 		case 'group-and-period': {
 			const group = interaction.options.getString('group');
 			const period = interaction.options.getInteger('period');
@@ -182,9 +223,18 @@ export function run({ interaction }: { interaction: Interaction; }) {
 			break;
 		}
 
-		default:
-			var plainReplyArray = ["bruh"];
+
+		default: {
+			interaction.reply(
+				{
+					content: "Invalid subcommand.\n**This should not happen. There might have been an internal error. Please report this error to the developer.**",
+					ephemeral: true
+				}
+			);
+			return;
+		}
 	}
+
 
 	const replyArray = new MessageArray();
 	replyArray.extend(plainReplyArray);
@@ -205,6 +255,7 @@ export const data = new SlashCommandBuilder()
 	.setName("element")
 	.setDescription("Show information about 1 or more chemical element(s)")
 	.setDescriptionLocalization('vi', "Thông tin về 1 hoặc nhiều nguyên tố hoá học")
+
 	.addSubcommand(subcommand => subcommand
 		.setName('atomic-number')
 		.setDescription("Search for element(s) with the given atomic number")
@@ -220,6 +271,18 @@ export const data = new SlashCommandBuilder()
 	)
 
 	.addSubcommand(subcommand => subcommand
+		.setName('name')
+		.setDescription("Search for element(s) with the given name")
+		.setDescriptionLocalization('vi', "Tìm kiếm nguyên tố hoá học với tên đã cho")
+		.addStringOption(option => option
+			.setName("name")
+			.setDescription("The name of the element to find")
+			.setDescriptionLocalization('vi', "Tên của nguyên tố hoá học cần tìm")
+			.setRequired(true)
+		)
+	)
+
+	.addSubcommand(subcommand => subcommand
 		.setName('group-and-period')
 		.setDescription("Search for element(s) with the given period and group")
 		.setDescriptionLocalization('vi', "Tìm kiếm nguyên tố hoá học nằm ở nhóm và chu kỳ đã cho")
@@ -228,7 +291,7 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The group of element(s) to find")
 			.setDescriptionLocalization('vi', "Nhóm của nguyên tố hoá học cần tìm")
 			.setRequired(true)
-			.setChoices(...groupOptions)
+			.setChoices(...groupCommandOptions)
 		)
 		.addIntegerOption(option => option
 			.setName('period')
