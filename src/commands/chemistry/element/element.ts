@@ -323,6 +323,7 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The name of the element to find")
 			.setDescriptionLocalization('vi', "Tên của nguyên tố hoá học cần tìm")
 			.setRequired(true)
+			.setAutocomplete(true)
 		)
 	)
 
@@ -335,6 +336,7 @@ export const data = new SlashCommandBuilder()
 			.setDescription("The symbol of the element to find")
 			.setDescriptionLocalization('vi', "Ký hiệu của nguyên tố hoá học cần tìm")
 			.setRequired(true)
+			.setAutocomplete(true)
 		)
 	)
 
@@ -361,5 +363,5 @@ export const data = new SlashCommandBuilder()
 
 
 export const option = {
-	devOnly: true
+	devOnly: false
 };
