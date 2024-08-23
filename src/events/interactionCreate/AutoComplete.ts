@@ -1,9 +1,10 @@
 import wiktionaryLanguages from '../../data/wiktionarLanguages.json';
+import element from '../../data/chemical-elements/element-data.json';
 import { Interaction } from 'discord.js';
 
-const autoCompleteCommandName = ['lookup'];
+const autoCompleteCommandName = ['lookup', 'element'];
 
-async function wiktionaryAutoComplete(interaction: any, focusedValue: any) {
+async function wiktionaryAutoComplete (interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'language') {
 		const filteredLanguages = wiktionaryLanguages.filter((language: any) => 
 			language.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
@@ -20,10 +21,18 @@ async function wiktionaryAutoComplete(interaction: any, focusedValue: any) {
 	}
 }
 
+async function elementAutoComplete (interaction: any, focusedValue: any) {
+
+}
+
 export default async function (interaction: Interaction) {	
 	if (!interaction.isAutocomplete()) return;
 	if (!autoCompleteCommandName.includes(interaction.commandName)) return;
 
 	const focusedValue = interaction.options.getFocused(true);
-	await wiktionaryAutoComplete(interaction, focusedValue);
+	if (interaction.commandName == 'lookup') {
+		await wiktionaryAutoComplete(interaction, focusedValue);
+	} else if (interaction.commandName == 'element') {
+		await elementAutoComplete(interaction, focusedValue);
+	}
 };
