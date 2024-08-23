@@ -1,6 +1,9 @@
 import wiktionaryLanguages from '../../data/wiktionarLanguages.json';
-import element from '../../data/chemical-elements/element-data.json';
 import { Interaction } from 'discord.js';
+import { 
+	elementNameOptions,
+	elementSymbolOptions,
+} from '../../data/chemical-elements/elementNameCommandOptions';
 
 const autoCompleteCommandName = ['lookup', 'element'];
 
@@ -22,7 +25,33 @@ async function wiktionaryAutoComplete (interaction: any, focusedValue: any) {
 }
 
 async function elementAutoComplete (interaction: any, focusedValue: any) {
-
+	if (focusedValue.name === 'name') {
+		const filteredElements = elementNameOptions.filter((element: any) => 
+			element.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
+		);
+	
+		const results = filteredElements.map((element: any) => {
+			return {
+				name: `${element.name} - ${element.value}`,
+				value: element.value,
+			};
+		});
+	
+		interaction.respond(results.slice(0, 25)).catch(() => {});
+	} else if (focusedValue.name === 'symbol') {
+		const filteredElements = elementSymbolOptions.filter((element: any) => 
+			element.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
+		);
+	
+		const results = filteredElements.map((element: any) => {
+			return {
+				name: `${element.name} - ${element.value}`,
+				value: element.value,
+			};
+		});
+	
+		interaction.respond(results.slice(0, 25)).catch(() => {});
+	}
 }
 
 export default async function (interaction: Interaction) {	
