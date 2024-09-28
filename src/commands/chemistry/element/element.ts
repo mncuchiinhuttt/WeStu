@@ -75,6 +75,11 @@ class MessageArray {
 		}
 		return result;
 	};
+
+	isEmpty() {
+		if ((this.length() === 1) && !(this.mainArray[0])) return true
+		else return false;
+	}
 };
 
 
@@ -283,6 +288,16 @@ export function run({ interaction }: { interaction: Interaction; }) {
 	const replyArray = new MessageArray();
 	replyArray.extend(plainReplyArray);
 	const pages = replyArray.withPageNumber();
+
+	if (replyArray.isEmpty()) {
+		interaction.reply(
+			{
+				content: "No element satisfies the given conditions.",
+				ephemeral: true
+			}
+		);
+		return;
+	}
 
 	(async () => {
 		await interaction.reply(pages[0]);
