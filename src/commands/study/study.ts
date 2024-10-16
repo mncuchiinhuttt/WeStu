@@ -43,6 +43,36 @@ const data = new SlashCommandBuilder()
 			.setDescription('The date for the session (in YYYY-MM-DD format)')
 			.setRequired(true)
 		)
+		.addUserOption(option =>
+			option 
+			.setName('participant1')
+			.setDescription('The first participant')
+			.setRequired(false)
+		)
+		.addUserOption(option =>
+			option
+			.setName('participant2')
+			.setDescription('The second participant')
+			.setRequired(false)
+		)
+		.addUserOption(option =>
+			option
+			.setName('participant3')
+			.setDescription('The third participant')
+			.setRequired(false)
+		)
+		.addUserOption(option => 
+			option
+			.setName('participant4')
+			.setDescription('The fourth participant')
+			.setRequired(false)
+		)
+		.addUserOption(option =>
+			option
+			.setName('participant5')
+			.setDescription('The fifth participant')
+			.setRequired(false)
+		)
 	);
 
 const options = {
