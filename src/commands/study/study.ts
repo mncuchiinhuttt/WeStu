@@ -9,7 +9,7 @@ async function run ({
 	if (subCommand === 'schedule') {
 		schedule_session({ interaction });
 	} else if (subCommand === 'help') {
-		study_help();
+		study_help({ interaction });
 	}
 };
 
