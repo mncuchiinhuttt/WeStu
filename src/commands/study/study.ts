@@ -1,6 +1,8 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { schedule_session } from './schedule-session';
 import { study_help } from './study_help';
+import { create_flashcard } from './create-flashcard';
+import { get_flashcard } from './get-flashcard';
 
 async function run ({
   interaction,
@@ -10,6 +12,10 @@ async function run ({
 		schedule_session({ interaction });
 	} else if (subCommand === 'help') {
 		study_help({ interaction });
+	} else if (subCommand === 'create-flashcard') {
+		create_flashcard({ interaction });
+	} else if (subCommand === 'get-flashcard') {
+		get_flashcard({ interaction });
 	}
 };
 
@@ -72,6 +78,34 @@ const data = new SlashCommandBuilder()
 			.setName('participant5')
 			.setDescription('The fifth participant')
 			.setRequired(false)
+		)
+	)
+	.addSubcommand(subCommand =>
+		subCommand
+		.setName('create-flashcard')
+		.setDescription('Create your own flashcard.')
+		.addStringOption(option =>
+			option
+			.setName('question')
+			.setDescription('The question for the flashcard')
+			.setRequired(true)
+		)
+		.addStringOption(option =>
+			option
+			.setName('answer')
+			.setDescription('The answer for the flashcard')
+			.setRequired(true)
+		)
+	)
+	.addSubcommand(subCommand =>
+		subCommand
+		.setName('get-flashcard')
+		.setDescription('Get a flashcard from Trivia API')
+		.addStringOption(option =>
+			option
+			.setName('category')
+			.setDescription('The category of the flashcard')
+			.setRequired(true)
 		)
 	);
 
