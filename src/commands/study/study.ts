@@ -3,6 +3,7 @@ import { schedule_session } from './schedule-session';
 import { study_help } from './study_help';
 import { create_flashcard } from './create-flashcard';
 import { get_flashcard } from './get-flashcard';
+import { quiz } from './quiz';
 
 async function run ({
   interaction,
@@ -16,6 +17,8 @@ async function run ({
 		create_flashcard({ interaction });
 	} else if (subCommand === 'get-flashcard') {
 		get_flashcard({ interaction });
+	} else if (subCommand === 'quiz') {
+		quiz({ interaction });
 	}
 };
 
@@ -107,6 +110,11 @@ const data = new SlashCommandBuilder()
 			.setDescription('The category of the flashcard')
 			.setRequired(true)
 		)
+	)
+	.addSubcommand(subCommand =>
+		subCommand
+		.setName('quiz')
+		.setDescription('Take a quiz with a random flashcard or trivia question.')
 	);
 
 const options = {
