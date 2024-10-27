@@ -6,19 +6,20 @@ export function mathjs_evaluate({
 }: any) {
 	const expression = interaction.options.getString('expression');
 	const precision = interaction.options.getNumber('precision');
-	const message = new messageArray();
 	const encodedExpression = encodeURIComponent(expression);
-	const url = precision !== null 
+	const url = precision !== null
 		? `http://api.mathjs.org/v4/?expr=${encodedExpression}&precision=${precision}`
 		: `http://api.mathjs.org/v4/?expr=${encodedExpression}`;
 
 	axios.get(url)
 		.then(response => {
-			message.push(response.data);
-			interaction.reply(message.toString());
+			const result = String(response.data);
+			const fullReply = `> ${expression}\n The result is ${result}.`;
+			if (fullReply.length > 1900) { interaction.reply(result); }
+			interaction.reply(fullReply);
 		})
 		.catch(error => {
-			message.push('Error evaluating expression.');
-			interaction.reply(message.toString());
-		});
+			interaction.reply('Error evaluating expression.');
+		}
+		);
 }
