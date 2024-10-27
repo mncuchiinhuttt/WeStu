@@ -106,9 +106,16 @@ const data = new SlashCommandBuilder()
 		.setDescription('Get a flashcard from Trivia API')
 		.addStringOption(option =>
 			option
+			.setName('amount')
+			.setDescription('The number of flashcards to get')
+			.setRequired(true)
+		)
+		.addStringOption(option =>
+			option
 			.setName('category')
 			.setDescription('The category of the flashcard')
 			.setRequired(true)
+			.setAutocomplete(true)
 		)
 	)
 	.addSubcommand(subCommand =>

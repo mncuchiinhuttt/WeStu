@@ -1,11 +1,13 @@
 import messageArray from "../../data/message_array";
 import axios from "axios";
+import Trivia_API_Categories from '../../data/trivia-api-categories.json';
 
 export async function get_flashcard ( { interaction }: any ) {
 	const category = interaction.options.getString('category');
+	const amount = interaction.options.getString('amount');
 
 	try {
-		const response = await axios.get(`https://opentdb.com/api.php?amount=5&category=${encodeURIComponent(category)}&type=multiple`);
+		const response = await axios.get(`https://opentdb.com/api.php?amount=${amount}&category=${encodeURIComponent(category)}&type=multiple`);
 		const data = response.data;
 
 		if (data.results.length === 0) {
@@ -15,7 +17,9 @@ export async function get_flashcard ( { interaction }: any ) {
 
 		const message = new messageArray();
 
-		message.push(`# Flashcards for ${category}\n`);
+		const categoryName = Trivia_API_Categories.find((cat: any) => cat.id === category)?.name || 'Unknown Category';
+
+		message.push(`# Flashcards for ${categoryName}\n`);
 
 		data.results.forEach((questionObj: any, index: number) => {
 			message.push(`**Q${index + 1}:** ${questionObj.question}\n`);
