@@ -10,7 +10,7 @@ const flashcardSchema = new mongoose.Schema({
     required: true
   },
   user: {
-    type: String, // Discord user ID
+    type: String,
     required: true
   },
   createdAt: {
