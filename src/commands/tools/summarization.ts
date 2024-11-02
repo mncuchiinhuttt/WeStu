@@ -55,7 +55,7 @@ const data = new SlashCommandBuilder()
 	)
 
 const options = {
-  devOnly: true,
+  devOnly: false,
 }
 
 module.exports = {
