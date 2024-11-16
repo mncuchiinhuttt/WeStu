@@ -2,8 +2,9 @@ import wiktionaryLanguages from '../../data/wiktionarLanguages.json';
 import { Interaction } from 'discord.js';
 import { elementNameOptions, elementSymbolOptions } from '../../data/chemical-elements/elementNameCommandOptions';
 import Trivia_API_Categories from '../../data/trivia-api-categories.json';
+import Deep_Translate_Languages from '../../data/deep-translate-language.json';
 
-const autoCompleteCommandName = ['lookup', 'element', 'study'];
+const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate'];
 
 async function wiktionaryAutoComplete (interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'language') {
@@ -69,6 +70,36 @@ async function studyAutoComplete (interaction: any, focusedValue: any) {
 	}
 }
 
+async function translateAutoComplete (interaction: any, focusedValue: any) {
+	if (focusedValue.name === 'orginal_language') {
+		const filteredCategories = Deep_Translate_Languages.filter((language: any) => 
+			language.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
+		);
+	
+		const results = filteredCategories.map((language: any) => {
+			return {
+				name: `${language.name}`,
+				value: language.language,
+			};
+		});
+	
+		interaction.respond(results.slice(0, 25)).catch(() => {});
+	} else if (focusedValue.name === 'target_language') {
+		const filteredCategories = Deep_Translate_Languages.filter((language: any) => 
+			language.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
+		);
+	
+		const results = filteredCategories.map((language: any) => {
+			return {
+				name: `${language.name}`,
+				value: language.language,
+			};
+		});
+	
+		interaction.respond(results.slice(0, 25)).catch(() => {});
+	}
+}
+
 export default async function (interaction: Interaction) {	
 	if (!interaction.isAutocomplete()) return;
 	if (!autoCompleteCommandName.includes(interaction.commandName)) return;
@@ -80,5 +111,7 @@ export default async function (interaction: Interaction) {
 		await elementAutoComplete(interaction, focusedValue);
 	} else if (interaction.commandName == 'study') {
 		await studyAutoComplete(interaction, focusedValue);
+	} else if (interaction.commandName == 'translate') {
+		await translateAutoComplete(interaction, focusedValue);
 	}
 };
