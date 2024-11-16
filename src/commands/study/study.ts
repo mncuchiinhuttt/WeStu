@@ -14,7 +14,7 @@ async function run ({
 	} else if (subCommand === 'help') {
 		study_help({ interaction });
 	} else if (subCommand === 'create-flashcard') {
-		create_flashcard({ interaction });
+		create_flashcard(interaction);
 	} else if (subCommand === 'get-flashcard') {
 		get_flashcard({ interaction });
 	} else if (subCommand === 'quiz') {
@@ -99,6 +99,12 @@ const data = new SlashCommandBuilder()
 			.setDescription('The answer for the flashcard')
 			.setRequired(true)
 		)
+		.addBooleanOption(option =>
+			option
+			.setName('visibility')
+			.setDescription('Whether your flashcard is public or private.')
+			.setRequired(true)
+		)
 	)
 	.addSubcommand(subCommand =>
 		subCommand
@@ -125,7 +131,7 @@ const data = new SlashCommandBuilder()
 	);
 
 const options = {
-  devOnly: true,
+  devOnly: false,
 }
 
 module.exports = {

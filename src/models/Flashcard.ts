@@ -13,10 +13,20 @@ const flashcardSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+	guild: {
+		type: String,
+		required: true
+	},
   createdAt: {
-    type: Date,
-    default: Date.now
-  }
+		type: Date,
+    default: Date.now,
+		required: true
+  },
+	visibility: {
+		type: Number,
+		default: 0,
+		required: true
+	},
 });
 
 export const Flashcard = mongoose.model('Flashcard', flashcardSchema);
