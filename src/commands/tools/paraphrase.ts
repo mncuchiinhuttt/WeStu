@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
 import messageArray from '../../data/message_array';
-import { option } from '../chemistry/element/element';
 
 async function run ({
 	interaction,
