@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 export enum Visibility {
 	Private = 0,
 	Public = 1,
-	Global = 2
+	PrivateAndPublic = 2,
+	Global = 3
 }
 
 const flashcardSchema = new mongoose.Schema({
@@ -14,6 +15,11 @@ const flashcardSchema = new mongoose.Schema({
 	answer: {
 		type: String,
 		required: true
+	},
+	topic: {
+		type: String,
+		required: false,
+		default: null
 	},
 	user: {
 		type: String,
