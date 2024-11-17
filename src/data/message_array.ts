@@ -1,3 +1,5 @@
+import { ChatInputCommandInteraction as Interaction } from 'discord.js';
+
 class messageArray {
 	mainArray: string[] = [""];
 
@@ -51,9 +53,21 @@ class messageArray {
 	};
 
 	isEmpty() {
-		if ((this.length() === 1) && !(this.mainArray[0])) return true
+		if ((this.length() === 1) && !(this.mainArray[0])) return true;
 		else return false;
 	}
 };
+
+export function replyWithArray(interaction: Interaction, replyArray: messageArray) {
+	const arrayToReply = replyArray.withPageNumber();
+	const arrayLength = replyArray.length();
+	interaction.reply(arrayToReply[0]);
+
+	if (arrayLength >= 2) {
+		for (let i = 1; i <= arrayLength - 1; i++) {
+			interaction.followUp(arrayToReply[i]);
+		}
+	}
+}
 
 export default messageArray;

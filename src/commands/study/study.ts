@@ -92,16 +92,18 @@ const data = new SlashCommandBuilder()
 			.setName('question')
 			.setDescription('The question for the flashcard')
 			.setRequired(true)
+			.setMaxLength(1900)
 		)
 		.addStringOption(option =>
 			option
 			.setName('answer')
 			.setDescription('The answer for the flashcard')
 			.setRequired(true)
+			.setMaxLength(1900)
 		)
 		.addBooleanOption(option =>
 			option
-			.setName('visibility')
+			.setName('is_public')
 			.setDescription('Whether your flashcard is public or private.')
 			.setRequired(true)
 		)
