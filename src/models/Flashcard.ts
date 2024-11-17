@@ -33,6 +33,10 @@ const flashcardSchema = new mongoose.Schema({
 		default: Visibility.Private,
 		required: true
 	},
+	approved: {
+		type: Boolean,
+		required: false
+	}
 });
 
 
