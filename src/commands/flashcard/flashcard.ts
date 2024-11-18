@@ -64,7 +64,7 @@ export const data = new SlashCommandBuilder()
 					.addChoices(
 						{ name: "Only my own flashcards", value: Visibility.Private },
 						{ name: "Only the server's public flashcards", value: Visibility.Public },
-						{ name: "Both my own flashcards and the server's public flashcards", value: Visibility.PrivateAndPublic }
+						{ name: "Both my own and the server's public flashcards", value: Visibility.PrivateAndPublic }
 					)
 			)
 			.addStringOption(option =>
