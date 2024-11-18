@@ -17,7 +17,7 @@ export async function create_flashcard(interaction: Interaction) {
 		replyArray.push(`# Flashcard created\n`);
 		replyArray.push(`**Q:** ${question}\n`);
 		replyArray.push(`**A:** ${answer}\n`);
-		replyArray.push(`**Topic**: ${topic}\n`)
+		replyArray.push(`**Topic**: ${topic}\n`);
 		replyArray.push(`**Visibility:** ${visibility ? "Public" : "Private"}`);
 
 		replyWithArray(interaction, replyArray);
