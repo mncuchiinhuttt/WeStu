@@ -5,7 +5,35 @@ class messageArray {
 
 	push = (item: string) => {
 		if (item.length >= 2000) {
-			throw new Error("Cannot append this string because its length is greater than 2000 characters.");
+			while (item.length > 1850) {
+				const lastSentenceEnd = item.lastIndexOf('.', 1850);
+				const splitIndex = lastSentenceEnd !== -1 ? lastSentenceEnd + 1 : 1850;
+				const firstPart = item.slice(0, splitIndex);
+				const secondPart = item.slice(splitIndex);
+				
+				const currentLength = this.mainArray.length;
+				const lastItem = this.mainArray[currentLength - 1];
+
+				if (lastItem.length + firstPart.length <= 1850) {
+					this.mainArray.pop();
+					this.mainArray.push(lastItem + firstPart);
+				} else {
+					this.mainArray.push(firstPart);
+				}
+
+				item = secondPart;
+			}
+
+			const currentLength = this.mainArray.length;
+			const lastItem = this.mainArray[currentLength - 1];
+
+			if (lastItem.length + item.length <= 1850) {
+				this.mainArray.pop();
+				this.mainArray.push(lastItem + item);
+			} else {
+				this.mainArray.push(item);
+			}
+			return;
 		}
 
 		const currentLength = this.mainArray.length;
@@ -46,7 +74,7 @@ class messageArray {
 		let result: string[] = [];
 		for (let i = 0; i < totalPageNumber; ++i) {
 			const page = this.mainArray[i];
-			const pageWithNumber = page + `-# Trang ${i + 1}/${totalPageNumber}`;
+			const pageWithNumber = page + `\n-# Trang ${i + 1}/${totalPageNumber}`;
 			result.push(pageWithNumber);
 		}
 		return result;
