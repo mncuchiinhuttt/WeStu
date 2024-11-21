@@ -137,8 +137,19 @@ const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subCommand =>
 		subCommand
-		.setName('review')
-		.setDescription('Review your study statistics')
+			.setName('review')
+			.setDescription('Review your study statistics')
+			.addStringOption(option =>
+				option
+					.setName('period')
+					.setDescription('Period to review')
+					.setRequired(true)
+					.addChoices(
+						{ name: '7 Days', value: '7' },
+						{ name: '30 Days', value: '30' },
+						{ name: '180 Days', value: '180' }
+					)
+			)
 	)
 	.addSubcommand(subcommand =>
   	subcommand

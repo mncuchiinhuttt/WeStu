@@ -2,37 +2,46 @@ import { CommandInteraction, EmbedBuilder } from "discord.js";
 import { TimeStudySession } from "../../models/TimeStudySession";
 import { StudyTarget } from "../../models/StudyTarget";
 
-export async function reviewStudy({ interaction }: { interaction: CommandInteraction }) {
-	try {
-		const userId = interaction.user.id;
-		const sevenDaysAgo = new Date();
-		sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+export async function reviewStudy(interaction: any) {
+  try {
+    if (!interaction?.user?.id) {
+      throw new Error('Invalid interaction object');
+    }
 
-		// Get sessions and target
-		const sessions = await TimeStudySession.find({
-			userId,
-			beginTime: { $gte: sevenDaysAgo }
-		}).sort({ beginTime: 1 });
+    const userId = interaction.user.id;
+    const period = parseInt(interaction.options.getString('period') || '7');
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - period);
 
-		const userTarget = await StudyTarget.findOne({ userId });
+    const sessions = await TimeStudySession.find({
+      userId,
+      beginTime: { $gte: startDate }
+    }).sort({ beginTime: 1 });
 
-		// Calculate metrics
-		const metrics = calculateMetrics(sessions);
-		const analysis = analyzeStudyPattern(sessions, metrics);
-		const recommendations = generateRecommendations(metrics, analysis, userTarget);
-		
-		// Create embed response
-		const embed = createReviewEmbed(metrics, analysis, recommendations, userTarget);
-		
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+    const userTarget = await StudyTarget.findOne({ userId });
 
-	} catch (error) {
-		console.error('Error in reviewStudy:', error);
-		await interaction.reply({
-			content: "Failed to generate study review.",
-			ephemeral: true
-		});
-	}
+    const metrics = calculateMetrics(sessions, period);
+    const analysis = analyzeStudyPattern(sessions, metrics);
+    const recommendations = generateRecommendations(metrics, analysis, userTarget);
+    
+    const embed = createReviewEmbed(metrics, analysis, recommendations, userTarget, period);
+
+    if (!interaction.replied) {
+      await interaction.reply({ 
+        embeds: [embed], 
+        ephemeral: true 
+      });
+    }
+
+  } catch (error) {
+    console.error('Error in reviewStudy:', error);
+    if (interaction?.reply && !interaction.replied) {
+      await interaction.reply({
+        content: "Failed to generate study review.",
+        ephemeral: true
+      });
+    }
+  }
 }
 
 interface Metrics {
@@ -47,16 +56,12 @@ interface Metrics {
 	longestSession: number;
 }
 
-function calculateMetrics(sessions: any[]): Metrics {
-	const dailySessions = groupSessionsByDay(sessions);
-	interface Session {
-		beginTime: Date;
-		duration?: number;
-	}
+interface DailySessions {
+  [date: string]: any[];
+}
 
-	interface DailySessions {
-		[date: string]: Session[];
-	}
+function calculateMetrics(sessions: any[], period: number): Metrics {
+	const dailySessions = groupSessionsByDay(sessions);
 
 	const dailyHours: number[] = Object.values(dailySessions as DailySessions).map(day => 
 		day.reduce((sum, session) => sum + (session.duration || 0) / 3600, 0)
@@ -66,11 +71,11 @@ function calculateMetrics(sessions: any[]): Metrics {
 	const daysStudied = dailyHours.filter(hours => hours > 0).length;
 
 	return {
-		totalDays: 7,
+		totalDays: period,
 		totalHours: totalHours,
-		averageHoursPerDay: totalHours / 7,
+		averageHoursPerDay: totalHours / period,
 		daysStudied: daysStudied,
-		consistency: (daysStudied / 7) * 100,
+		consistency: (daysStudied / period) * 100,
 		varianceScore: calculateVariance(dailyHours),
 		longestStreak: calculateLongestStreak(dailyHours),
 		shortestSession: Math.min(...sessions.map(s => (s.duration || 0) / 3600)),
@@ -123,15 +128,15 @@ function generateRecommendations(metrics: Metrics, analysis: any, target: any) {
 	return recommendations;
 }
 
-function createReviewEmbed(metrics: Metrics, analysis: any, recommendations: string[], target: any) {
+function createReviewEmbed(metrics: Metrics, analysis: any, recommendations: string[], target: any, period: number) {
 	const embed = new EmbedBuilder()
 		.setColor('#0099ff')
 		.setTitle('📚 Study Review Report')
-		.setDescription(`Last 7 days study analysis`)
+		.setDescription(`Last ${period} days study analysis`)
 		.addFields(
 			{ name: '📊 Basic Metrics', value: 
 				`Total Study Time: ${metrics.totalHours.toFixed(1)}h\n` +
-				`Days Studied: ${metrics.daysStudied}/7\n` +
+				`Days Studied: ${metrics.daysStudied}/${period}\n` +
 				`Average per Day: ${metrics.averageHoursPerDay.toFixed(1)}h\n` +
 				`Consistency Score: ${metrics.consistency.toFixed(1)}%`
 			},
