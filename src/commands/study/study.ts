@@ -97,10 +97,21 @@ const data = new SlashCommandBuilder()
 		.setName('session')
 		.setDescription('Start a study session (click button to finish)')
 	)
-	.addSubcommand(subCommand => 
-		subCommand
-		.setName('recent-sessions')
-		.setDescription('Get your study sessions from the past 7 days')
+	.addSubcommand(subcommand =>
+		subcommand
+			.setName('recent-sessions')
+			.setDescription('Get your recent study sessions')
+			.addStringOption(option =>
+				option
+					.setName('period')
+					.setDescription('Period to view')
+					.setRequired(true)
+					.addChoices(
+						{ name: '7 Days', value: '7' },
+						{ name: '30 Days', value: '30' },
+						{ name: '180 Days', value: '180' }
+					)
+			)
 	)
 	.addSubcommand(subCommand => 
 		subCommand
