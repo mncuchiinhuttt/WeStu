@@ -9,6 +9,7 @@ import { startPomodoro } from './pomodoro';
 import { manageGoals } from './manageGoals';
 import { manageStreak } from './streakManager';
 import { manageResources } from './resources';
+import { exportStudyData } from './exportStudyData';
 
 async function run ({
 	interaction,
@@ -25,6 +26,7 @@ async function run ({
 		'goal': manageGoals,
 		'streak': manageStreak,
 		'resources': manageResources,
+		'export': exportStudyData,
 	};
 
 	try {
@@ -325,6 +327,22 @@ const data = new SlashCommandBuilder()
           .setDescription('ID of the resource to delete')
           .setRequired(false)
 					.setAutocomplete(true)
+      )
+  )
+	.addSubcommand(subcommand =>
+    subcommand
+      .setName('export')
+      .setDescription('Export study data')
+      .addStringOption(option =>
+        option
+          .setName('format')
+          .setDescription('Export format')
+          .setRequired(true)
+          .addChoices(
+            { name: 'CSV', value: 'csv' },
+            { name: 'PDF Report', value: 'pdf' },
+            { name: 'Calendar', value: 'calendar' }
+          )
       )
   )
 
