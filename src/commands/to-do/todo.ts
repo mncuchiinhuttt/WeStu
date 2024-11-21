@@ -16,6 +16,10 @@ import { shareTask } from './shareTask';
 import { manageCategories } from './manageCategories';
 import { addComment } from './addComment';
 import { showComments } from './showComments';
+import { createFromTemplate } from './createFromTemplate';
+import { saveTemplate } from './saveTemplate';
+import { showTemplates } from './showTemplates';
+import { deleteOldTasks } from './deleteOldTasks';
 
 async function run ({ interaction }: any) {
 	const subCommand = interaction.options.getSubcommand();
@@ -37,6 +41,10 @@ async function run ({ interaction }: any) {
 		category: manageCategories,
 		comment: addComment,
 		showcomments: showComments,
+		savetemplate: saveTemplate,
+		fromtemplate: createFromTemplate,
+		showtemplates: showTemplates,
+		deleteold: deleteOldTasks,
 	};
 	try {
 		await handlers[subCommand](interaction);
@@ -347,6 +355,46 @@ const data = new SlashCommandBuilder()
 			.setRequired(true)
 			.setAutocomplete(true)
 		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('savetemplate')
+		.setDescription('Save task as template')
+		.addStringOption(option =>
+			option
+			.setName('task_id')
+			.setDescription('Task to save as template')
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+		.addStringOption(option =>
+			option
+			.setName('name')
+			.setDescription('Template name')
+			.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('fromtemplate')
+		.setDescription('Create task from template')
+		.addStringOption(option =>
+			option
+			.setName('template_name')
+			.setDescription('Template to use')
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('showtemplates')
+		.setDescription('Show all your saved task templates')
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('deleteold')
+		.setDescription('Delete completed tasks older than 30 days')
 	);
 
 const options = {

@@ -133,6 +133,29 @@ async function todoAutoComplete (interaction: any, focusedValue: any) {
       await interaction.respond([]);
     }
   }
+  if (focusedValue.name === 'template_name') {
+	try {
+	  const templates = await Task.find({
+		userId: interaction.user.id,
+		template: true
+	  });
+  
+	  const results = templates.map(template => ({
+		name: template.templateName,
+		value: template.templateName
+	  }));
+  
+	  await interaction.respond(
+		results.filter(template => 
+		  template.name?.toLowerCase().includes(focusedValue.value.toLowerCase())
+		).slice(0, 25)
+	  );
+	  
+	} catch (error) {
+	  console.error('Error in template autocomplete:', error);
+	  await interaction.respond([]);
+	}
+  }
 }
 
 export default async function (interaction: Interaction) {	
