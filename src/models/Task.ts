@@ -31,7 +31,12 @@ const taskSchema = new mongoose.Schema({
   subject: { type: String },
   createdAt: { type: Date, default: Date.now },
   completedAt: { type: Date },
-  reminderSent: { type: Boolean, default: false }
+  reminderSent: { type: Boolean, default: false },
+  tags: [String],
+  notes: String,
+  recurringFrequency: String,
+  recurringParentId: mongoose.Schema.Types.ObjectId,
+  dependencies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
 });
 
 export const Task = mongoose.model('Task', taskSchema);
