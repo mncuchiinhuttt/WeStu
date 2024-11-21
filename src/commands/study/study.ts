@@ -8,6 +8,7 @@ import { reviewStudy } from './reviewStudy';
 import { startPomodoro } from './pomodoro';
 import { manageGoals } from './manageGoals';
 import { manageStreak } from './streakManager';
+import { manageResources } from './resources';
 
 async function run ({
 	interaction,
@@ -23,6 +24,7 @@ async function run ({
 		'pomodoro': startPomodoro,
 		'goal': manageGoals,
 		'streak': manageStreak,
+		'resources': manageResources,
 	};
 
 	try {
@@ -278,6 +280,53 @@ const data = new SlashCommandBuilder()
 			)
 		)
 	)
+	.addSubcommand((subCommand) =>
+    subCommand
+      .setName('resources')
+      .setDescription('Manage study resources')
+      .addStringOption((option) =>
+        option
+          .setName('action')
+          .setDescription('Action to perform')
+          .setRequired(true)
+          .addChoices(
+            { name: 'Add Resource', value: 'add' },
+            { name: 'View Resources', value: 'view' },
+            { name: 'Delete Resource', value: 'delete' } 
+          )
+      )
+      .addStringOption((option) =>
+        option
+          .setName('title')
+          .setDescription('Title of the resource')
+          .setRequired(false)
+      )
+      .addStringOption((option) =>
+        option
+          .setName('description')
+          .setDescription('Description of the resource')
+          .setRequired(false)
+      )
+      .addStringOption((option) =>
+        option
+          .setName('link')
+          .setDescription('Link to the resource or uploaded file')
+          .setRequired(false)
+      )
+      .addBooleanOption((option) =>
+        option
+          .setName('share')
+          .setDescription('Share with server? (Default: false)')
+          .setRequired(false)
+      )
+      .addStringOption((option) =>
+        option
+          .setName('resource_id')
+          .setDescription('ID of the resource to delete')
+          .setRequired(false)
+					.setAutocomplete(true)
+      )
+  )
 
 const options = {
 	devOnly: false,

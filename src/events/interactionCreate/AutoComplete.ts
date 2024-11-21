@@ -4,6 +4,7 @@ import { elementNameOptions, elementSymbolOptions } from '../../data/chemical-el
 import Trivia_API_Categories from '../../data/trivia-api-categories.json';
 import Deep_Translate_Languages from '../../data/deep-translate-language.json';
 import { Task } from '../../models/Task';
+import { StudyResource } from '../../models/StudyResource';
 
 const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo'];
 
@@ -55,18 +56,39 @@ async function elementAutoComplete (interaction: any, focusedValue: any) {
 }
 
 async function studyAutoComplete (interaction: any, focusedValue: any) {
-	if (focusedValue.name === 'category') {
-		const filteredCategories = Trivia_API_Categories.filter((category: any) => 
+	const subcommand = interaction.options.getSubcommand();
+	if (subcommand === 'resources') {
+		if (focusedValue.name === 'resource_id') {
+			// Handle autocomplete for resource_id
+			try {
+				const userId = interaction.user.id;
+				const resources = await StudyResource.find({
+					userId,
+					title: { $regex: new RegExp(focusedValue.value, 'i') },
+				}).limit(25);
+
+				const results = resources.map((resource: any) => ({
+					name: resource.title,
+					value: resource._id.toString(),
+				}));
+
+				await interaction.respond(results);
+			} catch (error) {
+				console.error('Error in resource autocomplete:', error);
+				await interaction.respond([]);
+			}
+		}
+	} else if (focusedValue.name === 'category') {
+		// Existing code for handling 'category'
+		const filteredCategories = Trivia_API_Categories.filter((category: any) =>
 			category.name.toLowerCase().startsWith(focusedValue.value.toLowerCase())
 		);
-	
-		const results = filteredCategories.map((category: any) => {
-			return {
-				name: `${category.name}`,
-				value: category.id,
-			};
-		});
-	
+
+		const results = filteredCategories.map((category: any) => ({
+			name: category.name,
+			value: category.id,
+		}));
+
 		interaction.respond(results.slice(0, 25)).catch(() => {});
 	}
 }
@@ -102,60 +124,60 @@ async function translateAutoComplete (interaction: any, focusedValue: any) {
 }
 
 async function todoAutoComplete (interaction: any, focusedValue: any) {
-  if (focusedValue.name === 'task_id') {
-    try {
-      // Get user's tasks, prioritize pending ones
-      const tasks = await Task.find({ 
-        userId: interaction.user.id 
-      }).sort({ 
-        status: 1, // Pending first
-        deadline: 1  // Earlier deadlines first
-      }).limit(25);
+	if (focusedValue.name === 'task_id') {
+		try {
+			// Get user's tasks, prioritize pending ones
+			const tasks = await Task.find({ 
+				userId: interaction.user.id 
+			}).sort({ 
+				status: 1, // Pending first
+				deadline: 1  // Earlier deadlines first
+			}).limit(25);
 
-      const results = tasks.map(task => {
-        const deadline = task.deadline.toLocaleDateString();
-        const status = task.status === 'completed' ? '✅' : '⏳';
-        
-        return {
-          name: `${status} ${task.title} (Due: ${deadline})`,
-          value: task._id.toString()
-        };
-      });
+			const results = tasks.map(task => {
+				const deadline = task.deadline.toLocaleDateString();
+				const status = task.status === 'completed' ? '✅' : '⏳';
+				
+				return {
+					name: `${status} ${task.title} (Due: ${deadline})`,
+					value: task._id.toString()
+				};
+			});
 
-      await interaction.respond(
-        results.filter(task => 
-          task.name.toLowerCase().includes(focusedValue.value.toLowerCase())
-        ).slice(0, 25)
-      );
-      
-    } catch (error) {
-      console.error('Error in todo autocomplete:', error);
-      await interaction.respond([]);
-    }
-  }
-  if (focusedValue.name === 'template_name') {
+			await interaction.respond(
+				results.filter(task => 
+					task.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+				).slice(0, 25)
+			);
+			
+		} catch (error) {
+			console.error('Error in todo autocomplete:', error);
+			await interaction.respond([]);
+		}
+	}
+	if (focusedValue.name === 'template_name') {
 	try {
-	  const templates = await Task.find({
+		const templates = await Task.find({
 		userId: interaction.user.id,
 		template: true
-	  });
-  
-	  const results = templates.map(template => ({
+		});
+	
+		const results = templates.map(template => ({
 		name: template.templateName,
 		value: template.templateName
-	  }));
-  
-	  await interaction.respond(
+		}));
+	
+		await interaction.respond(
 		results.filter(template => 
-		  template.name?.toLowerCase().includes(focusedValue.value.toLowerCase())
+			template.name?.toLowerCase().includes(focusedValue.value.toLowerCase())
 		).slice(0, 25)
-	  );
-	  
+		);
+		
 	} catch (error) {
-	  console.error('Error in template autocomplete:', error);
-	  await interaction.respond([]);
+		console.error('Error in template autocomplete:', error);
+		await interaction.respond([]);
 	}
-  }
+	}
 }
 
 export default async function (interaction: Interaction) {	
