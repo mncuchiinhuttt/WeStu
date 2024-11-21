@@ -1,8 +1,12 @@
 import { TimeStudySession } from "../../models/TimeStudySession";
 import { CommandInteraction, EmbedBuilder } from "discord.js";
 
-export async function getRecentStudySessions({ interaction }: { interaction: CommandInteraction }) {
+export async function getRecentStudySessions(interaction: CommandInteraction) {
 	try {
+		if (!interaction?.user?.id) {
+			throw new Error('Invalid interaction object');
+		}
+
 		const userId = interaction.user.id;
 		const sevenDaysAgo = new Date();
 		sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -34,29 +38,31 @@ export async function getRecentStudySessions({ interaction }: { interaction: Com
 			.addFields(
 				sessions.map(session => ({
 					name: formatDate(session.beginTime),
-					value: `Duration: ${formatDuration(session.duration || 0)}`,
+					value: `Duration: ${formatDuration(session.duration || 0)}${
+						session.isPomodoro 
+							? `\nPomodoro: ${session.pomodoroConfig?.completedSessions}/${session.pomodoroConfig?.plannedSessions} sessions` 
+							: ''
+					}`,
 					inline: false
 				}))
 			);
 
-		await interaction.reply({
-			embeds: [embed],
-			ephemeral: true
-		});
+		if (!interaction.replied) {
+			await interaction.reply({
+				embeds: [embed],
+				ephemeral: true
+			});
+		}
 
 	} catch (error) {
-		console.error('Error in list_sessions:', error);
-		await interaction.reply({
-			content: "Failed to fetch study sessions. Please try again.",
-			ephemeral: true
-		});
+		console.error('Error in getRecentStudySessions:', error);
+		if (interaction?.reply && !interaction.replied) {
+			await interaction.reply({
+				content: "Failed to fetch study sessions. Please try again.",
+				ephemeral: true
+			});
+		}
 	}
-}
-
-function formatDuration(seconds: number): string {
-	const hours = Math.floor(seconds / 3600);
-	const minutes = Math.floor((seconds % 3600) / 60);
-	return `${hours}h ${minutes}m`;
 }
 
 function formatDate(date: Date): string {
@@ -64,7 +70,15 @@ function formatDate(date: Date): string {
 		weekday: 'short',
 		month: 'short',
 		day: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit'
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric'
 	});
+}
+
+function formatDuration(totalDuration: number): string {
+	const hours = Math.floor(totalDuration / 3600);
+	const minutes = Math.floor((totalDuration % 3600) / 60);
+	const seconds = totalDuration % 60;
+	return `${hours}h ${minutes}m ${seconds}s`;
 }

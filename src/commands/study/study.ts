@@ -1,30 +1,35 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { schedule_session } from './scheduleSession';
-import { start_session } from './startSession';
-import { finish_session } from './finishSession';
+import { manageStudySession } from './studySession';
 import { getRecentStudySessions } from './getRecentStudySessions';
 import { deleteOldSessions } from './deleteOldSessions';
 import { setStudyTarget } from './setStudyTarget';
 import { reviewStudy } from './reviewStudy';
+import { startPomodoro } from './pomodoro';
 
 async function run ({
-  interaction,
+	interaction,
 }: any) {
-  const subCommand = interaction.options.getSubcommand();
-	if (subCommand === 'schedule') {
-		schedule_session({ interaction });
-	} else if (subCommand === 'start-session') {
-		start_session({ interaction });
-	} else if (subCommand === 'finish-session') {
-		finish_session({ interaction });
-	} else if (subCommand === 'recent-sessions') {
-		getRecentStudySessions({ interaction });
-	} else if (subCommand === 'delete-old-sessions') {
-		deleteOldSessions({ interaction });
-	} else if (subCommand === 'set-target') {
-		setStudyTarget(interaction);
-	} else if (subCommand === 'review') {
-		reviewStudy({ interaction });
+	const subCommand = interaction.options.getSubcommand();
+	const handlers: { [key: string]: Function } = {
+		'schedule': schedule_session,
+		'session': manageStudySession,
+		'recent-sessions': getRecentStudySessions,
+		'delete-old-sessions': deleteOldSessions,
+		'set-target': setStudyTarget,
+		'review': reviewStudy,
+		'pomodoro': startPomodoro,
+
+	};
+
+	try {
+		await handlers[subCommand](interaction);
+	} catch (error) {
+		console.error(`Error in ${subCommand}:`, error);
+		await interaction.reply({
+			content: 'An error occurred while processing your request',
+			ephemeral: true
+		});
 	}
 };
 
@@ -86,13 +91,8 @@ const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subCommand =>
 		subCommand
-		.setName('start-session')
-		.setDescription('Start a study session')
-	)
-	.addSubcommand(subCommand =>
-		subCommand
-		.setName('finish-session')
-		.setDescription('Finish a study session')
+		.setName('session')
+		.setDescription('Start a study session (click button to finish)')
 	)
 	.addSubcommand(subCommand => 
 		subCommand
@@ -126,13 +126,38 @@ const data = new SlashCommandBuilder()
 		.setName('review')
 		.setDescription('Review your study statistics')
 	)
+	.addSubcommand(subcommand =>
+  	subcommand
+    .setName('pomodoro')
+    .setDescription('Start a Pomodoro study session')
+    .addIntegerOption(option =>
+      option
+			.setName('duration')
+			.setDescription('Study duration in minutes (default: 25)')
+			.setRequired(false)
+    )
+    .addIntegerOption(option =>
+      option
+			.setName('break')
+			.setDescription('Break duration in minutes (default: 5)')
+			.setRequired(false)
+    )
+    .addIntegerOption(option =>
+      option
+			.setName('sessions')
+			.setDescription('Number of Pomodoro sessions (default: 1)')
+			.setRequired(false)
+			.setMinValue(1)
+			.setMaxValue(10)
+    )
+	)
 
 const options = {
-  devOnly: false,
+	devOnly: false,
 }
 
 module.exports = {
-  data,
-  run,
-  options
+	data,
+	run,
+	options
 }

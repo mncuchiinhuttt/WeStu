@@ -40,11 +40,11 @@ async function run ({ interaction }: any) {
 		share: shareTask,
 		category: manageCategories,
 		comment: addComment,
-		showcomments: showComments,
-		savetemplate: saveTemplate,
-		fromtemplate: createFromTemplate,
-		showtemplates: showTemplates,
-		deleteold: deleteOldTasks,
+		'show-comments': showComments,
+		'save-template': saveTemplate,
+		'from-template': createFromTemplate,
+		'show-templates': showTemplates,
+		'delete-old': deleteOldTasks,
 	};
 	try {
 		await handlers[subCommand](interaction);
@@ -346,7 +346,7 @@ const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subcommand =>
 		subcommand
-		.setName('showcomments')
+		.setName('show-comments')
 		.setDescription('Show all comments for a task')
 		.addStringOption(option =>
 			option
@@ -358,7 +358,7 @@ const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subcommand =>
 		subcommand
-		.setName('savetemplate')
+		.setName('save-template')
 		.setDescription('Save task as template')
 		.addStringOption(option =>
 			option
@@ -376,7 +376,7 @@ const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subcommand =>
 		subcommand
-		.setName('fromtemplate')
+		.setName('from-template')
 		.setDescription('Create task from template')
 		.addStringOption(option =>
 			option
@@ -388,12 +388,12 @@ const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subcommand =>
 		subcommand
-		.setName('showtemplates')
+		.setName('show-templates')
 		.setDescription('Show all your saved task templates')
 	)
 	.addSubcommand(subcommand =>
 		subcommand
-		.setName('deleteold')
+		.setName('delete-old')
 		.setDescription('Delete completed tasks older than 30 days')
 	);
 
