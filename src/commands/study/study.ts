@@ -7,6 +7,7 @@ import { setStudyTarget } from './setStudyTarget';
 import { reviewStudy } from './reviewStudy';
 import { startPomodoro } from './pomodoro';
 import { manageGoals } from './manageGoals';
+import { manageStreak } from './streakManager';
 
 async function run ({
 	interaction,
@@ -21,6 +22,7 @@ async function run ({
 		'review': reviewStudy,
 		'pomodoro': startPomodoro,
 		'goal': manageGoals,
+		'streak': manageStreak,
 	};
 
 	try {
@@ -237,6 +239,21 @@ const data = new SlashCommandBuilder()
 				.setName('target_value')
 				.setDescription('Milestone target hours')
 				.setRequired(false)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('streak')
+		.setDescription('View your study streak and achievements')
+		.addStringOption(option =>
+			option
+			.setName('period')
+			.setDescription('Period to view')
+			.setRequired(true)
+			.addChoices(
+				{ name: '30 Days', value: '30' },
+				{ name: '180 Days', value: '180' }
+			)
 		)
 	)
 
