@@ -69,6 +69,11 @@ const data = new SlashCommandBuilder()
 			.setName('description')
 			.setDescription('Task description')
 		)
+		.addBooleanOption(option => 
+			option
+			.setName('reminder')
+			.setDescription('Set a reminder for this task')
+		)
 	)
 	.addSubcommand(subCommand => 
 		subCommand

@@ -30,7 +30,8 @@ const taskSchema = new mongoose.Schema({
   },
   subject: { type: String },
   createdAt: { type: Date, default: Date.now },
-  completedAt: { type: Date }
+  completedAt: { type: Date },
+  reminderSent: { type: Boolean, default: false }
 });
 
 export const Task = mongoose.model('Task', taskSchema);
