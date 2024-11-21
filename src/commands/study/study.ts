@@ -116,7 +116,7 @@ const data = new SlashCommandBuilder()
 	.addSubcommand(subCommand => 
 		subCommand
 		.setName('delete-old-sessions')
-		.setDescription('Delete study sessions older than 30 days')
+		.setDescription('Delete study sessions older than 250 days')
 	)
 	.addSubcommand(subCommand => 
 		subCommand 

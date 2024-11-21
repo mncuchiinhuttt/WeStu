@@ -4,7 +4,6 @@ import config from "../../config.json";
 
 export async function deleteOldSessions({ interaction }: { interaction: CommandInteraction }) {
 	try {
-		// Check if user is developer
 		if (!config.developers.includes(interaction.user.id)) {
 			await interaction.reply({
 				content: "This command is only available to developers.",
@@ -15,7 +14,7 @@ export async function deleteOldSessions({ interaction }: { interaction: CommandI
 
 		// Calculate date 30 days ago
 		const thirtyDaysAgo = new Date();
-		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 250);
 
 		// Delete old sessions
 		const result = await TimeStudySession.deleteMany({
