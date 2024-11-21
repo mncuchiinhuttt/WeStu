@@ -6,6 +6,7 @@ import { deleteOldSessions } from './deleteOldSessions';
 import { setStudyTarget } from './setStudyTarget';
 import { reviewStudy } from './reviewStudy';
 import { startPomodoro } from './pomodoro';
+import { manageGoals } from './manageGoals';
 
 async function run ({
 	interaction,
@@ -19,7 +20,7 @@ async function run ({
 		'set-target': setStudyTarget,
 		'review': reviewStudy,
 		'pomodoro': startPomodoro,
-
+		'goal': manageGoals,
 	};
 
 	try {
@@ -150,6 +151,93 @@ const data = new SlashCommandBuilder()
 			.setMinValue(1)
 			.setMaxValue(10)
     )
+	)
+	.addSubcommand(subcommand =>
+	 subcommand
+		.setName('goal')
+		.setDescription('Manage study goals')
+		.addStringOption(option =>
+			option
+			.setName('action')
+			.setDescription('Action to perform')
+			.setRequired(true)
+			.addChoices(
+				{ name: 'Set new goal', value: 'set' },
+				{ name: 'View goals', value: 'view' },
+				{ name: 'Update progress', value: 'update' },
+				{ name: 'Add milestone', value: 'milestone' }
+			)
+		)
+		.addStringOption(option =>
+			option
+			.setName('description')
+			.setDescription('Goal description')
+			.setRequired(false)
+		)
+		.addStringOption(option =>
+			option
+			.setName('category')
+			.setDescription('Goal category')
+			.setRequired(false)
+			.addChoices(
+				{ name: 'Daily', value: 'daily' },
+				{ name: 'Weekly', value: 'weekly' },
+				{ name: 'Monthly', value: 'monthly' },
+				{ name: 'Custom', value: 'custom' }
+			)
+		)
+		.addNumberOption(option =>
+			option
+			.setName('target_hours')
+			.setDescription('Target study hours')
+			.setRequired(false)
+		)
+		.addStringOption(option =>
+			option
+			.setName('priority')
+			.setDescription('Goal priority')
+			.setRequired(false)
+			.addChoices(
+				{ name: 'Low', value: 'low' },
+				{ name: 'Medium', value: 'medium' },
+				{ name: 'High', value: 'high' }
+			)
+		)
+		.addStringOption(option =>
+			option
+			.setName('deadline')
+			.setDescription('Goal deadline (YYYY-MM-DD)')
+			.setRequired(false)
+		)
+		.addBooleanOption(option =>
+			option
+			.setName('recurring')
+			.setDescription('Make goal recurring')
+			.setRequired(false)
+		)
+		.addStringOption(option =>
+			option
+				.setName('milestone_action')
+				.setDescription('Milestone action')
+				.setRequired(false)
+				.addChoices(
+					{ name: 'Add milestone', value: 'add' },
+					{ name: 'Update progress', value: 'update' },
+					{ name: 'View milestones', value: 'view' }
+				)
+		)
+		.addStringOption(option =>
+			option
+				.setName('milestone_id')
+				.setDescription('Milestone ID (for updates)')
+				.setRequired(false)
+		)
+		.addNumberOption(option =>
+			option
+				.setName('target_value')
+				.setDescription('Milestone target hours')
+				.setRequired(false)
+		)
 	)
 
 const options = {
