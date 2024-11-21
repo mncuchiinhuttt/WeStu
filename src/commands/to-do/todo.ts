@@ -14,6 +14,8 @@ import { manageSubtasks } from './manageSubtasks';
 import { updateProgress } from './updateProgress';
 import { shareTask } from './shareTask';
 import { manageCategories } from './manageCategories';
+import { addComment } from './addComment';
+import { showComments } from './showComments';
 
 async function run ({ interaction }: any) {
 	const subCommand = interaction.options.getSubcommand();
@@ -32,7 +34,9 @@ async function run ({ interaction }: any) {
 		subtask: manageSubtasks,
 		progress: updateProgress,
 		share: shareTask,
-		category: manageCategories
+		category: manageCategories,
+		comment: addComment,
+		showcomments: showComments,
 	};
 	try {
 		await handlers[subCommand](interaction);
@@ -169,7 +173,7 @@ const data = new SlashCommandBuilder()
 			{ name: 'High', value: 'high' }
 			)
 		)
-		)
+	)
 	.addSubcommand(subcommand =>
 		subcommand
 		.setName('search')
@@ -312,6 +316,36 @@ const data = new SlashCommandBuilder()
 			.setName('name')
 			.setDescription('Category name')
 			.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('comment')
+		.setDescription('Add a comment to a task')
+		.addStringOption(option =>
+			option
+			.setName('task_id')
+			.setDescription('Task ID')
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+		.addStringOption(option =>
+			option
+			.setName('content')
+			.setDescription('Comment content')
+			.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('showcomments')
+		.setDescription('Show all comments for a task')
+		.addStringOption(option =>
+			option
+			.setName('task_id')
+			.setDescription('Task ID')
+			.setRequired(true)
+			.setAutocomplete(true)
 		)
 	);
 

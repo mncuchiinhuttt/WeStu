@@ -25,6 +25,20 @@ const subtaskSchema = new mongoose.Schema<ISubtask>({
   completedAt: Date
 });
 
+interface IComment {
+  userId: string;
+  username: string; 
+  content: string;
+  createdAt: Date;
+}
+
+const commentSchema = new mongoose.Schema<IComment>({
+  userId: { type: String, required: true },
+  username: { type: String, required: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const taskSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   title: { type: String, required: true },
@@ -57,7 +71,8 @@ const taskSchema = new mongoose.Schema({
   recurringParentId: mongoose.Schema.Types.ObjectId,
   reminderSent: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
-  completedAt: Date
+  completedAt: Date,
+  comments: [commentSchema]
 });
 
 export const Task = mongoose.model('Task', taskSchema);
