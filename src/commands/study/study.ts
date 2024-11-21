@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { schedule_session } from './scheduleSession';
-import { study_help } from './studyHelp';
 import { start_session } from './startSession';
 import { finish_session } from './finishSession';
 import { getRecentStudySessions } from './getRecentStudySessions';
@@ -14,8 +13,6 @@ async function run ({
   const subCommand = interaction.options.getSubcommand();
 	if (subCommand === 'schedule') {
 		schedule_session({ interaction });
-	} else if (subCommand === 'help') {
-		study_help({ interaction });
 	} else if (subCommand === 'start-session') {
 		start_session({ interaction });
 	} else if (subCommand === 'finish-session') {
@@ -34,11 +31,6 @@ async function run ({
 const data = new SlashCommandBuilder()
 	.setName('study')
 	.setDescription('Functions for studying')
-	.addSubcommand(subCommand =>
-		subCommand
-		.setName('help')
-		.setDescription('Get help with using the study command')
-	)
 	.addSubcommand(subCommand =>
 		subCommand
 		.setName('schedule')
