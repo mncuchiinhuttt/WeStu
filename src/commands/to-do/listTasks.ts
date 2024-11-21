@@ -1,43 +1,34 @@
-import { Task } from '../../models/Task';
+import { Task, TaskStatus } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
-
-enum TaskStatus {
-	PENDING = 'pending',
-	IN_PROGRESS = 'in_progress', 
-	COMPLETED = 'completed',
-	OVERDUE = 'overdue'
-}
 
 export async function listTasks(interaction: any) {
 	const filter = interaction.options.getString('filter') || 'all';
 	const userId = interaction.user.id;
 
 	try {
-		let query: { userId: string, status?: TaskStatus, deadline?: { $lt?: Date, $gte?: Date, $lte?: Date } } = { userId };
+		let query: any = { 
+			$or: [
+				{ userId },
+				{ sharedWith: userId }
+			]
+		};
 		const now = new Date();
 
 		switch(filter) {
 			case 'pending':
-				query = { ...query, status: TaskStatus.PENDING };
+				query.status = TaskStatus.PENDING;
 				break;
 			case 'completed':
-				query = { ...query, status: TaskStatus.COMPLETED };
+				query.status = TaskStatus.COMPLETED;
 				break;
 			case 'overdue':
-				query = { 
-					...query, 
-					status: TaskStatus.PENDING,
-					deadline: { $lt: now }
-				};
+				query.status = TaskStatus.PENDING;
+				query.deadline = { $lt: now };
 				break;
 			case 'due_soon':
-				const twoDaysFromNow = new Date();
-				twoDaysFromNow.setDate(now.getDate() + 2);
-				query = {
-					...query,
-					status: TaskStatus.PENDING,
-					deadline: { $gte: now, $lte: twoDaysFromNow }
-				};
+				const twoDaysFromNow = new Date(now.getTime() + (48 * 60 * 60 * 1000));
+				query.status = TaskStatus.PENDING;
+				query.deadline = { $gte: now, $lte: twoDaysFromNow };
 				break;
 		}
 
@@ -53,9 +44,35 @@ export async function listTasks(interaction: any) {
 			tasks.forEach(task => {
 				const dueDate = task.deadline.toLocaleDateString();
 				const status = task.status === TaskStatus.COMPLETED ? '✅' : '⏳';
+				const progress = task.progress ? `[${task.progress}%] ` : '';
+				const recurring = task.recurringFrequency ? `🔄 ${task.recurringFrequency} ` : '';
+				const category = task.category ? `📁 ${task.category} ` : '';
+				const tags = task.tags?.length ? `🏷️ ${task.tags.join(', ')} ` : '';
+				
+				let fieldValue = [
+					`Due: ${dueDate}`,
+					task.description ? `Description: ${task.description}` : null,
+					`Progress: ${progress}`,
+					category ? `Category: ${category}` : null,
+					tags ? `Tags: ${tags}` : null,
+					`ID: ${task._id}`
+				].filter(Boolean).join('\n');
+
+				// Add subtasks if any
+				if (task.subtasks?.length > 0) {
+					fieldValue += '\nSubtasks:\n' + task.subtasks.map((st: any) => 
+						`${st.completed ? '✓' : '○'} ${st.title}`
+					).join('\n');
+				}
+
+				// Add shared users if any
+				if (task.sharedWith?.length > 0) {
+					fieldValue += '\nShared with: ' + task.sharedWith.length + ' users';
+				}
+
 				embed.addFields({
-					name: `${status} ${task.title} (${task.priority})`,
-					value: `Due: ${dueDate}\n${task.description || 'No description'}\nID: ${task._id}`
+					name: `${status} ${recurring}${category}${task.title} (${task.priority})`,
+					value: fieldValue
 				});
 			});
 		}

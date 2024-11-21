@@ -11,7 +11,7 @@ export async function manageTags(interaction: any) {
 		});
 
 		if (!task) {
-			await interaction.reply('Task not found');
+			await interaction.reply({ content: 'Task not found', ephemeral: true });
 			return;
 		}
 
@@ -20,9 +20,9 @@ export async function manageTags(interaction: any) {
 		task.tags = tags;
 		await task.save();
 
-		await interaction.reply(`✅ Updated tags for **${task.title}**:\n${tags.join(', ')}`);
+		await interaction.reply({ content: `✅ Updated tags for **${task.title}**:\n${tags.join(', ')}`, ephemeral: true });
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Failed to update tags');
+		await interaction.reply({ content: 'Failed to update tags', ephemeral: true });
 	}
 }

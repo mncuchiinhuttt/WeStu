@@ -74,7 +74,7 @@ export async function taskStats(interaction: any) {
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Failed to generate task statistics');
+		await interaction.reply({ content: 'Failed to generate task statistics', ephemeral: true });
 	}
 }
 

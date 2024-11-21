@@ -13,7 +13,7 @@ export async function editTask(interaction: any) {
 		});
 
 		if (!task) {
-			await interaction.reply('Task not found');
+			await interaction.reply({ content: 'Task not found', ephemeral: true });
 			return;
 		}
 
@@ -22,9 +22,9 @@ export async function editTask(interaction: any) {
 		if (newPriority) task.priority = newPriority;
 
 		await task.save();
-		await interaction.reply(`✅ Task updated: **${task.title}**`);
+		await interaction.reply({ content: `✅ Task updated: **${task.title}**`, ephemeral: true });
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Failed to edit task');
+		await interaction.reply({ content: 'Failed to edit task', ephemeral: true });
 	}
 }

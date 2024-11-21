@@ -21,7 +21,8 @@ export async function addTask(interaction: any) {
 		priority,
 		subject,
 		description,
-		reminder
+		reminder,
+		progress: 0,
 	});
 
 	await interaction.reply({

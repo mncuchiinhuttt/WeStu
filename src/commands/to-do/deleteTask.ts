@@ -9,7 +9,10 @@ export async function deleteTask(interaction: any) {
 		});
 
 		if (!task) {
-			await interaction.reply('Task not found');
+			await interaction.reply({
+				content: 'Task not found',
+				ephemeral: true
+			});
 			return;
 		}
 
@@ -20,6 +23,9 @@ export async function deleteTask(interaction: any) {
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Failed to delete task');
+		await interaction.reply({
+			content: 'Failed to delete task',
+			ephemeral: true
+		});
 	}
 }

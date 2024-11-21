@@ -10,43 +10,35 @@ import { searchTasks } from './searchTasks';
 import { createRecurringTask } from './createRecurringTask';
 import { exportTasks } from './exportTasks';
 import { manageTags } from './manageTags';
+import { manageSubtasks } from './manageSubtasks';
+import { updateProgress } from './updateProgress';
+import { shareTask } from './shareTask';
+import { manageCategories } from './manageCategories';
 
 async function run ({ interaction }: any) {
 	const subCommand = interaction.options.getSubcommand();
-	switch (subCommand) {
-		case 'add':
-			await addTask(interaction);
-			break;
-		case 'list':
-			await listTasks(interaction);
-			break;
-		case 'complete':
-			await completeTask(interaction);
-			break;
-		case 'stats':
-			await taskStats(interaction);
-			break;
-		case 'delete':
-			await deleteTask(interaction);
-			break;
-		case 'suggest':
-			await suggestTaskOrder(interaction);
-			break;
-		case 'edit':
-			await editTask(interaction);
-			break;
-		case 'search':
-			await searchTasks(interaction);
-			break;
-		case 'recurring':
-			await createRecurringTask(interaction);
-			break;
-		case 'export':
-			await exportTasks(interaction);
-			break;
-		case 'tags':
-			await manageTags(interaction);
-			break;
+	const handlers: { [key: string]: Function } = {
+		add: addTask, 
+		list: listTasks,
+		complete: completeTask,
+		stats: taskStats,
+		delete: deleteTask,
+		suggest: suggestTaskOrder,
+		edit: editTask,
+		search: searchTasks,
+		recurring: createRecurringTask,
+		export: exportTasks,
+		tags: manageTags,
+		subtask: manageSubtasks,
+		progress: updateProgress,
+		share: shareTask,
+		category: manageCategories
+	};
+	try {
+		await handlers[subCommand](interaction);
+	} catch (error) {
+		console.log(`Error in ${subCommand}:`, error);
+		await interaction.reply('Failed to execute command');
 	}
 };
 
@@ -231,6 +223,94 @@ const data = new SlashCommandBuilder()
 			option
 			.setName('tags')
 			.setDescription('Comma-separated tags')
+			.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('subtask')
+		.setDescription('Add/remove subtasks')
+		.addStringOption(option =>
+			option
+			.setName('task_id')
+			.setDescription('Parent task ID')
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+		.addStringOption(option =>
+			option
+			.setName('action')
+			.setDescription('Action to perform')
+			.setRequired(true)
+			.addChoices(
+				{ name: 'Add subtask', value: 'add' },
+				{ name: 'Remove subtask', value: 'remove' },
+				{ name: 'Complete subtask', value: 'complete' }
+			)
+		)
+		.addStringOption(option =>
+			option
+			.setName('title')
+			.setDescription('Subtask title')
+			.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('progress')
+		.setDescription('Update task progress')
+		.addStringOption(option =>
+			option
+			.setName('task_id')
+			.setDescription('Task ID')
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+		.addIntegerOption(option =>
+			option
+			.setName('percentage')
+			.setDescription('Progress percentage (0-100)')
+			.setRequired(true)
+			.setMinValue(0)
+			.setMaxValue(100)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('share')
+		.setDescription('Share task with other users')
+		.addStringOption(option =>
+			option
+			.setName('task_id')
+			.setDescription('Task to share')
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+		.addUserOption(option =>
+			option
+			.setName('user')
+			.setDescription('User to share with')
+			.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('category')
+		.setDescription('Manage task categories')
+		.addStringOption(option =>
+			option
+			.setName('action')
+			.setDescription('Action to perform')
+			.setRequired(true)
+			.addChoices(
+				{ name: 'Create category', value: 'create' },
+				{ name: 'Move task to category', value: 'move' }
+			)
+		)
+		.addStringOption(option =>
+			option
+			.setName('name')
+			.setDescription('Category name')
 			.setRequired(true)
 		)
 	);

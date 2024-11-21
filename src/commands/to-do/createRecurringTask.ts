@@ -13,11 +13,11 @@ export async function createRecurringTask(interaction: any) {
 			deadline: calculateNextDeadline(frequency)
 		});
 
-		await interaction.reply(`✅ Created recurring task: **${title}**`);
+		await interaction.reply({ content: `✅ Created recurring task: **${title}**`, ephemeral: true });
 		
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Failed to create recurring task');
+		await interaction.reply({ content: 'Failed to create recurring task', ephemeral: true });
 	}
 }
 

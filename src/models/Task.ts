@@ -8,35 +8,56 @@ export enum TaskPriority {
 
 export enum TaskStatus {
   PENDING = 'pending',
-  IN_PROGRESS = 'in_progress', 
+  IN_PROGRESS = 'in_progress',
   COMPLETED = 'completed',
   OVERDUE = 'overdue'
 }
 
+interface ISubtask {
+  title: string;
+  completed: boolean;
+  completedAt?: Date;
+}
+
+const subtaskSchema = new mongoose.Schema<ISubtask>({
+  title: { type: String, required: true },
+  completed: { type: Boolean, default: false },
+  completedAt: Date
+});
+
 const taskSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   title: { type: String, required: true },
-  description: { type: String },
+  description: String,
   deadline: { type: Date, required: true },
-  priority: { 
+  priority: {
     type: String,
     enum: Object.values(TaskPriority),
     default: TaskPriority.MEDIUM
   },
   status: {
-    type: String, 
+    type: String,
     enum: Object.values(TaskStatus),
     default: TaskStatus.PENDING
   },
-  subject: { type: String },
-  createdAt: { type: Date, default: Date.now },
-  completedAt: { type: Date },
-  reminderSent: { type: Boolean, default: false },
+  subtasks: [subtaskSchema],
+  progress: {
+    type: Number,
+    min: 0,
+    max: 100,
+    default: 0,  // Already set correctly
+    required: true
+  },
+  category: String,
   tags: [String],
-  notes: String,
+  sharedWith: [String],
+  estimatedHours: Number,
+  actualHours: Number,
   recurringFrequency: String,
   recurringParentId: mongoose.Schema.Types.ObjectId,
-  dependencies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
+  reminderSent: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  completedAt: Date
 });
 
 export const Task = mongoose.model('Task', taskSchema);

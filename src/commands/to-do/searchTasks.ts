@@ -31,6 +31,6 @@ export async function searchTasks(interaction: any) {
 		await interaction.reply({ embeds: [embed], ephemeral: true });
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Search failed');
+		await interaction.reply({ content: 'Search failed', ephemeral: true });
 	}
 }
