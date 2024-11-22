@@ -10,6 +10,7 @@ import { manageGoals } from './manageGoals';
 import { manageStreak } from './streakManager';
 import { manageResources } from './resources';
 import { exportStudyData } from './exportStudyData';
+import { displayLeaderboard } from './leaderboard';
 
 async function run ({
 	interaction,
@@ -27,6 +28,7 @@ async function run ({
 		'streak': manageStreak,
 		'resources': manageResources,
 		'export': exportStudyData,
+		'leaderboard': displayLeaderboard,
 	};
 
 	try {
@@ -351,6 +353,11 @@ const data = new SlashCommandBuilder()
           )
       )
   )
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('leaderboard')
+		.setDescription('View the study leaderboard')
+	)
 
 const options = {
 	devOnly: false,
