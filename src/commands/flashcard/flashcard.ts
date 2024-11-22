@@ -77,5 +77,5 @@ export const data = new SlashCommandBuilder()
 	);
 
 export const options = {
-	devOnly: true,
+	devOnly: false,
 };

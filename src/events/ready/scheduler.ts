@@ -4,10 +4,13 @@ import {
 	ButtonBuilder, 
 	ButtonStyle, 
 	ActionRowBuilder, 
-	ComponentType 
+	ComponentType, 
+	EmbedBuilder 
 } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySession';
 import moment from 'moment-timezone';
+import { updateUserStreak } from '../../commands/study/streakService';
+import { checkAndAwardAchievements } from '../../commands/study/achievementService';
 
 export default async (client: Client) => {
 	console.log('Scheduler initialized');
@@ -41,8 +44,13 @@ async function startScheduler(client: Client) {
 
 			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(startButton);
 
+			const embed = new EmbedBuilder()
+				.setTitle('Scheduled Study Session')
+				.setDescription(`⏰ Your scheduled study session is starting now (${moment(session.scheduledTime).tz('Asia/Bangkok').format('YYYY-MM-DD HH:mm')} UTC+7). Click the button below to start your session.`)
+				.setColor(0x00FF00);
+
 			const dm = await user.send({
-				content: `⏰ Your scheduled study session is starting now (${moment(session.scheduledTime).tz('Asia/Bangkok').format('YYYY-MM-DD HH:mm')} UTC+7). Click the button below to start your session.`,
+				embeds: [embed],
 				components: [row],
 			});
 
@@ -71,8 +79,13 @@ async function startScheduler(client: Client) {
 
 					const newRow = new ActionRowBuilder<ButtonBuilder>().addComponents(finishButton);
 
+					const newEmbed = new EmbedBuilder()
+						.setTitle('Study Session Started')
+						.setDescription('📝 Study session started! Click the button below when you\'re done.')
+						.setColor(0x0000FF);
+
 					await i.update({
-						content: '📝 Study session started! Click the button below when you\'re done.',
+						embeds: [newEmbed],
 						components: [newRow],
 					});
 
@@ -92,8 +105,13 @@ async function startScheduler(client: Client) {
 
 					finishCollector?.on('end', async (collected: any) => {
 						if (collected.size === 0 && !session.finishTime) {
+							const timeoutEmbed = new EmbedBuilder()
+								.setTitle('Study Session Timed Out')
+								.setDescription('⏰ Study session timed out. Please start a new session.')
+								.setColor(0xFF0000);
+
 							await dm.edit({
-								content: '⏰ Study session timed out. Please start a new session.',
+								embeds: [timeoutEmbed],
 								components: [],
 							});
 							// Optionally, mark the session as timed out or remove it
@@ -112,7 +130,12 @@ async function startScheduler(client: Client) {
 					session.missed = true;
 					await session.save();
 
-					await user.send('⚠️ You missed your scheduled study session.');
+					const missedEmbed = new EmbedBuilder()
+						.setTitle('Missed Study Session')
+						.setDescription('⚠️ You missed your scheduled study session.')
+						.setColor(0xFF0000);
+
+					await user.send({ embeds: [missedEmbed] });
 				}
 			});
 
@@ -123,19 +146,39 @@ async function startScheduler(client: Client) {
 }
 
 async function finishStudySession(interaction: MessageComponentInteraction, session: any) {
+  const beginTime = session.beginTime ?? session.scheduledTime;
   const finishTime = new Date();
   const duration = Math.floor((finishTime.getTime() - session.beginTime.getTime()) / 1000);
 
-  session.finishTime = finishTime;
-  session.duration = duration;
-  await session.save();
+  await TimeStudySession.findByIdAndUpdate(session._id, {
+    beginTime,
+    finishTime,
+    duration,
+  });
+
+  await updateUserStreak(session.userId, interaction.client);
+  await checkAndAwardAchievements(session.userId, interaction.client);
 
   const hours = Math.floor(duration / 3600);
   const minutes = Math.floor((duration % 3600) / 60);
   const seconds = duration % 60;
 
+  const embed = new EmbedBuilder()
+    .setTitle('✅ Study Session Completed')
+    .setDescription(`You studied for **${hours}h ${minutes}m ${seconds}s**. Great job! 🎉`)
+    .setColor('#00ff00')
+    .setTimestamp();
+
   await interaction.update({
-    content: `✅ Study session finished! You studied for ${hours}h ${minutes}m ${seconds}s.`,
+    embeds: [embed],
     components: [],
   });
+
+  // Send a follow-up motivational message
+  try {
+    const user = await interaction.user.fetch();
+    await user.send('🙌 Keep up the fantastic work! Consistency is key to achieving your goals.');
+  } catch (error) {
+    console.error('Error sending motivational message:', error);
+  }
 }

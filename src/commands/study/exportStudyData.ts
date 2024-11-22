@@ -51,8 +51,8 @@ export async function exportStudyData(interaction: any) {
 async function exportAsCSV(interaction: CommandInteraction, sessions: any[]) {
   const csvHeaders = 'Session ID,Start Time,End Time,Duration (seconds)';
   const csvRows = sessions.map(session => {
-    const startTime = session.beginTime.toISOString();
-    const endTime = session.finishTime ? session.finishTime.toISOString() : 'In Progress';
+    const startTime = session.beginTime instanceof Date ? session.beginTime.toISOString() : 'N/A';
+    const endTime = session.finishTime instanceof Date ? session.finishTime.toISOString() : 'In Progress';
     const duration = session.duration || 0;
     return `${session._id},${startTime},${endTime},${duration}`;
   });

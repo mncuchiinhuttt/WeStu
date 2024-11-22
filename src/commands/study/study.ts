@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { schedule_session } from './scheduleSession';
 import { manageStudySession } from './studySession';
 import { getRecentStudySessions } from './getRecentStudySessions';
 import { deleteOldSessions } from './deleteOldSessions';
@@ -11,13 +10,14 @@ import { manageStreak } from './streakManager';
 import { manageResources } from './resources';
 import { exportStudyData } from './exportStudyData';
 import { displayLeaderboard } from './leaderboard';
+import { dailyStudySummary } from './dailySummary';
+import { displayAchievements } from './achievements';
 
 async function run ({
 	interaction,
 }: any) {
 	const subCommand = interaction.options.getSubcommand();
 	const handlers: { [key: string]: Function } = {
-		'schedule': schedule_session,
 		'session': manageStudySession,
 		'recent-sessions': getRecentStudySessions,
 		'delete-old-sessions': deleteOldSessions,
@@ -29,6 +29,8 @@ async function run ({
 		'resources': manageResources,
 		'export': exportStudyData,
 		'leaderboard': displayLeaderboard,
+		'daily-summary': dailyStudySummary,
+		'achievements': displayAchievements
 	};
 
 	try {
@@ -45,59 +47,6 @@ async function run ({
 const data = new SlashCommandBuilder()
 	.setName('study')
 	.setDescription('Functions for studying')
-	.addSubcommand(subCommand =>
-		subCommand
-		.setName('schedule')
-		.setDescription('Schedule a study session')
-		.addStringOption(option =>
-			option
-			.setName('topic')
-			.setDescription('The topic to study')
-			.setRequired(true)
-		)
-		.addStringOption(option =>
-			option
-			.setName('time')
-			.setDescription('The time for the session (in HH:MM format)')
-			.setRequired(true)
-		)
-		.addStringOption(option =>
-			option
-			.setName('date')
-			.setDescription('The date for the session (in YYYY-MM-DD format)')
-			.setRequired(true)
-		)
-		.addUserOption(option =>
-			option 
-			.setName('participant1')
-			.setDescription('The first participant')
-			.setRequired(false)
-		)
-		.addUserOption(option =>
-			option
-			.setName('participant2')
-			.setDescription('The second participant')
-			.setRequired(false)
-		)
-		.addUserOption(option =>
-			option
-			.setName('participant3')
-			.setDescription('The third participant')
-			.setRequired(false)
-		)
-		.addUserOption(option => 
-			option
-			.setName('participant4')
-			.setDescription('The fourth participant')
-			.setRequired(false)
-		)
-		.addUserOption(option =>
-			option
-			.setName('participant5')
-			.setDescription('The fifth participant')
-			.setRequired(false)
-		)
-	)
 	.addSubcommand(subCommand =>
 		subCommand
 		.setName('session')
@@ -357,6 +306,16 @@ const data = new SlashCommandBuilder()
 		subcommand
 		.setName('leaderboard')
 		.setDescription('View the study leaderboard')
+	)
+	.addSubcommand(subcommand => 
+		subcommand
+		.setName('daily-summary')
+		.setDescription('View your daily study summary')
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('achievements')
+		.setDescription('View your earned achievements')
 	)
 
 const options = {

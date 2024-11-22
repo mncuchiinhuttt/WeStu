@@ -10,7 +10,8 @@ import {
 } from 'discord.js';
 import moment from 'moment-timezone';
 import { TimeStudySession } from '../../models/TimeStudySession';
-import { parseScheduleInput } from '../../utils/parseScheduleInput';
+import { updateUserStreak } from './streakService';
+import { checkAndAwardAchievements } from './achievementService';
 
 export async function manageStudySession(interaction: any) {
   try {
@@ -23,9 +24,13 @@ export async function manageStudySession(interaction: any) {
       scheduledTime = new Date(scheduleInput);
 
       if (!scheduledTime) {
+        const embed = new EmbedBuilder()
+          .setTitle('Invalid Schedule Time')
+          .setDescription('Please use the format `YYYY-MM-DD HH:MM` (UTC+7).')
+          .setColor('#ff0000');
+
         await interaction.reply({
-          content:
-            'Invalid schedule time provided. Please use the format `YYYY-MM-DD HH:MM` (UTC+7).',
+          embeds: [embed],
           ephemeral: true,
         });
         return;
@@ -33,8 +38,13 @@ export async function manageStudySession(interaction: any) {
 
       // Check if the scheduled time is in the past
       if (scheduledTime.getTime() <= Date.now()) {
+        const embed = new EmbedBuilder()
+          .setTitle('Invalid Schedule Time')
+          .setDescription('Scheduled time must be in the future.')
+          .setColor('#ff0000');
+
         await interaction.reply({
-          content: 'Scheduled time must be in the future.',
+          embeds: [embed],
           ephemeral: true,
         });
         return;
@@ -49,8 +59,13 @@ export async function manageStudySession(interaction: any) {
       });
 
       if (existingScheduledSession) {
+        const embed = new EmbedBuilder()
+          .setTitle('Pending Scheduled Session')
+          .setDescription('You already have a scheduled study session pending.')
+          .setColor('#ff0000');
+
         await interaction.reply({
-          content: 'You already have a scheduled study session pending.',
+          embeds: [embed],
           ephemeral: true,
         });
         return;
@@ -63,8 +78,13 @@ export async function manageStudySession(interaction: any) {
         scheduledStartNotified: false,
       });
 
+      const embed = new EmbedBuilder()
+        .setTitle('Study Session Scheduled')
+        .setDescription(`✅ Study session scheduled for ${moment(scheduledTime).tz('Asia/Bangkok').format('YYYY-MM-DD HH:mm')} (UTC+7). You will receive a DM when it's time to start.`)
+        .setColor('#00ff00');
+
       await interaction.reply({
-        content: `✅ Study session scheduled for ${moment(scheduledTime).tz('Asia/Bangkok').format('YYYY-MM-DD HH:mm')} (UTC+7). You will receive a DM when it's time to start.`,
+        embeds: [embed],
         ephemeral: true,
       });
 
@@ -79,8 +99,13 @@ export async function manageStudySession(interaction: any) {
       });
 
       if (existingSession) {
+        const embed = new EmbedBuilder()
+          .setTitle('Active Study Session')
+          .setDescription('You already have an active study session!')
+          .setColor('#ff0000');
+
         await interaction.reply({
-          content: 'You already have an active study session!',
+          embeds: [embed],
           ephemeral: true,
         });
         return;
@@ -100,8 +125,13 @@ export async function manageStudySession(interaction: any) {
         beginTime: new Date(),
       });
 
+      const embed = new EmbedBuilder()
+        .setTitle('Study Session Started')
+        .setDescription('📝 Study session started! Click the button below when you\'re done.')
+        .setColor('#00ff00');
+
       const response = await interaction.reply({
-        content: '📝 Study session started! Click the button below when you\'re done.',
+        embeds: [embed],
         components: [row],
         ephemeral: true,
       });
@@ -123,8 +153,13 @@ export async function manageStudySession(interaction: any) {
         if (collected.size === 0) {
           const session = await TimeStudySession.findById(newSession._id);
           if (!session?.finishTime) {
+            const embed = new EmbedBuilder()
+              .setTitle('Study Session Timed Out')
+              .setDescription('⏰ Study session timed out. Please start a new session.')
+              .setColor('#ff0000');
+
             await interaction.editReply({
-              content: '⏰ Study session timed out. Please start a new session.',
+              embeds: [embed],
               components: [],
             });
             // Optionally, mark the session as timed out or remove it
@@ -136,21 +171,31 @@ export async function manageStudySession(interaction: any) {
 
   } catch (error) {
     console.error('Error in study session:', error);
+    const embed = new EmbedBuilder()
+      .setTitle('Error')
+      .setDescription('Failed to manage study session. Please try again.')
+      .setColor('#ff0000');
+
     await interaction.reply({
-      content: 'Failed to manage study session. Please try again.',
+      embeds: [embed],
       ephemeral: true,
     });
   }
 }
 
 async function finishStudySession(interaction: MessageComponentInteraction, session: any) {
+  const beginTime = session.beginTime ?? session.scheduledTime;
   const finishTime = new Date();
   const duration = Math.floor((finishTime.getTime() - session.beginTime.getTime()) / 1000);
 
   await TimeStudySession.findByIdAndUpdate(session._id, {
+    beginTime,
     finishTime,
     duration,
   });
+
+  await updateUserStreak(session.userId, interaction.client);
+  await checkAndAwardAchievements(session.userId, interaction.client);
 
   const hours = Math.floor(duration / 3600);
   const minutes = Math.floor((duration % 3600) / 60);
