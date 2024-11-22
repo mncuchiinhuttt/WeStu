@@ -89,9 +89,8 @@ async function viewResources(interaction: CommandInteraction) {
 			const pageResources = resources.slice(start, end);
 
 			pageResources.forEach((resource) => {
-				const visibilityEmoji = resource.shareWithServer ? '🌐' : '🔒';
 				embed.addFields({
-					name: `${visibilityEmoji} ${resource.title} (ID: ${resource._id})`,
+					name: `${resource.title} (ID: ${resource._id})`,
 					value: `${resource.description || ''}\n${resource.link || ''}\nShared by: <@${resource.userId}>`,
 				});
 			});
