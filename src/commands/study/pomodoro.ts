@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType, EmbedBuilder } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySession';
 
 export async function startPomodoro(interaction: any) {
@@ -29,8 +29,13 @@ export async function startPomodoro(interaction: any) {
     const row = new ActionRowBuilder<ButtonBuilder>()
       .addComponents(stopButton);
 
+    const embed = new EmbedBuilder()
+      .setTitle(`🍅 Starting Pomodoro Session ${currentSession}/${sessions}`)
+      .setDescription(`Study: ${studyDuration / 60000}min, Break: ${breakDuration / 60000}min`)
+      .setColor(0xff0000);
+
     const response = await interaction.reply({
-      content: `🍅 Starting Pomodoro Session ${currentSession}/${sessions}\nStudy: ${studyDuration/60000}min, Break: ${breakDuration/60000}min`,
+      embeds: [embed],
       components: [row],
       ephemeral: true
     });
@@ -50,8 +55,13 @@ export async function startPomodoro(interaction: any) {
           'pomodoroConfig.completedSessions': currentSession - 1
         });
 
+        const stopEmbed = new EmbedBuilder()
+          .setTitle('⏹️ Pomodoro stopped')
+          .setDescription(`Pomodoro stopped after ${currentSession - 1} sessions.`)
+          .setColor(0xff0000);
+
         await i.update({
-          content: `⏹️ Pomodoro stopped after ${currentSession - 1} sessions.`,
+          embeds: [stopEmbed],
           components: []
         });
       }
@@ -66,8 +76,12 @@ export async function startPomodoro(interaction: any) {
           'pomodoroConfig.completedSessions': sessions
         });
 
+        const completeEmbed = new EmbedBuilder()
+          .setTitle('🎉 All Pomodoro sessions completed!')
+          .setColor(0x00ff00);
+
         await interaction.editReply({
-          content: '🎉 All Pomodoro sessions completed!',
+          embeds: [completeEmbed],
           components: []
         });
         return;
@@ -80,8 +94,13 @@ export async function startPomodoro(interaction: any) {
             'pomodoroConfig.completedSessions': currentSession
           });
 
+          const breakEmbed = new EmbedBuilder()
+            .setTitle(`⏰ Session ${currentSession}/${sessions}`)
+            .setDescription('Study time is up! Take a break!')
+            .setColor(0xffff00);
+
           await interaction.followUp({
-            content: `⏰ Session ${currentSession}/${sessions}: Study time is up! Take a break!`,
+            embeds: [breakEmbed],
             ephemeral: true
           });
 
@@ -89,8 +108,13 @@ export async function startPomodoro(interaction: any) {
             if (!collector.ended) {
               currentSession++;
               if (currentSession <= sessions) {
+                const startEmbed = new EmbedBuilder()
+                  .setTitle(`⏰ Break time is over!`)
+                  .setDescription(`Starting session ${currentSession}/${sessions}`)
+                  .setColor(0x00ff00);
+
                 await interaction.followUp({
-                  content: `⏰ Break time is over! Starting session ${currentSession}/${sessions}`,
+                  embeds: [startEmbed],
                   ephemeral: true
                 });
                 runPomodoroSession();
@@ -101,8 +125,12 @@ export async function startPomodoro(interaction: any) {
                   'pomodoroConfig.completedSessions': sessions
                 });
 
+                const completeEmbed = new EmbedBuilder()
+                  .setTitle('🎉 All Pomodoro sessions completed!')
+                  .setColor(0x00ff00);
+
                 await interaction.editReply({
-                  content: '🎉 All Pomodoro sessions completed!',
+                  embeds: [completeEmbed],
                   components: []
                 });
               }
