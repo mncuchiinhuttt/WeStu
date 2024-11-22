@@ -12,6 +12,7 @@ import { exportStudyData } from './exportStudyData';
 import { displayLeaderboard } from './leaderboard';
 import { dailyStudySummary } from './dailySummary';
 import { displayAchievements } from './achievements';
+import { addVirtualSession } from './addVirtualSession';
 
 async function run ({
 	interaction,
@@ -30,7 +31,8 @@ async function run ({
 		'export': exportStudyData,
 		'leaderboard': displayLeaderboard,
 		'daily-summary': dailyStudySummary,
-		'achievements': displayAchievements
+		'achievements': displayAchievements,
+		'add-virtual-session': addVirtualSession,
 	};
 
 	try {
@@ -316,6 +318,35 @@ const data = new SlashCommandBuilder()
 		subcommand
 		.setName('achievements')
 		.setDescription('View your earned achievements')
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+			.setName('add-virtual-session')
+			.setDescription('Admin: Add a virtual study session with specified start and end times')
+			.addUserOption(option =>
+				option
+					.setName('user')
+					.setDescription('User to assign the study session')
+					.setRequired(true)
+			)
+			.addStringOption(option =>
+				option
+					.setName('topic')
+					.setDescription('Research topic')
+					.setRequired(true)
+			)
+			.addStringOption(option =>
+				option
+					.setName('begin_time')
+					.setDescription('Begin time (YYYY-MM-DD HH:MM)')
+					.setRequired(true)
+			)
+			.addStringOption(option =>
+				option
+					.setName('finish_time')
+					.setDescription('Finish time (YYYY-MM-DD HH:MM)')
+					.setRequired(true)
+			)
 	)
 
 const options = {
