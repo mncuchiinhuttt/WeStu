@@ -172,9 +172,6 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
 	  components: [],
 	});
 	
-	await updateUserStreak(session.userId, interaction.client);
-	await checkAndAwardAchievements(session.userId, interaction.client);
-	
   // Send a follow-up motivational message
   try {
     const user = await interaction.user.fetch();
