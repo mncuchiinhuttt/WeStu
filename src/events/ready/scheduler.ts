@@ -156,24 +156,25 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
     duration,
   });
 
-  await updateUserStreak(session.userId, interaction.client);
-  await checkAndAwardAchievements(session.userId, interaction.client);
-
+  
   const hours = Math.floor(duration / 3600);
   const minutes = Math.floor((duration % 3600) / 60);
   const seconds = duration % 60;
-
+  
   const embed = new EmbedBuilder()
-    .setTitle('✅ Study Session Completed')
-    .setDescription(`You studied for **${hours}h ${minutes}m ${seconds}s**. Great job! 🎉`)
-    .setColor('#00ff00')
-    .setTimestamp();
-
+  .setTitle('✅ Study Session Completed')
+  .setDescription(`You studied for **${hours}h ${minutes}m ${seconds}s**. Great job! 🎉`)
+  .setColor('#00ff00')
+  .setTimestamp();
+  
   await interaction.update({
-    embeds: [embed],
-    components: [],
-  });
-
+	  embeds: [embed],
+	  components: [],
+	});
+	
+	await updateUserStreak(session.userId, interaction.client);
+	await checkAndAwardAchievements(session.userId, interaction.client);
+	
   // Send a follow-up motivational message
   try {
     const user = await interaction.user.fetch();

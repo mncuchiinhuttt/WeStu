@@ -194,9 +194,6 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
     duration,
   });
 
-  await updateUserStreak(session.userId, interaction.client);
-  await checkAndAwardAchievements(session.userId, interaction.client);
-
   const hours = Math.floor(duration / 3600);
   const minutes = Math.floor((duration % 3600) / 60);
   const seconds = duration % 60;
@@ -211,6 +208,9 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
     embeds: [embed],
     components: [],
   });
+
+  await updateUserStreak(session.userId, interaction.client);
+  await checkAndAwardAchievements(session.userId, interaction.client);
 
   // Send a follow-up motivational message
   try {
