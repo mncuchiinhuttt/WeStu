@@ -4,10 +4,10 @@ export async function addTask(interaction: any) {
   try {
 	const title = interaction.options.getString('title');
 	const deadline = new Date(interaction.options.getString('deadline'));
-	const priority = interaction.options.getString('priority') || TaskPriority.MEDIUM;
+	const priority = interaction.options.getString('priority') ?? TaskPriority.MEDIUM;
 	const subject = interaction.options.getString('subject');
 	const description = interaction.options.getString('description');
-	const reminder = interaction.options.getBoolean('reminder') || false;
+	const reminder = interaction.options.getBoolean('reminder') ?? false;
 
 	if (deadline < new Date()) {
 		await interaction.reply('Deadline cannot be in the past!');
