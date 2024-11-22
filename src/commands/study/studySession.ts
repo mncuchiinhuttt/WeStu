@@ -6,6 +6,7 @@ import {
   ComponentType,
   MessageComponentInteraction,
   User,
+  EmbedBuilder,
 } from 'discord.js';
 import moment from 'moment-timezone';
 import { TimeStudySession } from '../../models/TimeStudySession';
@@ -155,8 +156,22 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
   const minutes = Math.floor((duration % 3600) / 60);
   const seconds = duration % 60;
 
+  const embed = new EmbedBuilder()
+    .setTitle('✅ Study Session Completed')
+    .setDescription(`You studied for **${hours}h ${minutes}m ${seconds}s**. Great job! 🎉`)
+    .setColor('#00ff00')
+    .setTimestamp();
+
   await interaction.update({
-    content: `✅ Study session finished! You studied for ${hours}h ${minutes}m ${seconds}s.`,
+    embeds: [embed],
     components: [],
   });
+
+  // Send a follow-up motivational message
+  try {
+    const user = await interaction.user.fetch();
+    await user.send('🙌 Keep up the fantastic work! Consistency is key to achieving your goals.');
+  } catch (error) {
+    console.error('Error sending motivational message:', error);
+  }
 }
