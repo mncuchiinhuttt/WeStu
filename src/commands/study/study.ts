@@ -100,6 +100,12 @@ const data = new SlashCommandBuilder()
 		subCommand
 		.setName('session')
 		.setDescription('Start a study session (click button to finish)')
+		.addStringOption(option =>
+			option
+			.setName('schedule')
+			.setDescription('Schedule the study session start time (format: YYYY-MM-DD HH:MM)')
+			.setRequired(false)
+		)
 	)
 	.addSubcommand(subcommand =>
 		subcommand
