@@ -1,4 +1,4 @@
-import { Client } from 'discord.js';
+import { Client, EmbedBuilder } from 'discord.js';
 import { Task, TaskStatus } from '../../models/Task';
 
 export default async (client: Client) => {
@@ -39,24 +39,29 @@ async function checkAndSendTaskReminders(client: Client) {
 		for (const [userId, tasks] of Object.entries(tasksByUser)) {
 			try {
 				const user = await client.users.fetch(userId);
-				let message = `⚠️ **Task Reminder**\n\n`;
-				message += `You have ${tasks.length} task(s) due within 24 hours:\n\n`;
-				
+				const embed = new EmbedBuilder()
+					.setTitle('⚠️ Task Reminder')
+					.setDescription(`You have ${tasks.length} task(s) due within 24 hours:`)
+					.setColor('#FF0000')
+					.setTimestamp();
+
 				tasks.forEach(task => {
-					message += `📌 **${task.title}**\n`;
-					message += `⏰ Due: ${task.deadline.toLocaleString()}\n`;
-					message += `🏷️ Priority: ${task.priority}\n`;
-					message += task.category ? `📁 Category: ${task.category}\n` : '';
-					message += task.progress ? `📊 Progress: ${task.progress}%\n` : '';
-					message += task.subtasks?.length ? 
-						`📋 Subtasks: ${task.subtasks.filter((st: any) => !st.completed).length} remaining\n` : '';
-					message += task.tags?.length ? `🏷️ Tags: ${task.tags.join(', ')}\n` : '';
-					message += '\n';
+					embed.addFields([
+						{
+							name: `📌 ${task.title}`,
+							value: `**Due:** ${task.deadline.toLocaleString()}\n` +
+								`**Priority:** ${task.priority}\n` +
+								(task.category ? `**Category:** ${task.category}\n` : '') +
+								(task.progress ? `**Progress:** ${task.progress}%\n` : '') +
+								(task.subtasks?.length ? `**Subtasks:** ${task.subtasks.filter((st: any) => !st.completed).length} remaining\n` : '') +
+								(task.tags?.length ? `**Tags:** ${task.tags.join(', ')}\n` : '')
+						}
+					]);
 				});
 
-				message += `Use \`/todo list\` to view all your tasks.`;
-				
-				await user.send(message);
+				embed.addFields([{ name: 'Note', value: 'Use `/todo list` to view all your tasks.' }]);
+
+				await user.send({ embeds: [embed] });
 
 				// Mark reminders as sent
 				await Task.updateMany(

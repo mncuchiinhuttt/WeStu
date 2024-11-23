@@ -48,10 +48,15 @@ export async function shareTask(interaction: any) {
 		});
 		
 		try {
-			await user.send(
-				`📋 ${interaction.user.username} shared a task with you:\n` +
-				`**${task.title}**\nDue: ${task.deadline.toLocaleDateString()}`
-			);
+		const dmEmbed = new EmbedBuilder()
+			.setColor(0x00ff00)
+			.setTitle('Task Shared')
+			.setDescription(`📋 ${interaction.user.username} shared a task with you:\n**${task.title}**\nDue: ${task.deadline.toLocaleDateString()}\nDescription: ${task.description}\nPriority: ${task.priority}`);
+		if (task.subtasks && task.subtasks.length > 0) {
+			const subtaskList = task.subtasks.map(subtask => `- ${subtask.title}`).join('\n');
+			dmEmbed.addFields({ name: 'Subtasks', value: subtaskList });
+		}
+		await user.send({ embeds: [dmEmbed] });
 		} catch (error) {
 			console.error('Failed to DM user:', error);
 		}
