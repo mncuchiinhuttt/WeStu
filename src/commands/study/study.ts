@@ -35,6 +35,14 @@ async function run ({
 		'add-virtual-session': addVirtualSession,
 	};
 
+	if (subCommand === 'goal' && interaction.user.id !== '936234981167104031') {
+		await interaction.reply({
+			content: 'This command is only available to the bot owner',
+			ephemeral: true
+		});
+		return;
+	}
+
 	try {
 		await handlers[subCommand](interaction);
 	} catch (error) {

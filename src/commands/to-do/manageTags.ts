@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function manageTags(interaction: any) {
 	try {
@@ -15,12 +16,17 @@ export async function manageTags(interaction: any) {
 			return;
 		}
 
-		// Add explicit type for tag parameter
 		const tags: string[] = tagsString.split(',').map((tag: string) => tag.trim());
 		task.tags = tags;
 		await task.save();
 
-		await interaction.reply({ content: `✅ Updated tags for **${task.title}**:\n${tags.join(', ')}`, ephemeral: true });
+		const embed = new EmbedBuilder()
+			.setColor('#00FF00')
+			.setTitle('Tags Updated')
+			.setDescription(`✅ Updated tags for **${task.title}**`)
+			.addFields({ name: 'Tags', value: tags.join(', '), inline: false });
+
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'Failed to update tags', ephemeral: true });

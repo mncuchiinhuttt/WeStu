@@ -1,4 +1,5 @@
 import { Task, TaskStatus } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function completeTask(interaction: any) {
   try {
@@ -9,8 +10,11 @@ export async function completeTask(interaction: any) {
     });
 
     if (!task) {
+      const embed = new EmbedBuilder()
+        .setColor('#FF0000') // Red color in hex
+        .setDescription('Task not found');
       await interaction.reply({
-        content: 'Task not found',
+        embeds: [embed],
         ephemeral: true
       });
       return;
@@ -22,15 +26,24 @@ export async function completeTask(interaction: any) {
 
     await task.save();
 
+    const embed = new EmbedBuilder()
+      .setColor('#00FF00') // Green color in hex
+      .setTitle('Task Completed')
+      .setDescription(`✅ Completed task: **${task.title}** (Progress: 100%)`)
+      .setTimestamp();
+
     await interaction.reply({
-      content: `✅ Completed task: **${task.title}** (Progress: 100%)`,
+      embeds: [embed],
       ephemeral: true
     });
 
   } catch (error) {
     console.error(error);
+    const embed = new EmbedBuilder()
+      .setColor('#FF0000') // Red color in hex
+      .setDescription('An error occurred while completing the task');
     await interaction.reply({
-      content: 'Failed to complete task',
+      embeds: [embed],
       ephemeral: true
     });
   }

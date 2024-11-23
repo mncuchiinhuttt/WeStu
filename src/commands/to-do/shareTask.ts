@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function shareTask(interaction: any) {
 	try {
@@ -11,16 +12,24 @@ export async function shareTask(interaction: any) {
 		});
 
 		if (!task) {
+			const embed = new EmbedBuilder()
+				.setColor(0xff0000)
+				.setTitle('Error')
+				.setDescription('Task not found');
 			await interaction.reply({
-				content: 'Task not found',
+				embeds: [embed],
 				ephemeral: true
 			});
 			return;
 		}
 
 		if (task.sharedWith.includes(user.id)) {
+			const embed = new EmbedBuilder()
+				.setColor(0xff0000)
+				.setTitle('Error')
+				.setDescription('Task already shared with this user');
 			await interaction.reply({
-				content: 'Task already shared with this user',
+				embeds: [embed],
 				ephemeral: true
 			});
 			return;
@@ -29,8 +38,12 @@ export async function shareTask(interaction: any) {
 		task.sharedWith.push(user.id);
 		await task.save();
 
+		const embed = new EmbedBuilder()
+			.setColor(0x00ff00)
+			.setTitle('Task Shared')
+			.setDescription(`✅ Shared task **${task.title}** with ${user.username}`);
 		await interaction.reply({
-			content: `✅ Shared task **${task.title}** with ${user.username}`,
+			embeds: [embed],
 			ephemeral: true
 		});
 		
@@ -45,8 +58,12 @@ export async function shareTask(interaction: any) {
 
 	} catch (error) {
 		console.error(error);
+		const embed = new EmbedBuilder()
+			.setColor(0xff0000)
+			.setTitle('Error')
+			.setDescription('Failed to share task');
 		await interaction.reply({
-			content: 'Failed to share task',
+			embeds: [embed],
 			ephemeral: true
 		});
 	}

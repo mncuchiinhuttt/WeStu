@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function deleteTask(interaction: any) {
 	try {
@@ -9,22 +10,34 @@ export async function deleteTask(interaction: any) {
 		});
 
 		if (!task) {
+			const embed = new EmbedBuilder()
+				.setColor(0xff0000)
+				.setTitle('Error')
+				.setDescription('Task not found');
 			await interaction.reply({
-				content: 'Task not found',
+				embeds: [embed],
 				ephemeral: true
 			});
 			return;
 		}
 
+		const embed = new EmbedBuilder()
+			.setColor(0x00ff00)
+			.setTitle('Task Deleted')
+			.setDescription(`🗑️ Deleted task: **${task.title}**`);
 		await interaction.reply({
-			content: `🗑️ Deleted task: **${task.title}**`,
+			embeds: [embed],
 			ephemeral: true
 		});
 
 	} catch (error) {
 		console.error(error);
+		const embed = new EmbedBuilder()
+			.setColor(0xff0000)
+			.setTitle('Error')
+			.setDescription('Failed to delete task');
 		await interaction.reply({
-			content: 'Failed to delete task',
+			embeds: [embed],
 			ephemeral: true
 		});
 	}

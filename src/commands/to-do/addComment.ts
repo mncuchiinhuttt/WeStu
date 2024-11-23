@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function addComment(interaction: any) {
 	try {
@@ -14,8 +15,12 @@ export async function addComment(interaction: any) {
 		});
 
 		if (!task) {
+			const embed = new EmbedBuilder()
+				.setColor(0xff0000)
+				.setTitle('Error')
+				.setDescription('Task not found or no access');
 			await interaction.reply({ 
-				content: 'Task not found or no access', 
+				embeds: [embed], 
 				ephemeral: true 
 			});
 			return;
@@ -29,15 +34,24 @@ export async function addComment(interaction: any) {
 		});
 
 		await task.save();
+
+		const embed = new EmbedBuilder()
+			.setColor(0x00ff00)
+			.setTitle('Comment Added')
+			.setDescription(`💬 Added comment to **${task.title}**`);
 		await interaction.reply({
-			content: `💬 Added comment to **${task.title}**`,
+			embeds: [embed],
 			ephemeral: true
 		});
 
 	} catch (error) {
 		console.error(error);
+		const embed = new EmbedBuilder()
+			.setColor(0xff0000)
+			.setTitle('Error')
+			.setDescription('Failed to add comment');
 		await interaction.reply({
-			content: 'Failed to add comment',
+			embeds: [embed],
 			ephemeral: true
 		});
 	}

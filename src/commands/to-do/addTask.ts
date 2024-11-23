@@ -1,7 +1,8 @@
 import { Task, TaskPriority } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function addTask(interaction: any) {
-  try {
+	try {
 	const title = interaction.options.getString('title');
 	const deadline = new Date(interaction.options.getString('deadline'));
 	const priority = interaction.options.getString('priority') ?? TaskPriority.MEDIUM;
@@ -25,13 +26,25 @@ export async function addTask(interaction: any) {
 		progress: 0,
 	});
 
+	const embed = new EmbedBuilder()
+		.setTitle('✅ Task Created')
+		.addFields(
+		{ name: 'Title', value: title, inline: true },
+		{ name: 'Deadline', value: deadline.toLocaleString(), inline: true },
+		{ name: 'Priority', value: priority, inline: true },
+		{ name: 'Subject', value: subject, inline: true },
+		{ name: 'Description', value: description, inline: true },
+		{ name: 'Reminder', value: reminder ? 'Yes' : 'No', inline: true }
+		)
+		.setColor(0x00FF00);
+
 	await interaction.reply({
-	  content: `✅ Task created: **${title}**\nDeadline: ${deadline.toLocaleString()}`,
-	  ephemeral: true
+		embeds: [embed],
+		ephemeral: true
 	});
 
-  } catch (error) {
+	} catch (error) {
 	console.error(error);
 	await interaction.reply('Failed to create task');
-  }
+	}
 }

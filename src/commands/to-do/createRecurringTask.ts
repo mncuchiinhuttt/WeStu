@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function createRecurringTask(interaction: any) {
 	try {
@@ -13,11 +14,23 @@ export async function createRecurringTask(interaction: any) {
 			deadline: calculateNextDeadline(frequency)
 		});
 
-		await interaction.reply({ content: `✅ Created recurring task: **${title}**`, ephemeral: true });
+		const embed = new EmbedBuilder()
+			.setColor('#00FF00')
+			.setTitle('Recurring Task Created')
+			.setDescription(`✅ Created recurring task: **${title}**`)
+			.setTimestamp();
+
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 		
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'Failed to create recurring task', ephemeral: true });
+		const embed = new EmbedBuilder()
+			.setColor('#FF0000')
+			.setTitle('Error')
+			.setDescription('Failed to create recurring task')
+			.setTimestamp();
+
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 	}
 }
 

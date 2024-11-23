@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function createFromTemplate(interaction: any) {
 	try {
@@ -34,8 +35,20 @@ export async function createFromTemplate(interaction: any) {
 			template: false
 		});
 
+		const embed = new EmbedBuilder()
+			.setTitle('Task Created from Template')
+			.setDescription(`✅ Created task from template: **${task.title}**`)
+			.addFields(
+				{ name: 'Description', value: task.description || 'No description', inline: true },
+				{ name: 'Priority', value: task.priority || 'No priority', inline: true },
+				{ name: 'Category', value: task.category || 'No category', inline: true },
+				{ name: 'Tags', value: task.tags.join(', ') || 'No tags', inline: true },
+				{ name: 'Subtasks', value: task.subtasks.map(st => st.title).join(', ') || 'No subtasks', inline: true }
+			)
+			.setFooter({ text: 'Use `/todo edit` to set deadline' });
+
 		await interaction.reply({
-			content: `✅ Created task from template: **${task.title}**\nUse \`/todo edit\` to set deadline`,
+			embeds: [embed],
 			ephemeral: true
 		});
 

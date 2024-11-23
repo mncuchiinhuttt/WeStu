@@ -1,5 +1,6 @@
 import { Task, TaskStatus } from '../../models/Task';
 import { Document, Types } from 'mongoose';
+import { EmbedBuilder } from 'discord.js';
 
 interface ISubtask extends Document {
 	title: string;
@@ -26,7 +27,10 @@ export async function manageSubtasks(interaction: any) {
 		}) as ITaskDocument;
 
 		if (!task) {
-			await interaction.reply({ content: 'Task not found', ephemeral: true });
+			const embed = new EmbedBuilder()
+				.setColor('#FF0000') // Red color in hex
+				.setDescription('Task not found');
+			await interaction.reply({ embeds: [embed], ephemeral: true });
 			return;
 		}
 
@@ -56,10 +60,20 @@ export async function manageSubtasks(interaction: any) {
 		}
 
 		await task.save();
-		await interaction.reply({ content: `✅ Subtask ${action}ed: ${title}`, ephemeral: true });
+
+		const subtaskList = task.subtasks.map(st => `- ${st.title} ${st.completed ? '✅' : '❌'}`).join('\n');
+		const description = action === 'complete' ? `✅ Subtask completed: ${title}` : `✅ Subtask ${action}ed: ${title}`;
+		const embed = new EmbedBuilder()
+			.setColor('#00FF00') // Green color in hex
+			.setTitle(`Task: ${task.title}`)
+			.setDescription(`${description}\n\n**Subtasks:**\n${subtaskList}`);
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'Failed to manage subtask', ephemeral: true });
+		const embed = new EmbedBuilder()
+			.setColor('#FF0000') // Red color in hex
+			.setDescription('Failed to manage subtask');
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 	}
 }

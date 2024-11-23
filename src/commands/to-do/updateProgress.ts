@@ -1,4 +1,5 @@
 import { Task, TaskStatus } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function updateProgress(interaction: any) {
 	try {
@@ -11,7 +12,11 @@ export async function updateProgress(interaction: any) {
 		});
 
 		if (!task) {
-			await interaction.reply({ content: 'Task not found', ephemeral: true });
+			const embed = new EmbedBuilder()
+				.setColor('#FF0000')
+				.setTitle('Error')
+				.setDescription('Task not found');
+			await interaction.reply({ embeds: [embed], ephemeral: true });
 			return;
 		}
 
@@ -22,10 +27,20 @@ export async function updateProgress(interaction: any) {
 		}
 
 		await task.save();
-		await interaction.reply({ content: `✅ Updated progress for **${task.title}** to ${progress}%`, ephemeral: true });
+
+		const embed = new EmbedBuilder()
+			.setColor('#00FF00')
+			.setTitle('Progress Updated')
+			.setDescription(`✅ Updated progress for **${task.title}** to ${progress}%`);
+
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'Failed to update progress', ephemeral: true });
+		const embed = new EmbedBuilder()
+			.setColor('#FF0000')
+			.setTitle('Error')
+			.setDescription('Failed to update progress');
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 	}
 }

@@ -1,4 +1,5 @@
 import { Task } from '../../models/Task';
+import { EmbedBuilder } from 'discord.js';
 
 export async function saveTemplate(interaction: any) {
 	try {
@@ -35,8 +36,21 @@ export async function saveTemplate(interaction: any) {
 			deadline: farFutureDate
 		});
 
+		const embed = new EmbedBuilder()
+			.setTitle(`✅ Saved template: **${templateName}**`)
+			.addFields(
+				{ name: 'Title', value: template.title, inline: true },
+				{ name: 'Description', value: template.description || 'No description', inline: true },
+				{ name: 'Priority', value: template.priority.toString(), inline: true },
+				{ name: 'Category', value: template.category || 'No category', inline: true },
+				{ name: 'Tags', value: template.tags.join(', ') || 'No tags', inline: true },
+				{ name: 'Subtasks', value: template.subtasks.length.toString(), inline: true }
+			)
+			.setTimestamp()
+			.setColor('#00FF00');
+
 		await interaction.reply({
-			content: `✅ Saved template: **${templateName}**`,
+			embeds: [embed],
 			ephemeral: true
 		});
 
