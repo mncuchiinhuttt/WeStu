@@ -1,0 +1,45 @@
+{
+	"commands": {
+		"todo": {
+			"addTask": {
+				"success": "Tạo công việc thành công",
+				"error": "Không thể tạo công việc",
+				"deadlineError": "Hạn chót không thể ở quá khứ!",
+				"title": "Tiêu đề",
+				"deadline": "Hạn chót",
+				"priority": "Độ ưu tiên",
+				"priorityOptions": {
+					"low": "Thấp",
+					"medium": "Trung bình",
+					"high": "Cao"
+				},
+				"subject": "Chủ đề",
+				"description": "Mô tả",
+				"reminder": "Nhắc nhở"
+			},
+			"addComment": {
+				"error": "Lỗi",
+				"success": "Thêm bình luận thành công",
+				"successReply": "Đã thêm bình luận vào",
+				"taskNotFound": "Không tìm thấy công việc hoặc không có quyền truy cập",
+				"errorReply": "Không thể thêm bình luận"
+			},
+			"completeTask": {
+				"error": "Lỗi",
+				"taskNotFound": "Không tìm thấy công việc.",
+				"success": "Hoàn thành công việc",
+				"successReply": "Bạn đã hoàn thành công việc thành công",
+				"errorReply": "Đã xảy ra lỗi khi hoàn thành công việc.",
+				"progress": "Tiến độ"
+			}
+		}
+	}, 
+	"responses": {
+		"welcome": "Chào mừng bạn đến với server!",
+		"goodbye": "Tạm biệt!",
+		"error": "Đã xảy ra lỗi.",
+		"noPermission": "Bạn không có quyền sử dụng lệnh này.",
+		"languageChanged": "🇻🇳 Ngôn ngữ đã được thay đổi",
+		"languageChangedMessage": "Ngôn ngữ đã được thay đổi sang Tiếng Việt."
+	}
+}

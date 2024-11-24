@@ -1,9 +1,14 @@
 import { Task, TaskStatus } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function completeTask(interaction: any) {
+  const taskId = interaction.options.getString('task_id');
+  const languageService = LanguageService.getInstance();
+  const userLang = await languageService.getUserLanguage(interaction.user.id);
+  const langStrings = require(`../../data/languages/${userLang}.json`);
+
   try {
-    const taskId = interaction.options.getString('task_id');
     const task = await Task.findOne({ 
       _id: taskId,
       userId: interaction.user.id
@@ -12,7 +17,8 @@ export async function completeTask(interaction: any) {
     if (!task) {
       const embed = new EmbedBuilder()
         .setColor('#FF0000') // Red color in hex
-        .setDescription('Task not found');
+        .setTitle(langStrings.commands.todo.completeTask.error)
+        .setDescription(langStrings.commands.todo.completeTask.taskNotFound);
       await interaction.reply({
         embeds: [embed],
         ephemeral: true
@@ -28,8 +34,8 @@ export async function completeTask(interaction: any) {
 
     const embed = new EmbedBuilder()
       .setColor('#00FF00') // Green color in hex
-      .setTitle('Task Completed')
-      .setDescription(`✅ Completed task: **${task.title}** (Progress: 100%)`)
+      .setTitle(langStrings.commands.todo.completeTask.success)
+      .setDescription(`✅ ${langStrings.commands.todo.completeTask.successReply} **${task.title}** (${langStrings.commands.todo.completeTask.progress}: 100%)`)
       .setTimestamp();
 
     await interaction.reply({
@@ -41,7 +47,8 @@ export async function completeTask(interaction: any) {
     console.error(error);
     const embed = new EmbedBuilder()
       .setColor('#FF0000') // Red color in hex
-      .setDescription('An error occurred while completing the task');
+      .setTitle(langStrings.commands.todo.completeTask.error)
+      .setDescription(langStrings.commands.todo.completeTask.errorReply);
     await interaction.reply({
       embeds: [embed],
       ephemeral: true

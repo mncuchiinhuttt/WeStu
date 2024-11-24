@@ -1,0 +1,45 @@
+{
+	"commands": {
+		"todo": {
+			"addTask": {
+				"success": "Task Created",
+				"error": "Failed to create task",
+				"deadlineError": "Deadline cannot be in the past!",
+				"title": "Title",
+				"deadline": "Deadline",
+				"priority": "Priority",
+				"priorityOptions": {
+					"low": "Low",
+					"medium": "Medium",
+					"high": "High"
+				},
+				"subject": "Subject",
+				"description": "Description",
+				"reminder": "Reminder"
+			},
+			"addComment": {
+				"error": "Error",
+				"success": "Comment Added",
+				"successReply": "Added comment to",
+				"taskNotFound": "Task not found or no access",
+				"errorReply": "Failed to add comment"
+			},
+			"completeTask": {
+				"error": "Error",
+				"taskNotFound": "Task not found.",
+				"success": "Task Completed",
+				"successReply": "You have successfully completed the task",
+				"errorReply": "An error occurred while completing the task.",
+				"progress": "Progress"
+			}
+		}
+	}, 
+	"responses": {
+		"welcome": "Welcome to the server!",
+		"goodbye": "Goodbye!",
+		"error": "An error occurred.",
+		"noPermission": "You do not have permission to use this command.",
+		"languageChanged": "🇺🇸 Language Changed",
+		"languageChangedMessage": "Language changed to English."
+	}
+}

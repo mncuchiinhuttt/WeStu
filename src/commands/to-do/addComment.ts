@@ -1,11 +1,16 @@
 import { Task } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function addComment(interaction: any) {
-	try {
-		const taskId = interaction.options.getString('task_id');
-		const content = interaction.options.getString('content');
+	const taskId = interaction.options.getString('task_id');
+	const content = interaction.options.getString('content');
 
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	
+	try {
 		const task = await Task.findOne({
 			_id: taskId,
 			$or: [
@@ -17,8 +22,8 @@ export async function addComment(interaction: any) {
 		if (!task) {
 			const embed = new EmbedBuilder()
 				.setColor(0xff0000)
-				.setTitle('Error')
-				.setDescription('Task not found or no access');
+				.setTitle(langStrings.commands.addComment.error)
+				.setDescription(langStrings.commands.addComment.taskNotFound);
 			await interaction.reply({ 
 				embeds: [embed], 
 				ephemeral: true 
@@ -37,8 +42,8 @@ export async function addComment(interaction: any) {
 
 		const embed = new EmbedBuilder()
 			.setColor(0x00ff00)
-			.setTitle('Comment Added')
-			.setDescription(`💬 Added comment to **${task.title}**`);
+			.setTitle(langStrings.commands.todo.addComment.success)
+			.setDescription(`💬 ${langStrings.commands.todo.addComment.successReply} **${task.title}**`);
 		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true
@@ -48,8 +53,8 @@ export async function addComment(interaction: any) {
 		console.error(error);
 		const embed = new EmbedBuilder()
 			.setColor(0xff0000)
-			.setTitle('Error')
-			.setDescription('Failed to add comment');
+			.setTitle(langStrings.commands.addComment.error)
+			.setDescription(langStrings.commands.addComment.errorReply);
 		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true
