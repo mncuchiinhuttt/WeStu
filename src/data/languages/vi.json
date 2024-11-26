@@ -231,6 +231,15 @@
 				"successReply": "✅ Đã cập nhật tiến độ cho **{title}** thành {progress}%",
 				"errorReply": "Không thể cập nhật tiến độ"
 			}
+		},
+		"study": {
+
+		},
+		"tools": {
+			"insiderRegister": {
+				"alreadyRegistered": "Bạn đã đăng ký chương trình Insider.",
+				"success": "✅ Bạn đã đăng ký chương trình Insider!"
+			}
 		}
 	}, 
 	"responses": {

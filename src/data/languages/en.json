@@ -231,6 +231,15 @@
 				"successReply": "✅ Updated progress for **{title}** to {progress}%",
 				"errorReply": "Failed to update progress"
 			}
+		},
+		"study": {
+
+		},
+		"tools": {
+			"insiderRegister": {
+				"alreadyRegistered": "You are already registered in the Insider Program.",
+				"success": "✅ You have successfully registered for the Insider Program!"
+			}
 		}
 	}, 
 	"responses": {

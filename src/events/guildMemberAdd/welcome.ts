@@ -24,7 +24,7 @@ export default async function (member: GuildMember) {
 			.addFields(
 				{ name: '📚 Study Sessions', value: 'Track your study time with `/study session`' },
 				{ name: '✅ Task Management', value: 'Manage your tasks with `/todo`' },
-				{ name: '🎯 Study Goals', value: 'Set and track goals with `/study goal`' },
+				{ name: '🎯 Study Target', value: 'Set and track goals with `/study target`' },
 				{ name: '📝 Study Resources', value: 'Share and access resources with `/study resources`' },
 				{ name: '📅 Study Schedule', value: 'Plan your study schedule with `/study schedule`' },
 				{ name: '📊 Study Stats', value: 'View your study stats with `/study stats`' },
