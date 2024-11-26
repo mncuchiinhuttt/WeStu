@@ -13,6 +13,7 @@ import { displayLeaderboard } from './leaderboard';
 import { dailyStudySummary } from './dailySummary';
 import { displayAchievements } from './achievements';
 import { addVirtualSession } from './addVirtualSession';
+import { studyTips } from './studyTips';
 
 async function run ({
 	interaction,
@@ -33,6 +34,7 @@ async function run ({
 		'daily-summary': dailyStudySummary,
 		'achievements': displayAchievements,
 		'add-virtual-session': addVirtualSession,
+		'tips': studyTips
 	};
 
 	if (subCommand === 'goal' && interaction.user.id !== '936234981167104031') {
@@ -355,6 +357,14 @@ const data = new SlashCommandBuilder()
 					.setDescription('Finish time (YYYY-MM-DD HH:MM)')
 					.setRequired(true)
 			)
+	)
+	.addSubcommand(subcommand => 
+		subcommand
+		.setName('tips')
+		.setDescription('Get a random study tip')
+		.setDescriptionLocalizations({
+			'vi': 'Nhận một mẹo học tập ngẫu nhiên'
+		})
 	)
 
 const options = {
