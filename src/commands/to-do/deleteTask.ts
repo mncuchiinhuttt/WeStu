@@ -1,9 +1,16 @@
 import { Task } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function deleteTask(interaction: any) {
+	const taskId = interaction.options.getString('task_id');
+
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const path = langStrings.commands.todo.deleteTask;
+
 	try {
-		const taskId = interaction.options.getString('task_id');
 		const task = await Task.findOneAndDelete({
 			_id: taskId,
 			userId: interaction.user.id
@@ -12,8 +19,8 @@ export async function deleteTask(interaction: any) {
 		if (!task) {
 			const embed = new EmbedBuilder()
 				.setColor(0xff0000)
-				.setTitle('Error')
-				.setDescription('Task not found');
+				.setTitle(path.error)
+				.setDescription(path.notFound);
 			await interaction.reply({
 				embeds: [embed],
 				ephemeral: true
@@ -23,8 +30,8 @@ export async function deleteTask(interaction: any) {
 
 		const embed = new EmbedBuilder()
 			.setColor(0x00ff00)
-			.setTitle('Task Deleted')
-			.setDescription(`🗑️ Deleted task: **${task.title}**`);
+			.setTitle(path.success)
+			.setDescription(`🗑️ ${path.successReply}: **${task.title}**`);
 		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true
@@ -34,8 +41,8 @@ export async function deleteTask(interaction: any) {
 		console.error(error);
 		const embed = new EmbedBuilder()
 			.setColor(0xff0000)
-			.setTitle('Error')
-			.setDescription('Failed to delete task');
+			.setTitle(path.error)
+			.setDescription(path.errorReply);
 		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true

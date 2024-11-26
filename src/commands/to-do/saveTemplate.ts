@@ -1,7 +1,14 @@
 import { Task } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
+import { TaskPriority } from '../../models/Task';
 
 export async function saveTemplate(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.saveTemplate;
+
 	try {
 		const taskId = interaction.options.getString('task_id');
 		const templateName = interaction.options.getString('name');
@@ -13,7 +20,7 @@ export async function saveTemplate(interaction: any) {
 
 		if (!sourceTask) {
 			await interaction.reply({
-				content: 'Task not found',
+				content: strings.notFound,
 				ephemeral: true
 			});
 			return;
@@ -22,7 +29,6 @@ export async function saveTemplate(interaction: any) {
 		const farFutureDate = new Date();
 		farFutureDate.setFullYear(farFutureDate.getFullYear() + 100);
 
-		// Create template from task
 		const template = await Task.create({
 			userId: interaction.user.id,
 			title: sourceTask.title,
@@ -32,19 +38,25 @@ export async function saveTemplate(interaction: any) {
 			tags: sourceTask.tags,
 			subtasks: sourceTask.subtasks,
 			template: true,
-			templateName,
+			templateName: templateName,
 			deadline: farFutureDate
 		});
 
+		const priorityString = {
+			[TaskPriority.LOW]: strings.priorityOptions.low,
+			[TaskPriority.MEDIUM]: strings.priorityOptions.medium,
+			[TaskPriority.HIGH]: strings.priorityOptions.high,
+		};
+
 		const embed = new EmbedBuilder()
-			.setTitle(`✅ Saved template: **${templateName}**`)
+			.setTitle(`✅ ${strings.saved}: **${templateName}**`)
 			.addFields(
-				{ name: 'Title', value: template.title, inline: true },
-				{ name: 'Description', value: template.description || 'No description', inline: true },
-				{ name: 'Priority', value: template.priority.toString(), inline: true },
-				{ name: 'Category', value: template.category || 'No category', inline: true },
-				{ name: 'Tags', value: template.tags.join(', ') || 'No tags', inline: true },
-				{ name: 'Subtasks', value: template.subtasks.length.toString(), inline: true }
+				{ name: strings.title, value: template.title, inline: true },
+				{ name: strings.description, value: template.description ?? strings.noDescription, inline: true },
+				{ name: strings.priority, value: priorityString[template.priority], inline: true },
+				{ name: strings.category, value: template.category ?? strings.noCategory, inline: true },
+				{ name: strings.tags, value: template.tags?.length > 0 ? template.tags.join(', ') : strings.noTags, inline: true },
+				{ name: strings.subtasks, value: template.subtasks.length.toString(), inline: true }
 			)
 			.setTimestamp()
 			.setColor('#00FF00');
@@ -57,7 +69,7 @@ export async function saveTemplate(interaction: any) {
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({
-			content: 'Failed to save template',
+			content: `❌ ${strings.error}`,
 			ephemeral: true
 		});
 	}

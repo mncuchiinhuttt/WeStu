@@ -1,7 +1,13 @@
 import { AttachmentBuilder } from 'discord.js';
 import { Task } from '../../models/Task';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function exportTasks(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.exportTasks;
+
 	try {
 	  await interaction.deferReply({ ephemeral: true });
   
@@ -45,12 +51,12 @@ export async function exportTasks(interaction: any) {
 	  const attachment = new AttachmentBuilder(buffer, { name: 'tasks.csv' });
   
 	  await interaction.editReply({ 
-		content: '📤 Here are your tasks:',
+		content: `📤 ${strings.success}:`,
 		files: [attachment],
 		ephemeral: true
 	  });
 	} catch (error) {
 	  console.error(error);
-	  await interaction.editReply('Failed to export tasks');
+	  await interaction.editReply(strings.error);
 	}
   }

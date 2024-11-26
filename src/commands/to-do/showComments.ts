@@ -1,7 +1,13 @@
 import { Task } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function showComments(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.showComments;
+	
 	try {
 		const taskId = interaction.options.getString('task_id');
 
@@ -15,19 +21,21 @@ export async function showComments(interaction: any) {
 
 		if (!task) {
 			await interaction.reply({
-				content: 'Task not found or no access',
+				content: strings.notFound,
 				ephemeral: true
 			});
 			return;
 		}
 
 		const embed = new EmbedBuilder()
-			.setTitle(`💬 Comments for: ${task.title}`)
+			.setTitle(strings.success
+				.replace('{title}', task.title)
+			)
 			.setColor('#00ff00')
 			.setTimestamp();
 
 		if (task.comments.length === 0) {
-			embed.setDescription('No comments yet');
+			embed.setDescription(strings.noComments);
 		} else {
 			task.comments.forEach((comment: any) => {
 				embed.addFields({
@@ -45,7 +53,7 @@ export async function showComments(interaction: any) {
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({
-			content: 'Failed to show comments',
+			content: strings.error,
 			ephemeral: true
 		});
 	}

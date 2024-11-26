@@ -13,10 +13,11 @@ export async function addTask(interaction: any) {
 	const languageService = LanguageService.getInstance();
 	const userLang = await languageService.getUserLanguage(interaction.user.id);
 	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const path = langStrings.commands.todo.addTask;
 
 	try {
 		if (deadline < new Date()) {
-			await interaction.reply(langStrings.commands.todo.addTask.deadlineError);
+			await interaction.reply(path.deadlineError);
 			return;
 		}
 
@@ -32,20 +33,20 @@ export async function addTask(interaction: any) {
 		});
 
 		const priorityString = {
-			[TaskPriority.LOW]: langStrings.commands.todo.addTask.priorityOptions.low,
-			[TaskPriority.MEDIUM]: langStrings.commands.todo.addTask.priorityOptions.medium,
-			[TaskPriority.HIGH]: langStrings.commands.todo.addTask.priorityOptions.high,
+			[TaskPriority.LOW]: path.priorityOptions.low,
+			[TaskPriority.MEDIUM]: path.priorityOptions.medium,
+			[TaskPriority.HIGH]: path.priorityOptions.high,
 		};
 
 		const embed = new EmbedBuilder()
-			.setTitle(`✅ ${langStrings.commands.todo.addTask.success}`)
+			.setTitle(`✅ ${path.success}`)
 			.addFields(
-			{ name: `${langStrings.commands.todo.addTask.title}`, value: title, inline: true },
-			{ name: `${langStrings.commands.todo.addTask.deadline}`, value: deadline.toLocaleString(), inline: true },
-			{ name: `${langStrings.commands.todo.addTask.priority}`, value: priorityString[priority], inline: true },
-			{ name: `${langStrings.commands.todo.addTask.subject}`, value: subject, inline: true },
-			{ name: `${langStrings.commands.todo.addTask.description}`, value: description, inline: true },
-			{ name: `${langStrings.commands.todo.addTask.reminder}`, value: reminder ? 'Yes' : 'No', inline: true }
+			{ name: `${path.title}`, value: title, inline: true },
+			{ name: `${path.deadline}`, value: deadline.toLocaleString(), inline: true },
+			{ name: `${path.priority}`, value: priorityString[priority], inline: true },
+			{ name: `${path.subject}`, value: subject, inline: true },
+			{ name: `${path.description}`, value: description, inline: true },
+			{ name: `${path.reminder}`, value: reminder ? 'Yes' : 'No', inline: true }
 			)
 			.setColor(0x00FF00);
 
@@ -55,6 +56,9 @@ export async function addTask(interaction: any) {
 		});
 	} catch (error) {
 		console.error(error);
-		await interaction.reply(`❌ ${langStrings.commands.todo.addTask.error}`);
+		await interaction.reply({
+			content: `❌ ${path.error}`,
+			ephemeral: true
+		});
 	}
 }

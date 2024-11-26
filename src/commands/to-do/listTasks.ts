@@ -1,9 +1,16 @@
 import { Task, TaskStatus } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
+import { replacePlaceholders } from '../../utils/replacePlaceholders';
 
 export async function listTasks(interaction: any) {
-	const filter = interaction.options.getString('filter') || 'all';
+	const filter = interaction.options.getString('filter') ?? 'all';
 	const userId = interaction.user.id;
+
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(userId);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.listTasks;
 
 	try {
 		let query: any = { 
@@ -35,11 +42,11 @@ export async function listTasks(interaction: any) {
 		const tasks = await Task.find(query).sort({ deadline: 1 });
 
 		const embed = new EmbedBuilder()
-			.setTitle('Your Tasks')
+			.setTitle(strings.title)
 			.setColor('#0099ff');
 
 		if (tasks.length === 0) {
-			embed.setDescription('No tasks found');
+			embed.setDescription(strings.notFound);
 		} else {
 			tasks.forEach(task => {
 				const dueDate = task.deadline.toLocaleDateString();
@@ -50,24 +57,24 @@ export async function listTasks(interaction: any) {
 				const tags = task.tags?.length ? `🏷️ ${task.tags.join(', ')} ` : '';
 				
 				let fieldValue = [
-					`Due: ${dueDate}`,
-					task.description ? `Description: ${task.description}` : null,
-					`Progress: ${progress}`,
-					category ? `Category: ${category}` : null,
-					tags ? `Tags: ${tags}` : null,
+					`${strings.dueDate}: ${dueDate}`,
+					task.description ? `${strings.description}: ${task.description}` : null,
+					`${strings.progress}: ${progress}`,
+					category ? `${strings.category}: ${category}` : null,
+					tags ? `${strings.tags}: ${tags}` : null,
 					`ID: ${task._id}`
 				].filter(Boolean).join('\n');
 
 				// Add subtasks if any
 				if (task.subtasks?.length > 0) {
-					fieldValue += '\nSubtasks:\n' + task.subtasks.map((st: any) => 
+					fieldValue += `\n${strings.subtasks}:\n` + task.subtasks.map((st: any) => 
 						`${st.completed ? '✓' : '○'} ${st.title}`
 					).join('\n');
 				}
 
 				// Add shared users if any
 				if (task.sharedWith?.length > 0) {
-					fieldValue += '\nShared with: ' + task.sharedWith.length + ' users';
+					fieldValue += '\n' + replacePlaceholders(strings.shared, { count: `${task.sharedWith.length}` });
 				}
 
 				embed.addFields({
@@ -81,6 +88,6 @@ export async function listTasks(interaction: any) {
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply('Failed to fetch tasks');
+		await interaction.reply(strings.error);
 	}
 }

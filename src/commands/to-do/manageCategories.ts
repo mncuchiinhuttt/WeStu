@@ -1,6 +1,13 @@
 import { Task } from '../../models/Task';
+import { LanguageService } from '../../utils/LanguageService';
+import { replacePlaceholders } from '../../utils/replacePlaceholders';
 
 export async function manageCategories(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.manageCategories;
+
 	try {
 		const action = interaction.options.getString('action');
 		const name = interaction.options.getString('name');
@@ -8,14 +15,13 @@ export async function manageCategories(interaction: any) {
 
 		switch (action) {
 			case 'create':
-				// Create first task in category
 				await Task.create({
 					userId: interaction.user.id,
 					title: name,
 					category: name,
 					deadline: new Date()
 				});
-				await interaction.reply({ content: `✅ Created category: ${name}`, ephemeral: true });
+				await interaction.reply({ content: `✅ ${strings.successCreate}: ${name}`, ephemeral: true });
 				break;
 
 			case 'move':
@@ -25,18 +31,18 @@ export async function manageCategories(interaction: any) {
 				});
 
 				if (!task) {
-					await interaction.reply({ content: 'Task not found', ephemeral: true });
+					await interaction.reply({ content: strings.notFound, ephemeral: true });
 					return;
 				}
 
 				task.category = name;
 				await task.save();
-				await interaction.reply({ content: `✅ Moved task to category: ${name}`, ephemeral: true });
+				await interaction.reply({ content: `✅ ${strings.successMove}: ${name}`, ephemeral: true });
 				break;
 		}
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'Failed to manage categories', ephemeral: true });
+		await interaction.reply({ content: strings.error, ephemeral: true });
 	}
 }

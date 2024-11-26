@@ -7,6 +7,7 @@ export async function completeTask(interaction: any) {
   const languageService = LanguageService.getInstance();
   const userLang = await languageService.getUserLanguage(interaction.user.id);
   const langStrings = require(`../../data/languages/${userLang}.json`);
+  const path = langStrings.commands.todo.completeTask;
 
   try {
     const task = await Task.findOne({ 
@@ -17,8 +18,8 @@ export async function completeTask(interaction: any) {
     if (!task) {
       const embed = new EmbedBuilder()
         .setColor('#FF0000') // Red color in hex
-        .setTitle(langStrings.commands.todo.completeTask.error)
-        .setDescription(langStrings.commands.todo.completeTask.taskNotFound);
+        .setTitle(path.error)
+        .setDescription(path.taskNotFound);
       await interaction.reply({
         embeds: [embed],
         ephemeral: true
@@ -34,8 +35,8 @@ export async function completeTask(interaction: any) {
 
     const embed = new EmbedBuilder()
       .setColor('#00FF00') // Green color in hex
-      .setTitle(langStrings.commands.todo.completeTask.success)
-      .setDescription(`✅ ${langStrings.commands.todo.completeTask.successReply} **${task.title}** (${langStrings.commands.todo.completeTask.progress}: 100%)`)
+      .setTitle(path.success)
+      .setDescription(`✅ ${path.successReply} **${task.title}** (${path.progress}: 100%)`)
       .setTimestamp();
 
     await interaction.reply({
@@ -47,8 +48,8 @@ export async function completeTask(interaction: any) {
     console.error(error);
     const embed = new EmbedBuilder()
       .setColor('#FF0000') // Red color in hex
-      .setTitle(langStrings.commands.todo.completeTask.error)
-      .setDescription(langStrings.commands.todo.completeTask.errorReply);
+      .setTitle(path.error)
+      .setDescription(path.errorReply);
     await interaction.reply({
       embeds: [embed],
       ephemeral: true

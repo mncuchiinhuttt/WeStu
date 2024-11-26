@@ -1,5 +1,6 @@
 import { Task, TaskStatus, TaskPriority } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 interface TaskScore {
 	task: any;
@@ -8,6 +9,11 @@ interface TaskScore {
 }
 
 export async function suggestTaskOrder(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.suggestTaskOrder;
+
 	try {
 		const userId = interaction.user.id;
 		const tasks = await Task.find({
@@ -16,7 +22,7 @@ export async function suggestTaskOrder(interaction: any) {
 		});
 
 		if (tasks.length === 0) {
-			await interaction.reply('No pending tasks found!');
+			await interaction.reply(strings.noTasks);
 			return;
 		}
 
@@ -25,35 +31,33 @@ export async function suggestTaskOrder(interaction: any) {
 			let score = 0;
 			let reasons = [];
 
-			// Deadline factor (0-50 points)
 			const daysUntilDue = (task.deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
 			if (daysUntilDue < 0) {
 				score += 50;
-				reasons.push('⚠️ Overdue');
+				reasons.push(strings.dueDate.overDue);
 			} else if (daysUntilDue <= 1) {
 				score += 45;
-				reasons.push('🔥 Due within 24 hours');
+				reasons.push(strings.dueDate.under1);
 			} else if (daysUntilDue <= 3) {
 				score += 35;
-				reasons.push('⚡ Due within 3 days');
+				reasons.push(strings.dueDate.under3);
 			} else if (daysUntilDue <= 7) {
 				score += 25;
-				reasons.push('📅 Due within a week');
+				reasons.push(strings.dueDate.under7);
 			}
 
-			// Priority factor (0-30 points)
 			switch (task.priority) {
 				case TaskPriority.HIGH:
 					score += 30;
-					reasons.push('‼️ High priority');
+					reasons.push(strings.priority.high);
 					break;
 				case TaskPriority.MEDIUM:
 					score += 20;
-					reasons.push('❗ Medium priority');
+					reasons.push(strings.priority.medium);
 					break;
 				case TaskPriority.LOW:
 					score += 10;
-					reasons.push('ℹ️ Low priority');
+					reasons.push(strings.priority.low);
 					break;
 			}
 
@@ -64,12 +68,11 @@ export async function suggestTaskOrder(interaction: any) {
 			};
 		});
 
-		// Sort by score descending
 		scoredTasks.sort((a, b) => b.score - a.score);
 
 		const embed = new EmbedBuilder()
-			.setTitle('📋 Suggested Task Order')
-			.setDescription('Here\'s the recommended order to complete your tasks:')
+			.setTitle(strings.title)
+			.setDescription(strings.description)
 			.setColor('#00ff00')
 			.setTimestamp();
 
@@ -79,7 +82,10 @@ export async function suggestTaskOrder(interaction: any) {
 			
 			embed.addFields({
 				name: `${index + 1}. ${task.title}`,
-				value: `Due: ${deadline}\n${scoredTask.reason}\nPriority Score: ${scoredTask.score}`
+				value: strings.taskInfo
+					.replace('{deadline}', deadline)
+					.replace('{priority}', task.priority)
+					.replace('{reason}', scoredTask.reason)
 			});
 		});
 
@@ -87,6 +93,6 @@ export async function suggestTaskOrder(interaction: any) {
 
 	} catch (error) {
 		console.error('Error in suggestTaskOrder:', error);
-		await interaction.reply('Failed to generate task suggestions');
+		await interaction.reply(strings.error);
 	}
 }

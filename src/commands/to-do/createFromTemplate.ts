@@ -1,9 +1,16 @@
 import { Task } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function createFromTemplate(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const path = langStrings.commands.todo.createFromTemplate;
+
+	const templateName = interaction.options.getString('template_name');
+
 	try {
-		const templateName = interaction.options.getString('template_name');
 		
 		const template = await Task.findOne({
 			userId: interaction.user.id,
@@ -13,13 +20,12 @@ export async function createFromTemplate(interaction: any) {
 
 		if (!template) {
 			await interaction.reply({
-				content: 'Template not found',
+				content: path.notFound,
 				ephemeral: true
 			});
 			return;
 		}
 
-		// Create new task from template
 		const task = await Task.create({
 			userId: interaction.user.id,
 			title: template.title,
@@ -36,16 +42,16 @@ export async function createFromTemplate(interaction: any) {
 		});
 
 		const embed = new EmbedBuilder()
-			.setTitle('Task Created from Template')
-			.setDescription(`✅ Created task from template: **${task.title}**`)
+			.setTitle(path.success)
+			.setDescription(`✅ ${path.successMessage}: **${task.title}**`)
 			.addFields(
-				{ name: 'Description', value: task.description || 'No description', inline: true },
-				{ name: 'Priority', value: task.priority || 'No priority', inline: true },
-				{ name: 'Category', value: task.category || 'No category', inline: true },
-				{ name: 'Tags', value: task.tags.join(', ') || 'No tags', inline: true },
-				{ name: 'Subtasks', value: task.subtasks.map(st => st.title).join(', ') || 'No subtasks', inline: true }
+				{ name: path.description, value: task.description ?? path.noDescription, inline: true },
+				{ name: path.priority, value: task.priority ?? path.noPriority, inline: true },
+				{ name: path.category, value: task.category ?? path.noCategory, inline: true },
+				{ name: path.tags, value: task.tags.join(', ') ?? path.noTags, inline: true },
+				{ name: path.subtasks, value: task.subtasks.map(st => st.title).join(', ') ?? path.noSubtasks, inline: true }
 			)
-			.setFooter({ text: 'Use `/todo edit` to set deadline' });
+			.setFooter({ text: path.successFooter });
 
 		await interaction.reply({
 			embeds: [embed],
@@ -55,7 +61,7 @@ export async function createFromTemplate(interaction: any) {
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({
-			content: 'Failed to create from template',
+			content: path.failed,
 			ephemeral: true
 		});
 	}

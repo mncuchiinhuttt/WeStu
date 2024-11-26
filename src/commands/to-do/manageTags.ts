@@ -1,7 +1,13 @@
 import { Task } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function manageTags(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.manageTags;
+
 	try {
 		const taskId = interaction.options.getString('task_id');
 		const tagsString = interaction.options.getString('tags');
@@ -12,7 +18,7 @@ export async function manageTags(interaction: any) {
 		});
 
 		if (!task) {
-			await interaction.reply({ content: 'Task not found', ephemeral: true });
+			await interaction.reply({ content: strings.notFound, ephemeral: true });
 			return;
 		}
 
@@ -22,13 +28,13 @@ export async function manageTags(interaction: any) {
 
 		const embed = new EmbedBuilder()
 			.setColor('#00FF00')
-			.setTitle('Tags Updated')
-			.setDescription(`✅ Updated tags for **${task.title}**`)
-			.addFields({ name: 'Tags', value: tags.join(', '), inline: false });
+			.setTitle(strings.updated)
+			.setDescription(`✅ ${strings.description} **${task.title}**`)
+			.addFields({ name: strings.tags, value: tags.join(', '), inline: false });
 
 		await interaction.reply({ embeds: [embed], ephemeral: true });
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'Failed to update tags', ephemeral: true });
+		await interaction.reply({ content: strings.error, ephemeral: true });
 	}
 }

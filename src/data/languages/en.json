@@ -31,6 +31,205 @@
 				"successReply": "You have successfully completed the task",
 				"errorReply": "An error occurred while completing the task.",
 				"progress": "Progress"
+			},
+			"createFromTemplate": {
+				"notFound": "Template not found",
+				"success": "Task created from template",
+				"successMessage": "Created task from template",
+				"description": "Description",
+				"noDescription": "No description",
+				"priority": "Priority",
+				"noPriority": "No priority",
+				"category": "Category",
+				"noCategory": "No category",
+				"tags": "Tags",
+				"noTags": "No tags",
+				"subtasks": "Subtasks",
+				"noSubtasks": "No subtasks",
+				"successFooter": "Use `/todo edit` to set deadline",
+				"failed": "Failed to create from template"
+			},
+			"createRecurringTask": {
+				"success": "Recurring task created",
+				"successMessage": "Created recurring task",
+				"error": "Error",
+				"errorMessage": "Failed to create recurring task"
+			},
+			"deleteOldTasks": {
+				"lengthError": "No old tasks to delete",
+				"success": "Deleted {deletedCount} completed tasks older than 250 days",
+				"error": "Failed to delete old tasks"
+			},
+			"deleteTask": {
+				"error": "Error",
+				"notFound": "Task not found",
+				"success": "Task deleted",
+				"successReply": "Deleted task",
+				"errorReply": "Failed to delete task"
+			},
+			"editTask": {
+				"error": "Error",
+				"notFound": "Task not found",
+				"success": "Task Updated",
+				"successReply": "Task updated",
+				"title": "Title",
+				"deadline": "Deadline",
+				"priority": "Priority",
+				"priorityOptions": {
+					"low": "Low",
+					"medium": "Medium",
+					"high": "High"
+				},
+				"noDeadline": "No deadline",
+				"failed": "Failed to edit task"
+			},
+			"exportTasks": {
+				"success": "Here are your tasks",
+				"error": "Failed to export tasks"
+			},
+			"listTasks": {
+				"title": "Your Tasks",
+				"notFound": "No tasks found",
+				"dueDate": "Due",
+				"description": "Description",
+				"progress": "Progress",
+				"category": "Category",
+				"tags": "Tags",
+				"subtasks": "Subtasks",
+				"shared": "Shared with: {count} users",
+				"failed": "Failed to fetch tasks"
+			},
+			"manageCategories": {
+				"successCreate": "Created category",
+				"notFound": "Task not found",
+				"successMove": "Moved task to category",
+				"error": "Failed to manage categories"
+			},
+			"manageSubtasks": {
+				"notFound": "Task not found",
+				"description": {
+					"add": "Subtask added",
+					"remove": "Subtask removed",
+					"complete": "Subtask completed"
+				},
+				"title": "Task",
+				"subtasks": "Subtasks",
+				"error": "Failed to manage subtask"
+			},
+			"manageTags": {
+				"notFound": "Task not found",
+				"updated": "Tags Updated",
+				"description": "Updated tags for",
+				"tags": "Tags",
+				"error": "Failed to update tags"
+			},
+			"saveTemplate": {
+				"notFound": "Task not found",
+				"saved": "Saved template",
+				"title": "Title",
+				"description": "Description",
+				"noDescription": "No description",
+				"priority": "Priority",
+				"priorityOptions": {
+					"low": "Low",
+					"medium": "Medium",
+					"high": "High"
+				},
+				"category": "Category",
+				"noCategory": "No category",
+				"tags": "Tags",
+				"noTags": "No tags",
+				"subtasks": "Subtasks",
+				"error": "Failed to save template"
+			},
+			"searchTasks": {
+				"title": "Search Results",
+				"notFound": "No tasks found",
+				"dueDate": "Due",
+				"status": "Status",
+				"error": "Search failed"
+			},
+			"shareTask": {
+				"error": "Error",
+				"notFound": "Task not found",
+				"alreadyShared": "Task already shared with this user",
+				"success": "Task Shared",
+				"successMessage": "✅ Shared task **{title}** with {user}",
+				"dmTitle": "Task Shared",
+				"dmMessage": "📋 {user} shared a task with you:\n**{title}**\nDue: {deadline}\nDescription: {description}\nPriority: {priority}",
+				"subtasks": "Subtasks",
+				"failed": "Failed to share task"
+			},
+			"showComments": {
+				"notFound": "Task not found or no access",
+				"success": "💬 Comments for: {title}",
+				"noComments": "No comments yet",
+				"error": "Failed to show comments"
+			},
+			"showTemplates": {
+				"title": "📑 Your Task Templates",
+				"description": "No templates found. Use `/todo save-template` to create one.",
+				"template": {
+					"title": "Title: {title}",
+					"description": "Description: {description}",
+					"priority": "Priority: {priority}",
+					"category": "Category: {category}",
+					"tags": "Tags: {tags}",
+					"subtasks": "Subtasks:\n",
+					"noName": "Unnamed Template"
+				},
+				"error": "Failed to show templates"
+			},
+			"suggestTaskOrder": {
+				"dueDate": {
+					"overDue": "⚠️ Overdue",
+					"under1": "🔥 Due within 24 hours",
+					"under3": "⚡ Due within 3 days",
+					"under7": "📅 Due within a week"
+				},
+				"priority": {
+					"high": "‼️ High priority",
+					"medium": "❗ Medium priority",
+					"low": "ℹ️ Low priority"
+				},
+				"title": "📋 Suggested Task Order",
+				"description": "Here's the recommended order to complete your tasks:",
+				"taskInfo": "Due: {deadline}\n{reason}\nPriority Score: {score}",
+				"error": "Failed to generate task suggestions",
+				"noTasks": "No pending tasks found!"
+			},
+			"taskStats": {
+				"title": "📊 Your Task Statistics (Last 30 Days)",
+				"overview": {
+					"title": "Overview",
+					"total": "Total Tasks",
+					"completed": "Completed",
+					"pending": "Pending",
+					"overdue": "Overdue"
+				},
+				"priority": {
+					"title": "Priority Distribution",
+					"high": "High",
+					"medium": "Medium",
+					"low": "Low"
+				},
+				"performance": {
+					"title": "Performance",
+					"avgCompletion": "Average Completion Time",
+					"days": "days",
+					"onTimeRate": "On-time Completion Rate"
+				},
+				"subjects": {
+					"title": "Subject Breakdown"
+				},
+				"error": "Failed to generate task statistics"
+			},
+			"updateProgress": {
+				"error": "Error",
+				"notFound": "Task not found",
+				"success": "Progress Updated",
+				"successReply": "✅ Updated progress for **{title}** to {progress}%",
+				"errorReply": "Failed to update progress"
 			}
 		}
 	}, 

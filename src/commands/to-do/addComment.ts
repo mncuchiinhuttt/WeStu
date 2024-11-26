@@ -9,6 +9,7 @@ export async function addComment(interaction: any) {
 	const languageService = LanguageService.getInstance();
 	const userLang = await languageService.getUserLanguage(interaction.user.id);
 	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const path = langStrings.commands.todo.addComment;
 	
 	try {
 		const task = await Task.findOne({
@@ -22,8 +23,8 @@ export async function addComment(interaction: any) {
 		if (!task) {
 			const embed = new EmbedBuilder()
 				.setColor(0xff0000)
-				.setTitle(langStrings.commands.addComment.error)
-				.setDescription(langStrings.commands.addComment.taskNotFound);
+				.setTitle(path.error)
+				.setDescription(path.taskNotFound);
 			await interaction.reply({ 
 				embeds: [embed], 
 				ephemeral: true 
@@ -42,8 +43,8 @@ export async function addComment(interaction: any) {
 
 		const embed = new EmbedBuilder()
 			.setColor(0x00ff00)
-			.setTitle(langStrings.commands.todo.addComment.success)
-			.setDescription(`💬 ${langStrings.commands.todo.addComment.successReply} **${task.title}**`);
+			.setTitle(path.success)
+			.setDescription(`💬 ${path.successReply} **${task.title}**`);
 		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true
@@ -53,8 +54,8 @@ export async function addComment(interaction: any) {
 		console.error(error);
 		const embed = new EmbedBuilder()
 			.setColor(0xff0000)
-			.setTitle(langStrings.commands.addComment.error)
-			.setDescription(langStrings.commands.addComment.errorReply);
+			.setTitle(path.error)
+			.setDescription(path.errorReply);
 		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true

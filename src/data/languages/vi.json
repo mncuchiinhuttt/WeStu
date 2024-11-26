@@ -31,6 +31,205 @@
 				"successReply": "Bạn đã hoàn thành công việc thành công",
 				"errorReply": "Đã xảy ra lỗi khi hoàn thành công việc.",
 				"progress": "Tiến độ"
+			},
+			"createFromTemplate": {
+				"notFound": "Không tìm thấy mẫu",
+				"success": "Tạo công việc từ mẫu thành công",
+				"successMessage": "Đã tạo công việc từ mẫu",
+				"description": "Mô tả",
+				"noDescription": "Không có mô tả",
+				"priority": "Độ ưu tiên",
+				"noPriority": "Không có độ ưu tiên",
+				"category": "Danh mục",
+				"noCategory": "Không có danh mục",
+				"tags": "Thẻ",
+				"noTags": "Không có thẻ",
+				"subtasks": "Công việc con",
+				"noSubtasks": "Không có công việc con",
+				"successFooter": "Sử dụng `/todo edit` để đặt hạn chót",
+				"failed": "Không thể tạo từ mẫu"
+			},
+			"createRecurringTask": {
+				"success": "Tạo công việc lặp lại thành công",
+				"successMessage": "Đã tạo công việc lặp lại",
+				"error": "Lỗi",
+				"errorMessage": "Không thể tạo công việc lặp lại"
+			},
+			"deleteOldTasks": {
+				"lengthError": "Không có công việc cũ để xóa",
+				"success": "Đã xóa {deletedCount} công việc đã hoàn thành lâu hơn 250 ngày",
+				"error": "Xóa công việc cũ thất bại"
+			},
+			"deleteTask": {
+				"error": "Lỗi",
+				"notFound": "Không tìm thấy công việc",
+				"success": "Đã xóa công việc",
+				"successReply": "Đã xóa công việc",
+				"errorReply": "Không thể xóa công việc"
+			},
+			"editTask": {
+				"error": "Lỗi",
+				"notFound": "Không tìm thấy công việc",
+				"success": "Cập nhật công việc thành công",
+				"successReply": "Cập nhật công việc thành công",
+				"title": "Tiêu đề",
+				"deadline": "Hạn chót",
+				"priority": "Độ ưu tiên",
+				"priorityOptions": {
+					"low": "Thấp",
+					"medium": "Trung bình",
+					"high": "Cao"
+				},
+				"noDeadline": "Không có hạn chót",
+				"failed": "Không thể chỉnh sửa công việc"
+			},
+			"exportTasks": {
+				"success": "Đây là các công việc của bạn",
+				"error": "Không thể xuất công việc"
+			},
+			"listTasks": {
+				"title": "Công việc của bạn",
+				"notFound": "Không tìm thấy công việc",
+				"dueDate": "Hạn",
+				"description": "Mô tả",
+				"progress": "Tiến độ",
+				"category": "Danh mục",
+				"tags": "Thẻ",
+				"subtasks": "Công việc con",
+				"shared": "Chia sẻ với: {count} người dùng",
+				"failed": "Không thể lấy danh sách công việc"
+			},
+			"manageCategories": {
+				"successCreate": "Tạo danh mục thành công",
+				"notFound": "Không tìm thấy công việc",
+				"successMove": "Di chuyển công việc đến danh mục",
+				"error": "Quản lý danh mục không thành công"
+			},
+			"manageSubtasks": {
+				"notFound": "Không tìm thấy công việc",
+				"description": {
+					"add": "Thêm công việc con",
+					"remove": "Xóa công việc con",
+					"complete": "Hoàn thành công việc con"
+				},
+				"title": "Công việc",
+				"subtasks": "Công việc con",
+				"error": "Quản lý công việc con không thành công"
+			},
+			"manageTags": {
+				"notFound": "Không tìm thấy công việc",
+				"updated": "Đã cập nhật thẻ",
+				"description": "Đã cập nhật thẻ cho",
+				"tags": "Thẻ",
+				"error": "Không thể cập nhật thẻ"
+			},
+			"saveTemplate": {
+				"notFound": "Không tìm thấy công việc",
+				"saved": "Đã lưu mẫu",
+				"title": "Tiêu đề",
+				"description": "Mô tả",
+				"noDescription": "Không có mô tả",
+				"priority": "Độ ưu tiên",
+				"priorityOptions": {
+					"low": "Thấp",
+					"medium": "Trung bình",
+					"high": "Cao"
+				},
+				"category": "Danh mục",
+				"noCategory": "Không có danh mục",
+				"tags": "Thẻ",
+				"noTags": "Không có thẻ",
+				"subtasks": "Công việc con",
+				"error": "Không thể lưu mẫu"
+			},
+			"searchTasks": {
+				"title": "Kết quả tìm kiếm",
+				"notFound": "Không tìm thấy công việc",
+				"dueDate": "Hạn",
+				"status": "Trạng thái",
+				"error": "Tìm kiếm thất bại"
+			},
+			"shareTask": {
+				"error": "Lỗi",
+				"notFound": "Không tìm thấy công việc",
+				"alreadyShared": "Công việc đã được chia sẻ với người dùng này",
+				"success": "Đã Chia Sẻ Công Việc",
+				"successMessage": "✅ Đã chia sẻ công việc **{title}** với {user}",
+				"dmTitle": "Công Việc Được Chia Sẻ",
+				"dmMessage": "📋 {user} đã chia sẻ một công việc với bạn:\n**{title}**\nHạn: {deadline}\nMô tả: {description}\nĐộ ưu tiên: {priority}",
+				"subtasks": "Công việc con",
+				"failed": "Không thể chia sẻ công việc"
+			},
+			"showComments": {
+				"notFound": "Không tìm thấy công việc hoặc không có quyền truy cập",
+				"success": "💬 Bình luận cho: {title}",
+				"noComments": "Chưa có bình luận nào",
+				"error": "Không thể hiển thị bình luận"
+			},
+			"showTemplates": {
+				"title": "📑 Mẫu Công Việc Của Bạn",
+				"description": "Không tìm thấy mẫu. Sử dụng `/todo save-template` để tạo một mẫu.",
+				"template": {
+					"title": "Tiêu đề: {title}",
+					"description": "Mô tả: {description}",
+					"priority": "Độ ưu tiên: {priority}",
+					"category": "Danh mục: {category}",
+					"tags": "Thẻ: {tags}",
+					"subtasks": "Công việc con:\n",
+					"noName": "Mẫu không tên"
+				},
+				"error": "Không thể hiển thị mẫu"
+			},
+			"suggestTaskOrder": {
+				"dueDate": {
+					"overDue": "⚠️ Quá hạn",
+					"under1": "🔥 Hạn trong vòng 24 giờ",
+					"under3": "⚡ Hạn trong vòng 3 ngày",
+					"under7": "📅 Hạn trong vòng một tuần"
+				},
+				"priority": {
+					"high": "‼️ Ưu tiên cao",
+					"medium": "❗ Ưu tiên trung bình",
+					"low": "ℹ️ Ưu tiên thấp"
+				},
+				"title": "📋 Thứ Tự Công Việc Đề Xuất",
+				"description": "Đây là thứ tự hoàn thành công việc được đề xuất:",
+				"taskInfo": "Hạn: {deadline}\n{reason}\nĐiểm Ưu Tiên: {score}",
+				"error": "Không thể tạo đề xuất công việc",
+				"noTasks": "Không tìm thấy công việc đang chờ!"
+			},
+			"taskStats": {
+				"title": "📊 Thống Kê Công Việc (30 Ngày Qua)",
+				"overview": {
+					"title": "Tổng Quan",
+					"total": "Tổng Số Công Việc",
+					"completed": "Đã Hoàn Thành",
+					"pending": "Đang Chờ",
+					"overdue": "Quá Hạn"
+				},
+				"priority": {
+					"title": "Phân Bố Độ Ưu Tiên",
+					"high": "Cao",
+					"medium": "Trung Bình",
+					"low": "Thấp"
+				},
+				"performance": {
+					"title": "Hiệu Suất",
+					"avgCompletion": "Thời Gian Hoàn Thành Trung Bình",
+					"days": "ngày",
+					"onTimeRate": "Tỷ Lệ Hoàn Thành Đúng Hạn"
+				},
+				"subjects": {
+					"title": "Phân Loại Theo Chủ Đề"
+				},
+				"error": "Không thể tạo thống kê công việc"
+			},
+			"updateProgress": {
+				"error": "Lỗi",
+				"notFound": "Không tìm thấy công việc",
+				"success": "Cập nhật tiến độ thành công",
+				"successReply": "✅ Đã cập nhật tiến độ cho **{title}** thành {progress}%",
+				"errorReply": "Không thể cập nhật tiến độ"
 			}
 		}
 	}, 

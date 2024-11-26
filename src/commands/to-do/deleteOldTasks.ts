@@ -1,11 +1,18 @@
 import { Task, TaskStatus } from '../../models/Task';
+import { LanguageService } from '../../utils/LanguageService';
+import { replacePlaceholders } from '../../utils/replacePlaceholders';
 
 export async function deleteOldTasks(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const path = langStrings.commands.todo.deleteOldTasks;
+
 	try {
 		await interaction.deferReply({ ephemeral: true });
 
 		const thirtyDaysAgo = new Date();
-		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+		thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 250);
 
 		// Find tasks to delete
 		const tasksToDelete = await Task.find({
@@ -15,7 +22,7 @@ export async function deleteOldTasks(interaction: any) {
 		});
 
 		if (tasksToDelete.length === 0) {
-			await interaction.editReply('No old tasks to delete');
+			await interaction.editReply(path.lengthError);
 			return;
 		}
 
@@ -27,11 +34,11 @@ export async function deleteOldTasks(interaction: any) {
 		});
 
 		await interaction.editReply(
-			`🗑️ Deleted ${result.deletedCount} completed tasks older than 30 days`
+			replacePlaceholders(path.success, { deletedCount: `${result.deletedCount}` })
 		);
 
 	} catch (error) {
 		console.error(error);
-		await interaction.editReply('Failed to delete old tasks');
+		await interaction.editReply(path.error);
 	}
 }

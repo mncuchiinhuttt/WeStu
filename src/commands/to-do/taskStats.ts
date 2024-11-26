@@ -1,7 +1,13 @@
 import { Task, TaskStatus, TaskPriority } from '../../models/Task';
 import { EmbedBuilder } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function taskStats(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.todo.taskStats;
+
 	try {
 		const userId = interaction.user.id;
 		const now = new Date();
@@ -31,31 +37,31 @@ export async function taskStats(interaction: any) {
 		};
 
 		const embed = new EmbedBuilder()
-			.setTitle('📊 Your Task Statistics (Last 30 Days)')
+			.setTitle(strings.title)
 			.setColor('#0099ff')
 			.addFields(
 				{ 
-					name: 'Overview',
+					name: strings.overview.title,
 					value: [
-						`Total Tasks: ${stats.total}`,
-						`Completed: ${stats.completed} (${Math.round(stats.completed/stats.total * 100)}%)`,
-						`Pending: ${stats.pending}`,
-						`Overdue: ${stats.overdue}`
+						`${strings.overview.total}: ${stats.total}`,
+						`${strings.overview.completed}: ${stats.completed} (${Math.round(stats.completed/stats.total * 100)}%)`,
+						`${strings.overview.pending}: ${stats.pending}`,
+						`${strings.overview.overdue}: ${stats.overdue}`
 					].join('\n')
 				},
 				{
-					name: 'Priority Distribution',
+					name: strings.priority.title,
 					value: [
-						`High: ${stats.priorities.high}`,
-						`Medium: ${stats.priorities.medium}`,
-						`Low: ${stats.priorities.low}`
+						`${strings.priority.high}: ${stats.priorities.high}`,
+						`${strings.priority.medium}: ${stats.priorities.medium}`,
+						`${strings.priority.low}: ${stats.priorities.low}`
 					].join('\n')
 				},
 				{
-					name: 'Performance',
+					name: strings.performance.title,
 					value: [
-						`Average Completion Time: ${stats.avgCompletionTime} days`,
-						`On-time Completion Rate: ${stats.onTimeCompletion}%`
+						`${strings.performance.avgCompletion}: ${stats.avgCompletionTime} ${strings.performance.days}`,
+						`${strings.performance.onTimeRate}: ${stats.onTimeCompletion}%`
 					].join('\n')
 				}
 			);
@@ -63,7 +69,7 @@ export async function taskStats(interaction: any) {
 		// Add subject breakdown if exists
 		if (Object.keys(stats.subjectBreakdown).length > 0) {
 			embed.addFields({
-				name: 'Subject Breakdown',
+				name: strings.subjects.title,
 				value: Object.entries(stats.subjectBreakdown)
 					.map(([subject, count]) => `${subject}: ${count}`)
 					.join('\n')
@@ -74,7 +80,7 @@ export async function taskStats(interaction: any) {
 
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'Failed to generate task statistics', ephemeral: true });
+		await interaction.reply({ content: strings.error, ephemeral: true });
 	}
 }
 
