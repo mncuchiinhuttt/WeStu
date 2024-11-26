@@ -17,6 +17,6 @@ export function run({
 }
 
 export const options: CommandOptions = {
-    devOnly: false,
+    devOnly: true,
     testOnly: false,
 }	

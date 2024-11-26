@@ -70,7 +70,7 @@ const data = new SlashCommandBuilder()
 	);
 
 const options = {
-	devOnly: false,
+	devOnly: true,
 }
 
 module.exports = {
