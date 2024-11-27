@@ -14,8 +14,12 @@
 					"high": "Cao"
 				},
 				"subject": "Chủ đề",
+				"noSubject": "Không có chủ đề",
 				"description": "Mô tả",
-				"reminder": "Nhắc nhở"
+				"noDescription": "Không có mô tả",
+				"reminder": "Nhắc nhở",
+				"yes": "Có",
+				"no": "Không"
 			},
 			"addComment": {
 				"error": "Lỗi",

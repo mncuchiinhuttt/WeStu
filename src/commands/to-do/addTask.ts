@@ -13,11 +13,11 @@ export async function addTask(interaction: any) {
 	const languageService = LanguageService.getInstance();
 	const userLang = await languageService.getUserLanguage(interaction.user.id);
 	const langStrings = require(`../../data/languages/${userLang}.json`);
-	const path = langStrings.commands.todo.addTask;
+	const strings = langStrings.commands.todo.addTask;
 
 	try {
 		if (deadline < new Date()) {
-			await interaction.reply(path.deadlineError);
+			await interaction.reply(strings.deadlineError);
 			return;
 		}
 
@@ -32,21 +32,22 @@ export async function addTask(interaction: any) {
 			progress: 0,
 		});
 
-		const priorityString = {
-			[TaskPriority.LOW]: path.priorityOptions.low,
-			[TaskPriority.MEDIUM]: path.priorityOptions.medium,
-			[TaskPriority.HIGH]: path.priorityOptions.high,
+		const priorityString = (priority: TaskPriority) => {
+			if (priority === TaskPriority.LOW) return strings.priorityOptions.low;
+			else if (priority === TaskPriority.MEDIUM) return strings.priorityOptions.medium;
+			else if (priority === TaskPriority.HIGH) return strings.priorityOptions.high;
+			else return '';
 		};
 
 		const embed = new EmbedBuilder()
-			.setTitle(`✅ ${path.success}`)
+			.setTitle(`✅ ${strings.success}`)
 			.addFields(
-			{ name: `${path.title}`, value: title, inline: true },
-			{ name: `${path.deadline}`, value: deadline.toLocaleString(), inline: true },
-			{ name: `${path.priority}`, value: priorityString[priority], inline: true },
-			{ name: `${path.subject}`, value: subject, inline: true },
-			{ name: `${path.description}`, value: description, inline: true },
-			{ name: `${path.reminder}`, value: reminder ? 'Yes' : 'No', inline: true }
+			{ name: `${strings.title}`, value: title, inline: true },
+			{ name: `${strings.deadline}`, value: deadline.toLocaleString(), inline: true },
+			{ name: `${strings.priority}`, value: priorityString(priority), inline: true },
+			{ name: `${strings.subject}`, value: subject ?? strings.noSubject, inline: true },
+			{ name: `${strings.description}`, value: description ?? strings.noDescription, inline: true },
+			{ name: `${strings.reminder}`, value: reminder ? strings.yes : strings.no, inline: true }
 			)
 			.setColor(0x00FF00);
 
@@ -57,7 +58,7 @@ export async function addTask(interaction: any) {
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({
-			content: `❌ ${path.error}`,
+			content: `❌ ${strings.error}`,
 			ephemeral: true
 		});
 	}
