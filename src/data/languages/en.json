@@ -14,8 +14,12 @@
 					"high": "High"
 				},
 				"subject": "Subject",
+				"noSubject": "No subject",
 				"description": "Description",
-				"reminder": "Reminder"
+				"noDescription": "No description",
+				"reminder": "Reminder",
+				"yes": "Yes",
+				"no": "No"
 			},
 			"addComment": {
 				"error": "Error",
