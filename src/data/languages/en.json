@@ -434,6 +434,68 @@
 				"sendUser": "🙌 Keep up the fantastic work! Consistency is key to achieving your goals."
 			}
 		},
+		"group": {
+			"createGroup": {
+				"successTitle": "✨ Study Group Created",
+				"description": "Group \"{name}\" has been created successfully!",
+				"owner": "Owner",
+				"members": "Members",
+				"description2": "Description",
+				"noDescription": "No description provided."
+			},
+			"addGroupMember": {
+				"groupNotFound": "❌ Group not found",
+				"notOwner": "❌ Only group owner can add members",
+				"alreadyMember": "❌ User is already a member of the group",
+				"success": {
+					"title": "✅ Member Added",
+					"description": "{member} has been added to {group}"
+				},
+				"error": "❌ Failed to add member",
+				"dm": "You have been added to the group \"{group}\" of {owner}."
+			},
+			"removeGroupMember": {
+				"groupNotFound": "❌ Group not found",
+				"notOwner": "❌ Only group owner can remove members",
+				"notMember": "❌ User is not a member of the group",
+				"removeOwner": "❌ Group owner cannot be removed. Use delete group instead.",
+				"success": {
+					"title": "✅ Member Removed",
+					"description": "{member} has been removed from {group}",
+					"remaining": "Remaining Members"
+				},
+				"error": "❌ Failed to remove member",
+				"dm": "You have been removed from the group \"{group}\" of {owner}."
+			},
+			"deleteGroup": {
+				"groupNotFound": "❌ Group not found",
+				"notOwner": "❌ Only group owner can delete the group",
+				"success": {
+					"title": "✅ Group Deleted",
+					"description": "Group \"{name}\" has been deleted successfully!"
+				},
+				"error": "❌ Failed to delete group",
+				"groupDeletedMessage": "Group \"{name}\" has been deleted by {owner}."
+			},
+			"listGroup": {
+				"noGroups": "❌ You are not a member of any study groups",
+				"list": {
+					"title": "📚 Your Study Groups",
+					"description": "Showing page {page} of {totalPages}"
+				},
+				"fields": {
+					"description": "Description",
+					"noDescription": "No description",
+					"members": "Members",
+					"created": "Created",
+					"yourRole": "Your role",
+					"owner": "Owner",
+					"member": "Member"
+				},
+				"footer": "Use /group list page:[1-{totalPages}] to view other pages",
+				"error": "❌ Failed to fetch groups"
+			}
+		},
 		"tools": {
 			"insiderRegister": {
 				"alreadyRegistered": "You are already registered in the Insider Program.",

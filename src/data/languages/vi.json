@@ -434,6 +434,68 @@
 				"sendUser": "🙌 Tiếp tục duy trì phong độ tuyệt vời! Sự kiên trì là chìa khóa để đạt được mục tiêu của bạn."
 			}
 		},
+		"group": {
+			"createGroup": {
+				"successTitle": "✨ Nhóm Học Đã Được Tạo",
+				"description": "Nhóm \"{name}\" đã được tạo thành công!",
+				"owner": "Chủ Sở Hữu",
+				"members": "Thành Viên",
+				"description2": "Mô Tả",
+				"noDescription": "Không có mô tả được cung cấp."
+			},
+			"addGroupMember": {
+				"groupNotFound": "❌ Không tìm thấy nhóm",
+				"notOwner": "❌ Chỉ chủ nhóm mới có thể thêm thành viên",
+				"alreadyMember": "❌ Người dùng đã là thành viên của nhóm",
+				"success": {
+					"title": "✅ Đã Thêm Thành Viên",
+					"description": "{member} đã được thêm vào nhóm {group}"
+				},
+				"error": "❌ Không thể thêm thành viên",
+				"dm": "Bạn đã được thêm vào nhóm \"{group}\" của {owner}."
+			},
+			"removeGroupMember": {
+				"groupNotFound": "❌ Không tìm thấy nhóm",
+				"notOwner": "❌ Chỉ chủ nhóm mới có thể xóa thành viên",
+				"notMember": "❌ Người dùng không phải là thành viên của nhóm",
+				"removeOwner": "❌ Không thể xóa chủ nhóm. Hãy sử dụng chức năng xóa nhóm thay thế.",
+				"success": {
+					"title": "✅ Đã Xóa Thành Viên",
+					"description": "{member} đã được xóa khỏi nhóm {group}",
+					"remaining": "Thành Viên Còn Lại"
+				},
+				"error": "❌ Không thể xóa thành viên",
+				"dm": "Bạn đã bị xóa khỏi nhóm \"{group}\" của {owner}."
+			},
+			"deleteGroup": {
+				"groupNotFound": "❌ Không tìm thấy nhóm",
+				"notOwner": "❌ Chỉ chủ nhóm mới có thể xóa nhóm",
+				"success": {
+					"title": "✅ Nhóm Đã Được Xóa",
+					"description": "Nhóm \"{name}\" đã được xóa thành công!"
+				},
+				"error": "❌ Không thể xóa nhóm",
+				"groupDeletedMessage": "Nhóm \"{name}\" đã bị xóa bởi {owner}."
+			},
+			"listGroup": {
+				"noGroups": "❌ Bạn không phải là thành viên của bất kỳ nhóm học tập nào",
+				"list": {
+					"title": "📚 Các Nhóm Học Của Bạn",
+					"description": "Hiển thị trang {page} trên tổng số {totalPages}"
+				},
+				"fields": {
+					"description": "Mô Tả",
+					"noDescription": "Không có mô tả",
+					"members": "Thành Viên",
+					"created": "Được Tạo",
+					"yourRole": "Vai Trò Của Bạn",
+					"owner": "Chủ Sở Hữu",
+					"member": "Thành Viên"
+				},
+				"footer": "Sử dụng /group list page:[1-{totalPages}] để xem các trang khác",
+				"error": "❌ Không thể lấy danh sách các nhóm"
+			}
+		},
 		"tools": {
 			"insiderRegister": {
 				"alreadyRegistered": "Bạn đã đăng ký chương trình Insider.",

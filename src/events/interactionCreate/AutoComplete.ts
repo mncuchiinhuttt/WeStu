@@ -5,8 +5,9 @@ import Trivia_API_Categories from '../../data/trivia-api-categories.json';
 import Deep_Translate_Languages from '../../data/deep-translate-language.json';
 import { Task } from '../../models/Task';
 import { StudyResource } from '../../models/StudyResource';
+import { StudyGroup } from '../../models/StudyGroup';
 
-const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo'];
+const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo', 'group'];
 
 async function wiktionaryAutoComplete (interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'language') {
@@ -180,6 +181,40 @@ async function todoAutoComplete (interaction: any, focusedValue: any) {
 	}
 }
 
+async function groupAutoComplete(interaction: any, focusedValue: any) {
+  if (focusedValue.name === 'group_id') {
+    try {
+      // Find groups where user is member or owner
+      const groups = await StudyGroup.find({
+        $or: [
+          { members: interaction.user.id },
+          { ownerId: interaction.user.id }
+        ]
+      }).sort({ createdAt: -1 }).limit(25);
+
+      const results = groups.map(group => {
+        const isOwner = group.ownerId === interaction.user.id;
+        const memberCount = group.members.length;
+        
+        return {
+          name: `${isOwner ? '👑' : '👤'} ${group.name} (${memberCount} members)`,
+		  		value: (group._id as string)
+        };
+      });
+
+      await interaction.respond(
+        results.filter(group =>
+          group.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+        ).slice(0, 25)
+      );
+
+    } catch (error) {
+      console.error('Error in group autocomplete:', error);
+      await interaction.respond([]);
+    }
+  }
+}
+
 export default async function (interaction: Interaction) {	
 	if (!interaction.isAutocomplete()) return;
 	if (!autoCompleteCommandName.includes(interaction.commandName)) return;
@@ -201,6 +236,9 @@ export default async function (interaction: Interaction) {
 			break;
 		case 'todo':
 			await todoAutoComplete(interaction, focusedValue);
+			break;
+		case 'group':
+			await groupAutoComplete(interaction, focusedValue);
 			break;
 	}
 };
