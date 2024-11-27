@@ -2,6 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction as Interaction } from 
 import { create_flashcard } from './create-flashcard';
 import { Visibility } from '../../models/Flashcard';
 import { quiz } from './quiz';
+import { review } from './review';
 
 
 export async function run({ interaction }: any) {
@@ -13,6 +14,10 @@ export async function run({ interaction }: any) {
 
 		case "quiz":
 			quiz(interaction);
+			break;
+
+		case "review":
+			review(interaction);
 			break;
 	}
 }
@@ -98,6 +103,51 @@ export const data = new SlashCommandBuilder()
 					.setRequired(false)
 					.setMaxLength(100)
 			)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+			.setName('review')
+			.setDescription("Review your own, your study group's or the server's public flashcards.")
+			.setDescriptionLocalizations({
+				'vi': 'Xem lại flashcard cá nhân, nhóm học tập hoặc flashcard công khai của server'
+			})
+			.addIntegerOption(option => 
+				option
+					.setName('quantity')
+					.setDescription('The number of flashcards to review')
+					.setDescriptionLocalizations({
+						'vi': 'Số lượng flashcard cần xem lại'
+					})
+					.setRequired(true)
+					.setMinValue(1)
+					.setMaxValue(200)
+			)
+			.addIntegerOption(option =>
+				option
+					.setName('visibility')
+					.setDescription("Whether to search for your own, your study group's, the server's public flashcards or all")
+					.setDescriptionLocalizations({
+						'vi': 'Chỉ tìm kiếm flashcard của bạn, nhóm học tập của bạn, flashcard công khai của server hoặc tất cả'
+					})
+					.setRequired(true)
+					.addChoices(
+						{ name: "Only my own flashcards", value: Visibility.Private },
+						// { name: "Only my study group's flashcards", value: Visibility.Group },
+						{ name: "Only the server's public flashcards", value: Visibility.Public },
+						// { name: "All", value: Visibility.All }
+					)
+			)
+			.addStringOption(option =>
+				option
+					.setName('group_id')
+					.setDescription('The ID of the study group to search flashcards for')
+					.setDescriptionLocalizations({
+						'vi': 'ID của nhóm học tập để tìm kiếm flashcard'
+					})
+					.setRequired(false)
+					.setAutocomplete(true)
+			)
+			// Nên kiểm tra lại autocomplete cho group_id
 	);
 
 export const options = {

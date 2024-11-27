@@ -4,7 +4,9 @@ export enum Visibility {
 	Private = 0,
 	Public = 1,
 	PrivateAndPublic = 2,
-	Global = 3
+	Global = 3,
+	// Group = 4,
+	// All = 5
 }
 
 const flashcardSchema = new mongoose.Schema({

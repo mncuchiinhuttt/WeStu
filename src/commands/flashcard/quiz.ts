@@ -10,6 +10,8 @@ export async function quiz(interaction: Interaction) {
 
 	if (topic) query.where('topic').equals(topic);
 
+
+	// TODO: Sửa cái đống check điều kiện này lại
 	switch (visibility) {
 		case Visibility.Public:
 			query.where('visibility').equals(Visibility.Public);
