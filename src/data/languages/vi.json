@@ -505,6 +505,120 @@
 				"alreadyRegistered": "Bạn đã đăng ký chương trình Insider.",
 				"success": "✅ Bạn đã đăng ký chương trình Insider!"
 			}
+		},
+		"flashcard": {
+			"create_flashcard": {
+				"title": "📚 Flashcard Đã Được Tạo",
+				"topic": "📂 Chủ Đề",
+				"none": "Không có",
+				"visibility": "👁️ Chế độ Hiển Thị",
+				"public": "Công Khai",
+				"private": "Riêng Tư",
+				"error": "❌ Lỗi",
+				"errorDescription": "Đã xảy ra lỗi khi tạo flashcard. Vui lòng thử lại."
+			},
+			"quiz": {
+				"noFlashcards": {
+					"title": "❌ Không Tìm Thấy Flashcard",
+					"description": "Không tìm thấy flashcard nào phù hợp với tiêu chí tìm kiếm của bạn."
+				},
+				"quiz": "Câu Đố",
+				"onTopic": "thuộc chủ đề",
+				"reveal": "Hiện Đáp Án",
+				"answer": "Đáp Án"
+			},
+			"deleteFlashcard": {
+				"notFound": "❌ Không tìm thấy flashcard",
+				"notOwner": "❌ Chỉ chủ sở hữu mới có thể xóa flashcard",
+				"deleted": {
+					"title": "✅ Flashcard Đã Được Xóa",
+					"question": "📝 Câu Hỏi",
+					"topic": "📚 Chủ Đề",
+					"noTopic": "Không có chủ đề"
+				},
+				"error": "❌ Không thể xóa flashcard"
+			},
+			"shareFlashcard": {
+				"notFound": "❌ Không tìm thấy flashcard hoặc nhóm",
+				"notOwner": "❌ Bạn chỉ có thể chia sẻ flashcard của chính mình",
+				"notMember": "❌ Bạn phải là thành viên của nhóm để chia sẻ flashcard",
+				"success": {
+					"title": "✅ Flashcard Đã Được Chia Sẻ",
+					"description": "Đã chia sẻ thành công với nhóm: {group}",
+					"question": "📖 Câu Hỏi",
+					"topic": "📚 Chủ Đề",
+					"noTopic": "Không có chủ đề"
+				},
+				"error": "❌ Không thể chia sẻ flashcard"
+			},
+			"listFlashcards": {
+				"title": "📚 Flashcard",
+				"description": "Trang {page} trên tổng số {totalPages}",
+				"question": "Câu Hỏi",
+				"topic": "Chủ Đề",
+				"created": "Được Tạo",
+				"none": "Không có",
+				"footer": "Sử dụng `/flashcard list page:[1-{totalPages}]` để xem thêm",
+				"error": "❌ Không thể liệt kê flashcard"
+			},
+			"showFlashcard": {
+				"notFound": "❌ Không tìm thấy flashcard",
+				"noPermission": "❌ Bạn không có quyền xem flashcard này",
+				"title": "📝 Chi Tiết Flashcard",
+				"question": "Câu Hỏi",
+				"answer": "Đáp Án",
+				"topic": "Chủ Đề",
+				"author": "Tạo Bởi",	
+				"created": "Tạo Lúc",
+				"none": "Không có",
+				"error": "❌ Không thể hiển thị chi tiết flashcard"
+			},
+			"importHelp": {
+				"title": "📝 Hướng Dẫn Nhập Flashcard",
+				"description": "Tìm hiểu cách nhập nhiều flashcard bằng tệp văn bản",
+				"format": {
+					"title": "📄 Định Dạng Tệp",
+					"description": [
+						"• Sử dụng tệp `.txt` đơn giản",
+						"• Mỗi thẻ bắt đầu bằng câu hỏi (Q:)",
+						"• Tiếp theo là câu trả lời (A:)",
+						"• Tùy chọn thêm chủ đề (T:)",
+						"• Cài đặt mức hiển thị với (V: public/private)",
+						"• Để một dòng trống giữa các thẻ"
+					]
+				},
+				"tips": {
+					"title": "💡 Mẹo",
+					"description": [
+						"• Đặt câu hỏi rõ ràng và ngắn gọn",
+						"• Đảm bảo mỗi thẻ có cả Q: và A:",
+						"• Kiểm tra mã hóa tệp là UTF-8",
+						"• Tối đa 100 thẻ mỗi lần nhập"
+					]
+				},
+				"issues": {
+					"title": "⚠️ Các Vấn Đề Thường Gặp",
+					"description": [
+						"• Thiếu tiền tố Q: hoặc A:",
+						"• Không có dòng trống giữa các thẻ",
+						"• Cài đặt mức hiển thị không hợp lệ",
+						"• Tệp quá lớn"
+					]
+				},
+				"example": {
+					"title": "🔍 Ví Dụ"
+				}
+			},
+			"importFlashcards": {
+				"invalidFile": "❌ Định dạng tệp không hợp lệ. Vui lòng sử dụng tệp `.txt`.",
+				"invalidFlashcards": "❌ Không tìm thấy flashcard hợp lệ trong tệp.",
+				"error": "❌ Không thể nhập flashcard",
+				"title": "✅ Flashcard Đã Được Nhập",
+				"description": "Đã nhập thành công {length} flashcard",
+				"total": "Tổng Số Thẻ",
+				"example": "Định Dạng Ví Dụ",
+				"exmapleValue": "Q: Câu hỏi của bạn\nA: Câu trả lời của bạn\nT: Chủ đề (tùy chọn)\nV: public/private"
+			}
 		}
 	}, 
 	"events": {

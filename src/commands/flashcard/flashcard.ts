@@ -2,8 +2,12 @@ import { SlashCommandBuilder, ChatInputCommandInteraction as Interaction } from 
 import { create_flashcard } from './create-flashcard';
 import { Visibility } from '../../models/Flashcard';
 import { quiz } from './quiz';
-import { review } from './review';
-
+import { deleteFlashcard } from './deleteFlashcard';
+import { shareFlashcard } from './shareFlashcard';
+import { listFlashcards } from './listFlashcards';
+import { showFlashcard } from './showFlashcard';
+import { importHelp } from './importHelp';
+import { importFlashcards } from './importFlashcards';
 
 export async function run({ interaction }: any) {
 	const subcommand = interaction.options.getSubcommand();
@@ -11,13 +15,26 @@ export async function run({ interaction }: any) {
 		case "create":
 			create_flashcard(interaction);
 			break;
-
 		case "quiz":
 			quiz(interaction);
 			break;
-
-		case "review":
-			review(interaction);
+		case 'delete':
+			deleteFlashcard(interaction);
+			break;
+		case 'share':
+			shareFlashcard(interaction);
+			break;
+		case 'list':
+			listFlashcards(interaction);
+			break;
+		case 'show':
+			showFlashcard(interaction);
+			break;
+		case 'import-help':
+			importHelp(interaction);
+			break;
+		case 'import':
+			importFlashcards(interaction);
 			break;
 	}
 }
@@ -90,7 +107,8 @@ export const data = new SlashCommandBuilder()
 					.addChoices(
 						{ name: "Only my own flashcards", value: Visibility.Private },
 						{ name: "Only the server's public flashcards", value: Visibility.Public },
-						{ name: "Both my own and the server's public flashcards", value: Visibility.PrivateAndPublic }
+						{ name: "Both my own and the server's public flashcards", value: Visibility.PrivateAndPublic },
+						{ name: "Only my groups' flashcards", value: Visibility.GroupShared }
 					)
 			)
 			.addStringOption(option =>
@@ -106,49 +124,121 @@ export const data = new SlashCommandBuilder()
 	)
 	.addSubcommand(subcommand =>
 		subcommand
-			.setName('review')
-			.setDescription("Review your own, your study group's or the server's public flashcards.")
+		.setName('delete')
+		.setDescription('Delete your own flashcard')
+		.setDescriptionLocalizations({
+			'vi': 'Xóa flashcard của bạn'
+		})
+		.addStringOption(option =>
+			option
+				.setName('flashcard_id')
+				.setDescription('The ID of the flashcard to delete')
+				.setDescriptionLocalizations({
+					'vi': 'ID của flashcard cần xóa'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('share')
+		.setDescription('Share your own flashcard')
+		.setDescriptionLocalizations({
+			'vi': 'Chia sẻ flashcard của bạn'
+		})
+		.addStringOption(option =>
+			option
+			.setName('flashcard_id')
+			.setDescription('The ID of the flashcard to share')
 			.setDescriptionLocalizations({
-				'vi': 'Xem lại flashcard cá nhân, nhóm học tập hoặc flashcard công khai của server'
+				'vi': 'ID của flashcard cần chia sẻ'
 			})
-			.addIntegerOption(option => 
-				option
-					.setName('quantity')
-					.setDescription('The number of flashcards to review')
-					.setDescriptionLocalizations({
-						'vi': 'Số lượng flashcard cần xem lại'
-					})
-					.setRequired(true)
-					.setMinValue(1)
-					.setMaxValue(200)
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+		.addStringOption(option =>
+			option
+			.setName('group_id')
+			.setDescription('The ID of the group to share the flashcard with')
+			.setDescriptionLocalizations({
+				'vi': 'ID của nhóm cần chia sẻ flashcard'
+			})
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('list')
+		.setDescription('List your own flashcards')
+		.setDescriptionLocalizations({
+			'vi': 'Liệt kê flashcard của bạn'
+		})
+		.addIntegerOption(option =>
+			option
+			.setName('visibility')
+			.setDescription('Filter by visibility type')
+			.addChoices(
+				{ name: 'My flashcards', value: Visibility.Private },
+				{ name: 'Public flashcards', value: Visibility.Public },
+				{ name: 'Group flashcards', value: Visibility.GroupShared },
+				{ name: 'All accessible', value: -1 }
 			)
-			.addIntegerOption(option =>
-				option
-					.setName('visibility')
-					.setDescription("Whether to search for your own, your study group's, the server's public flashcards or all")
-					.setDescriptionLocalizations({
-						'vi': 'Chỉ tìm kiếm flashcard của bạn, nhóm học tập của bạn, flashcard công khai của server hoặc tất cả'
-					})
-					.setRequired(true)
-					.addChoices(
-						{ name: "Only my own flashcards", value: Visibility.Private },
-						// { name: "Only my study group's flashcards", value: Visibility.Group },
-						{ name: "Only the server's public flashcards", value: Visibility.Public },
-						// { name: "All", value: Visibility.All }
-					)
-			)
-			.addStringOption(option =>
-				option
-					.setName('group_id')
-					.setDescription('The ID of the study group to search flashcards for')
-					.setDescriptionLocalizations({
-						'vi': 'ID của nhóm học tập để tìm kiếm flashcard'
-					})
-					.setRequired(false)
-					.setAutocomplete(true)
-			)
-			// Nên kiểm tra lại autocomplete cho group_id
-	);
+		)
+		.addIntegerOption(option =>
+			option
+			.setName('page')	
+			.setDescription('The page number to view')
+			.setDescriptionLocalizations({
+				'vi': 'Trang cần xem'
+			})
+			.setRequired(false)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('show')
+		.setDescription('Show a flashcard')
+		.setDescriptionLocalizations({
+			'vi': 'Hiển thị flashcard'
+		})
+		.addStringOption(option =>
+			option
+			.setName('flashcard_id_show')
+			.setDescription('The ID of the flashcard to show')
+			.setDescriptionLocalizations({
+				'vi': 'ID của flashcard cần hiển thị'
+			})
+			.setRequired(true)
+			.setAutocomplete(true)
+		)
+	)
+	.addSubcommand(subcommand => 
+		subcommand
+		.setName('import')
+		.setDescription('Import flashcards from a file')
+		.setDescriptionLocalizations({
+			'vi': 'Nhập flashcard từ file'
+		})
+		.addAttachmentOption(option =>
+			option
+				.setName('file')
+				.setDescription('Text file containing flashcards')
+				.setDescriptionLocalizations({
+					'vi': 'File chứa flashcard'
+				})
+				.setRequired(true)
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('import-help')
+		.setDescription('Get help with importing flashcards from a text file')
+		.setDescriptionLocalizations({
+			'vi': 'Hướng dẫn cách nhập flashcard từ file văn bản'
+		})
+	)
 
 export const options = {
 	devOnly: false,

@@ -505,6 +505,120 @@
 				"alreadyRegistered": "You are already registered in the Insider Program.",
 				"success": "✅ You have successfully registered for the Insider Program!"
 			}
+		},
+		"flashcard": {
+			"create_flashcard": {
+				"title": "📚 Flashcard Created",
+				"topic": "📂 Topic",
+				"none" : "None",
+				"visibility": "👁️ Visibility",
+				"public": "Public",
+				"private": "Private",
+				"error": "❌ Error",
+				"errorDescription": "There was an error creating the flashcard. Please try again."
+			},
+			"quiz": {
+				"noFlashcards": {
+					"title": "❌ No Flashcard Found",
+					"description": "Found no flashcard matching your searching criteria."
+				},
+				"quiz": "Quiz",
+				"onTopic": "on topic",
+				"reveal": "Reveal Answer",
+				"answer": "Answer"
+			},
+			"deleteFlashcard": {
+				"notFound": "❌ Flashcard not found",
+				"notOwner": "❌ Only the owner can delete the flashcard",
+				"deleted": {
+					"title": "✅ Flashcard Deleted",
+					"question": "📝 Question",
+					"topic": "📚 Topic",
+					"noTopic": "No topic"
+				},
+				"error": "❌ Failed to delete flashcard"
+			},
+			"shareFlashcard": {
+				"notFound": "❌ Flashcard or group not found",
+				"notOwner": "❌ You can only share your own flashcards",
+				"notMember": "❌ You must be a member of the group to share flashcards",
+				"success": {
+					"title": "✅ Flashcard Shared",
+					"description": "Successfully shared with group: {group}",
+					"question": "📖 Question",
+					"topic": "📚 Topic",
+					"noTopic": "No topic"
+				},
+				"error": "❌ Failed to share flashcard"
+			},
+			"listFlashcards": {
+				"title": "📚 Flashcards",
+				"description": "Page {page} of {totalPages}",
+				"question": "Question",
+				"topic": "Topic",
+				"created": "Created",
+				"none": "None",
+				"footer": "Use `/flashcard` list page:[1-{totalPages}] to view more",
+				"error": "❌ Failed to list flashcards"
+			},
+			"showFlashcard": {
+				"notFound": "❌ Flashcard not found",
+				"noPermission": "❌ You do not have permission to view this flashcard",
+				"title": "📝 Flashcard Details",
+				"question": "Question",
+				"answer": "Answer",
+				"topic": "Topic",
+				"author": "Created by",	
+				"created": "Created at",
+				"none": "None",
+				"error": "❌ Failed to show flashcard details"
+			},
+			"importHelp": {
+				"title": "📝 Flashcard Import Guide",
+				"description": "Learn how to import multiple flashcards using a text file",
+				"format": {
+					"title": "📄 File Format",
+					"description": [
+						"• Use a simple `.txt` file",
+						"• Each card starts with a question (Q:)",
+						"• Followed by an answer (A:)",
+						"• Optionally add topic (T:)",
+						"• Set visibility with (V: public/private)",
+						"• Leave a blank line between cards"
+					]
+				},
+				"tips": {
+					"title": "💡 Tips",
+					"description": [
+						"• Keep questions clear and concise",
+						"• Make sure each card has both Q: and A:",
+						"• Check file encoding is UTF-8",
+						"• Maximum 100 cards per import"
+					]
+				},
+				"issues": {
+					"title": "⚠️ Common Issues",
+					"description": [
+						"• Missing Q: or A: prefix",
+						"• No blank line between cards",
+						"• Invalid visibility setting",
+						"• File too large"
+					]
+				},
+				"example": {
+					"title": "🔍 Example"
+				}
+			},
+			"importFlashcards": {
+				"invalidFile": "❌ Invalid file format. Please use a `.txt` file.",
+				"invalidFlashcards": "❌ No valid flashcards found in the file.",
+				"error": "❌ Failed to import flashcards",
+				"title": "✅ Flashcards Imported",
+				"description": "Successfully imported {length} flashcards",
+				"total": "Total Cards",
+				"example": "Example Format",
+				"exmapleValue": "Q: Your question\nA: Your answer\nT: Topic (optional)\nV: public/private"
+			}
 		}
 	}, 
 	"events": {

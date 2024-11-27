@@ -6,8 +6,9 @@ import Deep_Translate_Languages from '../../data/deep-translate-language.json';
 import { Task } from '../../models/Task';
 import { StudyResource } from '../../models/StudyResource';
 import { StudyGroup } from '../../models/StudyGroup';
+import { Flashcard, Visibility } from '../../models/Flashcard';
 
-const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo', 'group'];
+const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo', 'group', 'flashcard'];
 
 async function wiktionaryAutoComplete (interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'language') {
@@ -182,37 +183,145 @@ async function todoAutoComplete (interaction: any, focusedValue: any) {
 }
 
 async function groupAutoComplete(interaction: any, focusedValue: any) {
-  if (focusedValue.name === 'group_id') {
-    try {
-      // Find groups where user is member or owner
-      const groups = await StudyGroup.find({
-        $or: [
-          { members: interaction.user.id },
-          { ownerId: interaction.user.id }
-        ]
-      }).sort({ createdAt: -1 }).limit(25);
+	if (focusedValue.name === 'group_id') {
+		try {
+			const groups = await StudyGroup.find({
+				$or: [
+					{ members: interaction.user.id },
+					{ ownerId: interaction.user.id }
+				]
+			}).sort({ createdAt: -1 }).limit(25);
 
-      const results = groups.map(group => {
-        const isOwner = group.ownerId === interaction.user.id;
-        const memberCount = group.members.length;
-        
-        return {
-          name: `${isOwner ? '👑' : '👤'} ${group.name} (${memberCount} members)`,
-		  		value: (group._id as string)
-        };
-      });
+			const results = groups.map(group => {
+				const isOwner = group.ownerId === interaction.user.id;
+				const memberCount = group.members.length;
+				
+				return {
+					name: `${isOwner ? '👑' : '👤'} ${group.name} (${memberCount} members)`,
+					value: (group._id as string)
+				};
+			});
 
-      await interaction.respond(
-        results.filter(group =>
-          group.name.toLowerCase().includes(focusedValue.value.toLowerCase())
-        ).slice(0, 25)
-      );
+			await interaction.respond(
+				results.filter(group =>
+					group.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+				).slice(0, 25)
+			);
 
-    } catch (error) {
-      console.error('Error in group autocomplete:', error);
-      await interaction.respond([]);
-    }
-  }
+		} catch (error) {
+			console.error('Error in group autocomplete:', error);
+			await interaction.respond([]);
+		}
+	}
+}
+
+async function flashcardAutoComplete(interaction: any, focusedValue: any) {
+	if (focusedValue.name === 'flashcard_id') {
+		try {
+			const flashcards = await Flashcard.find({ 
+				user: interaction.user.id 
+			}).sort({ 
+				createdAt: -1 
+			}).limit(25);
+
+			const results = flashcards.map(card => {
+				const topic = card.topic ? `[${card.topic}] ` : '';
+				const preview = card.question.length > 30 
+					? card.question.substring(0, 30) + '...' 
+					: card.question;
+				
+				return {
+					name: `${topic}${preview}`,
+					value: card._id.toString()
+				};
+			});
+
+			await interaction.respond(
+				results.filter(card => 
+					card.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+				).slice(0, 25)
+			);
+
+		} catch (error) {
+			console.error('Error in flashcard autocomplete:', error);
+			await interaction.respond([]);
+		}
+	} else if (focusedValue.name === 'group_id') {
+		try {
+			const groups = await StudyGroup.find({
+				$or: [
+					{ members: interaction.user.id },
+					{ ownerId: interaction.user.id }
+				]
+			}).sort({ createdAt: -1 }).limit(25);
+
+			const results = groups.map(group => {
+				const isOwner = group.ownerId === interaction.user.id;
+				const memberCount = group.members.length;
+				
+				return {
+					name: `${isOwner ? '👑' : '👤'} ${group.name} (${memberCount} members)`,
+					value: (group._id as string)
+				};
+			});
+
+			await interaction.respond(
+				results.filter(group =>
+					group.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+				).slice(0, 25)
+			);
+
+		} catch (error) {
+			console.error('Error in group autocomplete:', error);
+			await interaction.respond([]);
+		}
+	} else if (focusedValue.name === 'flashcard_id_show') {
+		try {
+			// Get user's groups
+			const userGroups = await StudyGroup.find({ members: interaction.user.id });
+			const groupIds = userGroups.map((g: any) => g._id.toString());
+
+			// Query all accessible flashcards
+			const flashcards = await Flashcard.find({
+				$or: [
+					{ user: interaction.user.id },
+					{ visibility: Visibility.Public },
+					{ 
+						visibility: Visibility.GroupShared,
+						groupIds: { $in: groupIds }
+					}
+				]
+			})
+			.sort({ createdAt: -1 })
+			.limit(25);
+
+			const results = flashcards.map(card => {
+				// Add visibility icon
+				const visibility = card.user === interaction.user.id ? '🔒' : 
+												 card.visibility === Visibility.Public ? '🌐' : '👥';
+				
+				const topic = card.topic ? `[${card.topic}] ` : '';
+				const preview = card.question.length > 30 
+					? card.question.substring(0, 30) + '...' 
+					: card.question;
+
+				return {
+					name: `${visibility} ${topic}${preview}`,
+					value: card._id.toString()
+				};
+			});
+
+			await interaction.respond(
+				results.filter(card => 
+					card.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+				).slice(0, 25)
+			);
+
+		} catch (error) {
+			console.error('Error in flashcard show autocomplete:', error);
+			await interaction.respond([]);
+		}
+	}
 }
 
 export default async function (interaction: Interaction) {	
@@ -239,6 +348,9 @@ export default async function (interaction: Interaction) {
 			break;
 		case 'group':
 			await groupAutoComplete(interaction, focusedValue);
+			break;
+		case 'flashcard':
+			await flashcardAutoComplete(interaction, focusedValue);
 			break;
 	}
 };

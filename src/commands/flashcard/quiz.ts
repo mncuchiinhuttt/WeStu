@@ -1,17 +1,21 @@
 import { Flashcard, Visibility } from "../../models/Flashcard";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction as Interaction } from 'discord.js';
-import messageArray from '../../data/message_array';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction as Interaction, EmbedBuilder } from 'discord.js';
+import { LanguageService } from "../../utils/LanguageService";
 
 export async function quiz(interaction: Interaction) {
 	const topic = interaction.options.getString('topic') ?? null;
 	const visibility = interaction.options.getInteger('visibility');
 
 	const query = Flashcard.findOne();
+	query.skip(Math.floor(Math.random() * await Flashcard.countDocuments()));
+
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.flashcard.quiz;
 
 	if (topic) query.where('topic').equals(topic);
 
-
-	// TODO: Sửa cái đống check điều kiện này lại
 	switch (visibility) {
 		case Visibility.Public:
 			query.where('visibility').equals(Visibility.Public);
@@ -28,33 +32,42 @@ export async function quiz(interaction: Interaction) {
 				{ visibility: Visibility.Private, user: interaction.user.id }
 			]);
 			break;
+
+		case Visibility.GroupShared:
+			query.where('visibility').equals(Visibility.GroupShared);
+			break;
 	}
 
 	const doc = await query;
 
 	if (!doc) {
-		interaction.reply("Found no flashcard matching your searching criteria.");
+		const noFlashcardEmbed = new EmbedBuilder()
+			.setTitle(strings.noFlashcards.title)
+			.setDescription(strings.noFlashcards.description)
+			.setColor(0xFF0000);
+
+		await interaction.reply({ embeds: [noFlashcardEmbed], ephemeral: true });
 		return;
 	}
 
-	const replyArray = new messageArray();
-	replyArray.push(`# Quiz${topic ? ` on topic \"${topic}\"` : ""}\n`);
-	replyArray.push(`**Q**: ${doc.question}\n`);
+	const embed = new EmbedBuilder()
+		.setTitle(`📝 ${strings.quiz}${topic ? ` ${strings.onTopic} \"${topic}\"` : ""}`)
+		.setDescription(`**❓ Q**: ${doc.question}`)
+		.setColor(0x00AE86);
 
 	const revealButton = new ButtonBuilder()
 		.setCustomId('flashcard-quiz-reveal-answer')
-		.setLabel('Reveal Answer')
-		.setStyle(ButtonStyle.Primary);
+		.setLabel(strings.reveal)
+		.setStyle(ButtonStyle.Primary)
+		.setEmoji('🔍');
 
 	const row = new ActionRowBuilder<ButtonBuilder>()
 		.addComponents(revealButton);
 
 	const response = await interaction.reply({
-		content: replyArray.get(0),
+		embeds: [embed],
 		components: [row],
 	});
-
-	replyArray.push(`**A**: ${doc.answer}`);
 
 	const userFilter = ((i: any) => i.user.id === interaction.user.id);
 
@@ -62,14 +75,15 @@ export async function quiz(interaction: Interaction) {
 		const signalRevealAnswer = await response.awaitMessageComponent({ filter: userFilter, time: 120_000 });
 
 		if (signalRevealAnswer.customId === "flashcard-quiz-reveal-answer") {
+			embed.addFields({ name: strings.answer, value: doc.answer });
 			await signalRevealAnswer.update({
-				content: replyArray.get(0),
+				embeds: [embed],
 				components: []
 			});
 		}
 	} catch (e) {
 		await interaction.editReply({
-			content: replyArray.get(0),
+			embeds: [embed],
 			components: []
 		});
 	}
