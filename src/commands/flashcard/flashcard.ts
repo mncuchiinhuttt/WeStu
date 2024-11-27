@@ -20,6 +20,9 @@ export async function run({ interaction }: any) {
 export const data = new SlashCommandBuilder()
 	.setName('flashcard')
 	.setDescription("Create and manage your own private/server's public flashcards")
+	.setDescriptionLocalizations({
+		'vi': 'Tạo và quản lý flashcard cá nhân/công khai của server'
+	})
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('create')
@@ -28,6 +31,9 @@ export const data = new SlashCommandBuilder()
 				option
 					.setName('question')
 					.setDescription('The question for the flashcard')
+					.setDescriptionLocalizations({
+						'vi': 'Câu hỏi cho flashcard'
+					})
 					.setRequired(true)
 					.setMaxLength(900)
 			)
@@ -35,6 +41,9 @@ export const data = new SlashCommandBuilder()
 				option
 					.setName('answer')
 					.setDescription('The answer for the flashcard')
+					.setDescriptionLocalizations({
+						'vi': 'Câu trả lời cho flashcard'
+					})
 					.setRequired(true)
 					.setMaxLength(900)
 			)
@@ -42,12 +51,18 @@ export const data = new SlashCommandBuilder()
 				option
 					.setName('is_public')
 					.setDescription('Whether your flashcard is public or private.')
+					.setDescriptionLocalizations({
+						'vi': 'Flashcard của bạn là công khai hay cá nhân.'
+					})
 					.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
 					.setName('topic')
 					.setDescription('The topic for the flashcard')
+					.setDescriptionLocalizations({
+						'vi': 'Chủ đề cho flashcard'
+					})
 					.setRequired(false)
 					.setMaxLength(100)
 			)
@@ -56,10 +71,16 @@ export const data = new SlashCommandBuilder()
 		subcommand
 			.setName('quiz')
 			.setDescription("Take a quiz from your own/the server's public flashcards.")
+			.setDescriptionLocalizations({
+				'vi': 'Tham gia bài kiểm tra từ flashcard cá nhân/công khai của server'
+			})
 			.addIntegerOption(option =>
 				option
 					.setName('visibility')
 					.setDescription("Whether to search for only your own flashcards, the server's public flashcards or both")
+					.setDescriptionLocalizations({
+						'vi': 'Chỉ tìm kiếm flashcard của bạn, flashcard công khai của server hoặc cả hai'
+					})
 					.setRequired(true)
 					.addChoices(
 						{ name: "Only my own flashcards", value: Visibility.Private },
@@ -71,6 +92,9 @@ export const data = new SlashCommandBuilder()
 				option
 					.setName('topic')
 					.setDescription('The topic to search for')
+					.setDescriptionLocalizations({
+						'vi': 'Chủ đề cần tìm kiếm'
+					})
 					.setRequired(false)
 					.setMaxLength(100)
 			)

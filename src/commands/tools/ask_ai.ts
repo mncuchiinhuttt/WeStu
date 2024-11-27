@@ -6,7 +6,7 @@ async function run ({
 }: any) {
 	const question = interaction.options.getString('question');
 	const model = interaction.options.getString('model');
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Thinking...');
 	if (model === 'gpt') {
 		const url = 'https://chatgpt-42.p.rapidapi.com/gpt4';

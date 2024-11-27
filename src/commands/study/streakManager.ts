@@ -1,15 +1,22 @@
 import { EmbedBuilder } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySession';
 import { StudyGoalTarget } from '../../models/StudyGoalTarget';
+import { LanguageService } from '../../utils/LanguageService';
+
+let strings: any;
 
 export async function manageStreak(interaction: any) {
   try {
+    const languageService = LanguageService.getInstance();
+    const userLang = await languageService.getUserLanguage(interaction.user.id);
+    const langStrings = require(`../../data/languages/${userLang}.json`);
+    strings = langStrings.commands.study.streak;
+
     const userId = interaction.user.id;
-    const period = parseInt(interaction.options.getString('period') || '30');
+    const period = parseInt(interaction.options.getString('period') ?? '30');
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - period);
 
-    // Fetch both types of sessions
     const [studySessions, goals] = await Promise.all([
       TimeStudySession.find({
         userId,
@@ -26,53 +33,53 @@ export async function manageStreak(interaction: any) {
     const achievements = checkAchievements(streakStats);
 
     const embed = new EmbedBuilder()
-      .setTitle(`🔥 Study Streak (Last ${period} Days)`)
+      .setTitle(strings.title.replace('{period}', period))
       .setColor('#ff6b6b')
       .addFields([
         {
-          name: 'Current Streak',
-          value: `${streakStats.currentStreak} days`,
+          name: strings.currentStreak,
+          value: strings.daysValue.replace('{days}', streakStats.currentStreak),
           inline: true
         },
         {
-          name: 'Longest Streak',
-          value: `${streakStats.longestStreak} days`,
+          name: strings.longestStreak,
+          value: strings.daysValue.replace('{days}', streakStats.longestStreak),
           inline: true
         },
         {
-          name: 'Study Sessions',
-          value: `${studySessions.length} sessions`,
+          name: strings.studySessions,
+          value: strings.sessionsValue.replace('{count}', studySessions.length),
           inline: true
         },
         {
-          name: 'Goals In Progress',
-          value: `${goals.filter(g => g.status === 'in_progress').length} goals`,
+          name: strings.goalsInProgress,
+          value: strings.goalsValue.replace('{count}', goals.filter(g => g.status === 'in_progress').length),
           inline: true
         },
         {
-          name: 'Total Study Days',
-          value: `${streakStats.totalDays} days`,
+          name: strings.totalStudyDays,
+          value: strings.daysValue.replace('{days}', streakStats.totalDays),
           inline: true
         },
         {
-          name: 'Average Hours/Day',
-          value: `${streakStats.averageHours.toFixed(1)}h`,
+          name: strings.averageHours,
+          value: strings.hoursValue.replace('{hours}', streakStats.averageHours.toFixed(1)),
           inline: true
         }
       ]);
 
-		const calendar = period === 30 ? 
-		generateStreakCalendar(streakStats.history) :
-		generateLongStreakCalendar(streakStats.history);
+    const calendar = period === 30 ? 
+    generateStreakCalendar(streakStats.history) :
+    generateLongStreakCalendar(streakStats.history);
 
     embed.addFields({
-      name: `Streak Calendar (Last ${period} Days)`,
+      name: strings.calendar.title.replace('{period}', period),
       value: calendar
     });
 
     if (achievements.length > 0) {
       embed.addFields({
-        name: '🏆 Achievements',
+        name: strings.achievements.title,
         value: achievements.map(a => `**${a.name}**\n${a.description}`).join('\n\n')
       });
     }
@@ -85,7 +92,7 @@ export async function manageStreak(interaction: any) {
   } catch (error) {
     console.error(error);
     await interaction.reply({
-      content: 'Failed to fetch streak information',
+      content: strings.error,
       ephemeral: true
     });
   }
@@ -200,51 +207,59 @@ function calculateCombinedStreakStats(sessions: any[], goals: any[]) {
 // generateStreakCalendar and checkAchievements functions remain unchanged
 
 function generateStreakCalendar(history: any) {
-	const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-	const calendar: string[] = [];
-	const today = new Date();
-	
-	for (let i = 29; i >= 0; i--) {
-		const date = new Date(today);
-		date.setDate(date.getDate() - i);
-		const dateStr = date.toISOString().split('T')[0];
-		const hours = history[dateStr] || 0;
-		
-		const emoji = hours === 0 ? '⬜' : 
-								 hours < 2 ? '🟨' :
-								 hours < 4 ? '🟧' : '🟥';
-								 
-		calendar.push(emoji);
-		
-		if (calendar.length % 7 === 0) calendar.push('\n');
-	}
-	
-	return `${days.join(' ')}\n${calendar.join(' ')}`;
+  const days = [
+    strings.calendar.days.sun,
+    strings.calendar.days.mon,
+    strings.calendar.days.tue,
+    strings.calendar.days.wed,
+    strings.calendar.days.thu,
+    strings.calendar.days.fri,
+    strings.calendar.days.sat
+  ];
+  const calendar: string[] = [];
+  const today = new Date();
+  
+  for (let i = 29; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+    const hours = history[dateStr] || 0;
+    
+    const emoji = hours === 0 ? '⬜' : 
+                 hours < 2 ? '🟨' :
+                 hours < 4 ? '🟧' : '🟥';
+                 
+    calendar.push(emoji);
+    
+    if (calendar.length % 7 === 0) calendar.push('\n');
+  }
+  
+  return `${days.join(' ')}\n${calendar.join(' ')}`;
 }
 
 function checkAchievements(stats: any) {
-	const achievements = [];
-	
-	if (stats.currentStreak >= 7) {
-		achievements.push({
-			name: 'Week Warrior',
-			description: '7 day study streak! Keep it up! 🎯'
-		});
-	}
-	
-	if (stats.longestStreak >= 30) {
-		achievements.push({
-			name: 'Monthly Master',
-			description: 'Incredible 30 day study streak! 🌟'
-		});
-	}
-	
-	if (stats.totalDays >= 100) {
-		achievements.push({
-			name: 'Century Club',
-			description: '100 total study days! Outstanding dedication! 🏆'
-		});
-	}
-	
-	return achievements;
+  const achievements = [];
+  
+  if (stats.currentStreak >= 7) {
+    achievements.push({
+      name: strings.achievements.weekWarrior.name,
+      description: strings.achievements.weekWarrior.description
+    });
+  }
+  
+  if (stats.longestStreak >= 30) {
+    achievements.push({
+      name: strings.achievements.monthlyMaster.name,
+      description: strings.achievements.monthlyMaster.description
+    });
+  }
+  
+  if (stats.totalDays >= 100) {
+    achievements.push({
+      name: strings.achievements.centuryClub.name,
+      description: strings.achievements.centuryClub.description
+    });
+  }
+  
+  return achievements;
 }

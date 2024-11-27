@@ -22,7 +22,7 @@ async function query (data: any) {
 
 async function run({ interaction }: any) {
     const text = interaction.options.getString('text')!;
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Generating...');
 	try {
         const response = await query({"inputs": `${text}`});

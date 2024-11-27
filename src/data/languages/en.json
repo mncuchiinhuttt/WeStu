@@ -233,7 +233,206 @@
 			}
 		},
 		"study": {
-
+			"achievement": {
+				"notFound": "🏆 You have not earned any achievements yet. Keep studying to earn some!",
+				"title": "🏅 Your Achievements",
+				"earned": "{index}. **{name}** - Earned on {date}\n"
+			},
+			"achievementService": {
+				"earned": "🎉 Congratulations! You have earned the **{name}** achievement: {description}"
+			},
+			"dailySummary": {
+				"notFound": "📅 You have no study sessions today.",
+				"title": "📅 Daily Study Summary",
+				"date": "Date",
+				"totalStudyTime": "Total Study Time",
+				"sessions": "Sessions"
+			},
+			"exportStudyData": {
+				"title": "Export Study Data",
+				"notFound": "No study data found to export.",
+				"invalidformat": "Invalid format selected",
+				"error": "Failed to export study data. Please try again.",
+				"csv": "📁 Here is your exported study data in CSV format.",
+				"pdf": "📄 Here is your study report in PDF format.",
+				"calendar": "📅 Here is your study calendar file."
+			},
+			"getRecentStudySessions": {
+				"noSessions": "You haven't had any study sessions in the last {period} days!",
+				"notUserButton": "These buttons are not for you!",
+				"error": "Failed to fetch study sessions. Please try again.",
+				"title": "📚 Your Study Sessions (Last {period} Days)",
+				"description": "⏳ Total study time: {totalDuration}",
+				"duration": "Duration",
+				"sessions": "sessions"
+			},
+			"leaderboard": {
+				"noData": "🏆 No study data available for the leaderboard.",
+				"title": "🏆 Study Leaderboard",
+				"unknownUser": "Unknown User"
+			},
+			"pomodoro": {
+				"stop": "Stop Pomodoro",
+				"title": "🍅 Starting Pomodoro Session {currentSession}/{sessions}",
+				"description": "Study: {studyDuration}min, Break: {breakDuration}min",
+				"stopMessage": "Pomodoro stopped after {currentSession} sessions.",
+				"stopTitle": "⏹️ Pomodoro stopped",
+				"complete": "🎉 All Pomodoro sessions completed!",
+				"break": {
+					"title": "⏰ Session {currentSession}/{sessions}",
+					"description": "Study time is up! Take a break!",
+					"overTitle": "⏰ Break time is over!",
+					"overMessage": "Starting session {currentSession}/{sessions}"
+				},
+				"allComplete": "🎉 All Pomodoro sessions completed!",
+				"error": "Failed to start Pomodoro timer"
+			},
+			"resources": {
+				"invalidAction": "Invalid action",
+				"noTitleOrDescription": "You must provide at least a title and a description or link.",
+				"resourceAdd": "✅ Resource \"{title}\" added successfully.\n**Description:** {description}\n**Link:** {link}\n**Privacy:** {share}",
+				"noDescription": "No description provided.",
+				"noLink": "No link provided.",
+				"shareStatus": {
+					"everyone": "Everyone",
+					"onlyYou": "Only You"
+				},
+				"error": "Failed to add resource. Please try again.",
+				"notFound": "No resources found.",
+				"view": {
+					"title": "📚 Study Resources",
+					"sharedBy": "Shared by:",
+					"error": "Failed to retrieve resources. Please try again."
+				},
+				"remove": {
+					"invalidID": "You must provide the resource ID to delete.",
+					"notFound": "Resource not found or you do not have permission to delete it.",
+					"success": "✅ Resource \"{title}\" has been deleted.",
+					"error": "Failed to delete resource. Please try again."
+				}
+			},
+			"review": {
+				"title": "📚 Study Review Report",
+				"description": "Last {period} days study analysis",
+				"error": "Failed to generate study review.",
+				"metrics": {
+					"title": "📊 Basic Metrics",
+					"total": "Total Study Time: {hours}h",
+					"daysStudied": "Days Studied: {days}/{total}",
+					"average": "Average per Day: {hours}h",
+					"consistency": "Consistency Score: {score}%"
+				},
+				"analysis": {
+					"title": "📈 Analysis",
+					"trend": "Study Trend: {trend}",
+					"bestTime": "Best Study Time: {time}",
+					"consistencyGrade": "Consistency Grade: {grade}",
+					"varianceGrade": "Variance Grade: {grade}"
+				},
+				"recommendations": {
+					"title": "💡 Recommendations",
+					"default": "Keep up the good work!"
+				},
+				"target": {
+					"title": "🎯 Target Progress",
+					"weekly": "Weekly Target: {hours}h",
+					"daily": "Daily Minimum: {hours}h",
+					"progress": "Progress: {progress}%"
+				},
+				"trends": {
+					"improving": "📈 Improving",
+					"declining": "📉 Declining",
+					"stable": "➡️ Stable"
+				}
+			},
+			"setStudyTarget": {
+				"invalidInput": "Please provide both weekly target and daily minimum hours.",
+				"errorTitle": "Error",
+				"invalidWeeklyHours": "Weekly target must be at least 7 times the daily minimum.",
+				"invalidWeeklyHoursMax": "Weekly target cannot exceed 168 hours.",
+				"title": "Study Target Set",
+				"description": "Study target set!\n- **Weekly:** {weeklyHours}h\n- **Daily minimum:** {dailyMinHours}h",
+				"errorMessage": "Failed to set study target. Please try again."
+			},
+			"streak": {
+				"title": "🔥 Study Streak (Last {period} Days)",
+				"currentStreak": "Current Streak",
+				"longestStreak": "Longest Streak",
+				"studySessions": "Study Sessions",
+				"goalsInProgress": "Goals In Progress",
+				"totalStudyDays": "Total Study Days",
+				"averageHours": "Average Hours/Day",
+				"daysValue": "{days} days",
+				"sessionsValue": "{count} sessions",
+				"goalsValue": "{count} goals",
+				"hoursValue": "{hours}h",
+				"calendar": {
+					"title": "Streak Calendar (Last {period} Days)",
+					"days": {
+						"sun": "Sun",
+						"mon": "Mon",
+						"tue": "Tue",
+						"wed": "Wed",
+						"thu": "Thu",
+						"fri": "Fri",
+						"sat": "Sat"
+					},
+					"legend": "Study Hours: ⬜ 0h 🟨 <2h 🟧 <4h 🟥 4h+"
+				},
+				"achievements": {
+					"title": "🏆 Achievements",
+					"weekWarrior": {
+						"name": "Week Warrior",
+						"description": "7 day study streak! Keep it up! 🎯"
+					},
+					"monthlyMaster": {
+						"name": "Monthly Master",
+						"description": "Incredible 30 day study streak! 🌟"
+					},
+					"centuryClub": {
+						"name": "Century Club",
+						"description": "100 total study days! Outstanding dedication! 🏆"
+					}
+				},
+				"error": "Failed to fetch streak information"
+			},
+			"studySession": {
+				"invalidTime": {
+					"title": "Invalid Schedule Time",
+					"description": "Please use the format `YYYY-MM-DD HH:MM` (UTC+7).",
+					"description2": "Scheduled time must be in the future."
+				},
+				"pendingSession": {
+					"title": "Pending Scheduled Session",
+					"description": "You already have a scheduled study session pending."
+				},
+				"sessionSchedule": {
+					"title": "Study Session Scheduled",
+					"description": "✅ Study session scheduled for {time} (UTC+7). You will receive a DM when it's time to start."
+				},
+				"existingSession": {
+					"title": "Active Study Session",
+					"description": "You already have an active study session!"
+				},
+				"finishButton": "Finish Study Session",
+				"sessionStart": {
+					"title": "Study Session Started",
+					"description": "📝 Study session started! Click the button below when you're done."
+				},
+				"sessionTimeout": {
+					"title": "Study Session Timed Out",
+					"description": "⏰ Study session timed out. Please start a new session."
+				},
+				"error": {
+					"title": "Error",
+					"description": "Failed to manage study session. Please try again."
+				},
+				"sessionFinish": {
+					"title": "✅ Study Session Completed",
+					"description": "You studied for **{hours}h {minutes}m {seconds}s**. Great job! 🎉"
+				},
+				"sendUser": "🙌 Keep up the fantastic work! Consistency is key to achieving your goals."
+			}
 		},
 		"tools": {
 			"insiderRegister": {
@@ -242,6 +441,46 @@
 			}
 		}
 	}, 
+	"events": {
+		"scheduler": {
+			"startStudyButton": "Start Study Session",
+			"scheduledStudySession": {
+				"title": "Scheduled Study Session",
+				"description": "⏰ Your scheduled study session is starting now ({time} UTC+7). Click the button below to start your session."
+			},
+			"finishButton": "Finish Study Session",
+			"studySessionStarted": {
+				"title": "Study Session Started",
+				"description": "📝 Study session started! Click the button below when you're done."
+			},
+			"studySessionTimeout": {
+				"title": "Study Session Timed Out",
+				"description": "⏰ Study session timed out. Please start a new session."
+			},
+			"missedStudySession": {
+				"title": "Missed Study Session",
+				"description": "⚠️ You missed your scheduled study session."
+			},
+			"studySessionFinish": {
+				"title": "✅ Study Session Completed",
+				"description": "You studied for **{hours}h {minutes}m {seconds}s**. Great job! 🎉",
+				"userSend": "🙌 Keep up the fantastic work! Consistency is key to achieving your goals."
+			}
+		},
+		"taskReminders": {
+			"title": "⚠️ Task Reminder",
+			"description": "You have {length} task(s) due within 24 hours:",
+			"due": "**Due:**",
+			"priority": "**Priority:**",
+			"category": "**Category:**",
+			"progress": "**Progress:**",
+			"subtasks": "**Subtasks:**",
+			"remaining": "remaining",
+			"tags": "**Tags:**",
+			"note": "Note",
+			"noteValue": "Use `/todo list` to view all your tasks."
+		}
+	},
 	"responses": {
 		"welcome": "Welcome to the server!",
 		"goodbye": "Goodbye!",

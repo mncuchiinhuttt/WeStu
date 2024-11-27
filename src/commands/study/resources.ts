@@ -1,7 +1,15 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { StudyResource } from '../../models/StudyResource';
+import { LanguageService } from '../../utils/LanguageService';
+
+let strings: any;
 
 export async function manageResources(interaction: any) {
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	strings = langStrings.commands.study.resources;
+
 	const action = interaction.options.getString('action', true);
 
 	switch (action) {
@@ -16,7 +24,7 @@ export async function manageResources(interaction: any) {
 			break;
 		default:
 			await interaction.reply({
-				content: 'Invalid action',
+				content: strings.invalidAction,
 				ephemeral: true,
 			});
 			break;
@@ -31,7 +39,7 @@ async function addResource(interaction: any) {
 
 	if (!title || (!description && !link)) {
 		await interaction.reply({
-			content: 'You must provide at least a title and a description or link.',
+			content: strings.noTitleOrDescription,
 			ephemeral: true
 		});
 		return;
@@ -48,13 +56,18 @@ async function addResource(interaction: any) {
 		});
 
 		await interaction.reply({
-			content: `✅ Resource "${title}" added successfully.\n**Description:** ${description || 'No description provided.'}\n**Link:** ${link || 'No link provided.'}\n**Shared with server:** ${share ? 'Yes' : 'No'}`,
+			content: 
+				strings.resourceAdd
+				.replace('{title}', title)
+				.replace('{description}', description ?? strings.noDescription)
+				.replace('{link}', link ?? strings.noLink)
+				.replace('{share}', share ? strings.shareStatus.everyone : strings.shareStatus.onlyYou),
 			ephemeral: !share
 		});
 	} catch (error) {
 		console.error('Error adding resource:', error);
 		await interaction.reply({
-			content: 'Failed to add resource. Please try again.',
+			content: strings.error,
 			ephemeral: true
 		});
 	}
@@ -68,7 +81,7 @@ async function viewResources(interaction: CommandInteraction) {
 
 		if (resources.length === 0) {
 			await interaction.reply({
-				content: 'No resources found.',
+				content: strings.notFound,
 				ephemeral: true,
 			});
 			return;
@@ -80,7 +93,7 @@ async function viewResources(interaction: CommandInteraction) {
 
 		const generateEmbed = (page: number) => {
 			const embed = new EmbedBuilder()
-				.setTitle('📚 Study Resources')
+				.setTitle(strings.view.title)
 				.setColor('#00ff00')
 				.setFooter({ text: `Page ${page + 1} of ${totalPages}` });
 
@@ -91,7 +104,7 @@ async function viewResources(interaction: CommandInteraction) {
 			pageResources.forEach((resource) => {
 				embed.addFields({
 					name: `${resource.title} (ID: ${resource._id})`,
-					value: `${resource.description || ''}\n${resource.link || ''}\nShared by: <@${resource.userId}>`,
+					value: `${resource.description ?? ''}\n${resource.link ?? ''}\n${strings.view.sharedBy} <@${resource.userId}>`,
 				});
 			});
 
@@ -126,7 +139,7 @@ async function viewResources(interaction: CommandInteraction) {
 	} catch (error) {
 		console.error('Error viewing resources:', error);
 		await interaction.reply({
-			content: 'Failed to retrieve resources. Please try again.',
+			content: strings.view.error,
 			ephemeral: true,
 		});
 	}
@@ -137,7 +150,7 @@ async function deleteResource(interaction: any) {
 
 	if (!resourceId) {
 		await interaction.reply({
-			content: 'You must provide the resource ID to delete.',
+			content: strings.remove.invalidID,
 			ephemeral: true,
 		});
 		return;
@@ -151,7 +164,7 @@ async function deleteResource(interaction: any) {
 
 		if (!resource) {
 			await interaction.reply({
-				content: 'Resource not found or you do not have permission to delete it.',
+				content: strings.remove.notFound,
 				ephemeral: true,
 			});
 			return;
@@ -160,13 +173,15 @@ async function deleteResource(interaction: any) {
 		await StudyResource.deleteOne({ _id: resourceId });
 
 		await interaction.reply({
-			content: `✅ Resource "${resource.title}" has been deleted.`,
+			content: 
+				strings.remove.success
+				.replace('{title}', resource.title),
 			ephemeral: true,
 		});
 	} catch (error) {
 		console.error('Error deleting resource:', error);
 		await interaction.reply({
-			content: 'Failed to delete resource. Please try again.',
+			content: strings.remove.error,
 			ephemeral: true,
 		});
 	}

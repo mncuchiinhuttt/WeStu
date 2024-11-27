@@ -3,6 +3,7 @@ import { TimeStudySession } from '../../models/TimeStudySession';
 import { UserStreak } from '../../models/UserStreak';
 import { achievementsList, AchievementCriteria } from '../../data/achievementsList';
 import { Client } from 'discord.js';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function checkAndAwardAchievements(userId: string, client: Client) {
   // Calculate total study duration
@@ -61,8 +62,19 @@ export async function checkAndAwardAchievements(userId: string, client: Client) 
 
       // Notify user
       const user = await client.users.fetch(userId).catch(() => null);
+
+      const languageService = LanguageService.getInstance();
+      const userLang = await languageService.getUserLanguage(userId);
+      const langStrings = require(`../../data/languages/${userLang}.json`);
+      const strings = langStrings.commands.study.achievementService;
+
       if (user) {
         await user.send(`🎉 Congratulations! You have earned the **${achievement.name}** achievement: ${achievement.description}`);
+        await user.send(
+          strings.earned
+          .replace('{name}', achievement.name)
+          .replace('{description}', achievement.description)
+        );
       }
     }
   }

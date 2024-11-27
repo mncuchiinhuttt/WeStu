@@ -32,7 +32,7 @@ export function dictionaryapidev({
 }: any) {
 	const option = interaction.options.get("word");
 	if (!(option)) {
-		interaction.reply("Error: Internal error");
+		interaction.reply({ content: "Error: Internal error", ephemeral: true });
 		return;
 	}
 
@@ -42,13 +42,13 @@ export function dictionaryapidev({
 		const information = getFromDictionary(<string>word);
 
 		if (!(information)) {
-			interaction.reply("Error: Internal error");
+			interaction.reply({ content: "Error: Internal error", ephemeral: true });
 			return;
 		}
 
 		information.then((value) => {
 			if (value === false || value.title === "No Definitions Found") {
-				interaction.reply("No definitions found.");
+				interaction.reply({ content: "No definitions found.", ephemeral: true });
 				return;
 			}
 
@@ -126,11 +126,11 @@ export function dictionaryapidev({
 			
 			(async () => {
 				if (totalPageNumber === 1) {
-					await interaction.reply(replyMessage.get(0));
+					await interaction.reply({ content: replyMessage.get(0), ephemeral: true });
 				} else {
-					await interaction.reply(replyMessage.get(0) + `-# Page 1/${totalPageNumber}`);
+					await interaction.reply({ content: replyMessage.get(0) + `-# Page 1/${totalPageNumber}`, ephemeral: true });
 					for (let i = 1, _n = replyMessage.length(); i < _n; i++) {
-						await interaction.followUp(replyMessage.get(i) + `-# Page ${i + 1}/${totalPageNumber}`);
+						await interaction.followUp({ content: replyMessage.get(i) + `-# Page ${i + 1}/${totalPageNumber}`, ephemeral: true });
 					}
 				}
 			})();

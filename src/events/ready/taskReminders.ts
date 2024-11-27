@@ -1,5 +1,6 @@
 import { Client, EmbedBuilder } from 'discord.js';
 import { Task, TaskStatus } from '../../models/Task';
+import { LanguageService } from '../../utils/LanguageService';
 
 export default async (client: Client) => {
 	console.log('Task reminder system initialized');
@@ -39,9 +40,18 @@ async function checkAndSendTaskReminders(client: Client) {
 		for (const [userId, tasks] of Object.entries(tasksByUser)) {
 			try {
 				const user = await client.users.fetch(userId);
+
+				const languageService = LanguageService.getInstance();
+				const userLang = await languageService.getUserLanguage(userId);
+				const langStrings = require(`../../data/languages/${userLang}.json`);
+				const strings = langStrings.events.taskReminders;
+
 				const embed = new EmbedBuilder()
-					.setTitle('⚠️ Task Reminder')
-					.setDescription(`You have ${tasks.length} task(s) due within 24 hours:`)
+					.setTitle(strings.title)
+					.setDescription(
+						strings.title
+						.replace('{length}', tasks.length)
+					)
 					.setColor('#FF0000')
 					.setTimestamp();
 
@@ -49,21 +59,20 @@ async function checkAndSendTaskReminders(client: Client) {
 					embed.addFields([
 						{
 							name: `📌 ${task.title}`,
-							value: `**Due:** ${task.deadline.toLocaleString()}\n` +
-								`**Priority:** ${task.priority}\n` +
-								(task.category ? `**Category:** ${task.category}\n` : '') +
-								(task.progress ? `**Progress:** ${task.progress}%\n` : '') +
-								(task.subtasks?.length ? `**Subtasks:** ${task.subtasks.filter((st: any) => !st.completed).length} remaining\n` : '') +
-								(task.tags?.length ? `**Tags:** ${task.tags.join(', ')}\n` : '')
+							value: `${strings.due} ${task.deadline.toLocaleString()}\n` +
+								`${strings.priority} ${task.priority}\n` +
+								(task.category ? `${strings.category} ${task.category}\n` : '') +
+								(task.progress ? `${strings.progress} ${task.progress}%\n` : '') +
+								(task.subtasks?.length ? `${strings.subtasks} ${task.subtasks.filter((st: any) => !st.completed).length} ${strings.remaining}\n` : '') +
+								(task.tags?.length ? `${strings.tags} ${task.tags.join(', ')}\n` : '')
 						}
 					]);
 				});
 
-				embed.addFields([{ name: 'Note', value: 'Use `/todo list` to view all your tasks.' }]);
+				embed.addFields([{ name: strings.note, value: strings.noteValue }]);
 
 				await user.send({ embeds: [embed] });
 
-				// Mark reminders as sent
 				await Task.updateMany(
 					{ _id: { $in: tasks.map(t => t._id) } },
 					{ $set: { reminderSent: true } }

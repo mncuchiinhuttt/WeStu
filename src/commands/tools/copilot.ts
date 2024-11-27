@@ -5,7 +5,7 @@ async function run ({
 	interaction,
 }: any) {
 	const question = interaction.options.getString('question');
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Thinking...');
 
 	const url = 'https://copilot5.p.rapidapi.com/copilot';

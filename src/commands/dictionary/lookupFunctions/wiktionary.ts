@@ -35,7 +35,7 @@ export function wiktionary({
 	const language: string = interaction.options.getString("language");
 	
 	if (!(lookUpWord)) {
-		interaction.reply("Error: Internal error");
+		interaction.reply({ content: "Error: Internal error", ephemeral: true });
 		return;
 	}
 	
@@ -44,13 +44,13 @@ export function wiktionary({
 		const information = fetchFromWiktionary(<string>lookUpWord.value.trim().replace(/\s+/g, "_"));
 
 		if (!(information)) {
-			interaction.reply("Error: Internal error");
+			interaction.reply({ content: "Error: Internal error", ephemeral: true });
 			return;
 		}
 
 		information.then(async (value) => {
 			if (value === false || value.title === "Not found.") {
-				interaction.reply("No definitions found.");
+				interaction.reply({ content: "No definitions found.", ephemeral: true });
 				return;
 			}
 
@@ -106,11 +106,11 @@ export function wiktionary({
 					const totalPageNumber = message.length();
 
 					if (totalPageNumber === 1) {
-						await interaction.reply(message.get(0));
+						await interaction.reply({ content: message.get(0), ephemeral: true });
 					} else {
-						await interaction.reply(message.get(0) + `-# Page 1/${totalPageNumber}`);
+						await interaction.reply({ content: message.get(0) + `-# Page 1/${totalPageNumber}`, ephemeral: true });
 						for (let i = 1, _n = message.length(); i < _n; i++) {
-							await interaction.followUp(message.get(i) + `-# Page ${i + 1}/${totalPageNumber}`);
+							await interaction.followUp({ content: message.get(i) + `-# Page ${i + 1}/${totalPageNumber}`, ephemeral: true });
 						}
 					}
 				})();
@@ -118,7 +118,7 @@ export function wiktionary({
 				return;
 			} else {
 				const languageName = wiktionaryLanguages.find((lang: any) => lang.id === language).name;
-				await interaction.reply(`Word \`${word}\` does not exist in ${languageName}`);
+				await interaction.reply({ content: `Word \`${word}\` does not exist in ${languageName}`, ephemeral: true });
 				return;
 			}
 		});

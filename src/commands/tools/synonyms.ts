@@ -6,7 +6,7 @@ async function run ({
 	interaction,
 }: any) {
 	const word = interaction.options.getString('word');
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Waiting...');
 
 	if (!word || word.includes(' ')) {

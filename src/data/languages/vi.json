@@ -233,7 +233,206 @@
 			}
 		},
 		"study": {
-
+			"achievement": {
+				"notFound": "🏆 Bạn chưa đạt được bất kỳ thành tựu nào. Hãy tiếp tục học để đạt được chúng!",
+				"title": "🏅 Thành Tựu Của Bạn",
+				"earned": "{index}. **{name}** - Đạt được vào ngày {date}\n"
+			},
+			"achievementService": {
+				"earned": "🎉 Chúc mừng! Bạn đã đạt được thành tựu **{name}**: {description}"
+			},
+			"dailySummary": {
+				"notFound": "📅 Bạn không có phiên học nào hôm nay.",
+				"title": "📅 Tóm Tắt Học Tập Hàng Ngày",
+				"date": "Ngày",
+				"totalStudyTime": "Tổng Thời Gian Học",
+				"sessions": "Phiên Học"
+			},
+			"exportStudyData": {
+				"title": "Xuất Dữ Liệu Học Tập",
+				"notFound": "Không tìm thấy dữ liệu học tập để xuất.",
+				"invalidformat": "Định dạng được chọn không hợp lệ",
+				"error": "Xuất dữ liệu học tập thất bại. Vui lòng thử lại.",
+				"csv": "📁 Đây là dữ liệu học tập của bạn ở định dạng CSV.",
+				"pdf": "📄 Đây là báo cáo học tập của bạn ở định dạng PDF.",
+				"calendar": "📅 Đây là tệp lịch học tập của bạn."
+			},
+			"getRecentStudySessions": {
+				"noSessions": "Bạn chưa có bất kỳ phiên học nào trong {period} ngày qua!",
+				"notUserButton": "Các nút này không dành cho bạn!",
+				"error": "Không thể lấy dữ liệu phiên học. Vui lòng thử lại.",
+				"title": "📚 Các Phiên Học Gần Đây Của Bạn (Trong {period} Ngày Qua)",
+				"description": "⏳ Tổng thời gian học: {totalDuration}",
+				"duration": "Thời Lượng",
+				"sessions": "phiên học"
+			},
+			"leaderboard": {
+				"noData": "🏆 Không có dữ liệu học tập để hiển thị trên bảng xếp hạng.",
+				"title": "🏆 Bảng Xếp Hạng Học Tập",
+				"unknownUser": "Người Dùng Không Xác Định"
+			},
+			"pomodoro": {
+				"stop": "Dừng Pomodoro",
+				"title": "🍅 Bắt Đầu Phiên Pomodoro {currentSession}/{sessions}",
+				"description": "Học: {studyDuration} phút, Nghỉ: {breakDuration} phút",
+				"stopMessage": "Pomodoro đã dừng sau {currentSession} phiên.",
+				"stopTitle": "⏹️ Pomodoro đã dừng",
+				"complete": "🎉 Tất cả các phiên Pomodoro đã hoàn thành!",
+				"break": {
+					"title": "⏰ Phiên {currentSession}/{sessions}",
+					"description": "Thời gian học đã hết! Hãy nghỉ ngơi!",
+					"overTitle": "⏰ Thời gian nghỉ đã kết thúc!",
+					"overMessage": "Bắt đầu phiên {currentSession}/{sessions}"
+				},
+				"allComplete": "🎉 Tất cả các phiên Pomodoro đã hoàn thành!",
+				"error": "Không thể bắt đầu hẹn giờ Pomodoro"
+			},
+			"resources": {
+				"invalidAction": "Hành động không hợp lệ",
+				"noTitleOrDescription": "Bạn phải cung cấp ít nhất tiêu đề và mô tả hoặc liên kết.",
+				"resourceAdd": "✅ Tài nguyên \"{title}\" đã được thêm thành công.\n**Mô tả:** {description}\n**Liên kết:** {link}\n**Chia sẻ:** {share}",
+				"noDescription": "Không có mô tả.",
+				"noLink": "Không có liên kết.",
+				"shareStatus": {
+					"everyone": "Mọi người",
+					"onlyYou": "Chỉ bạn"
+				},
+				"error": "Không thể thêm tài nguyên. Vui lòng thử lại.",
+				"notFound": "Không tìm thấy tài nguyên nào.",
+				"view": {
+					"title": "📚 Tài Nguyên Học Tập",
+					"sharedBy": "Được chia sẻ bởi:",
+					"error": "Không thể lấy tài nguyên. Vui lòng thử lại."
+				},
+				"remove": {
+					"invalidID": "Bạn phải cung cấp ID tài nguyên để xóa.",
+					"notFound": "Không tìm thấy tài nguyên hoặc bạn không có quyền xóa nó.",
+					"success": "✅ Tài nguyên \"{title}\" đã được xóa.",
+					"error": "Không thể xóa tài nguyên. Vui lòng thử lại."
+				}
+			},
+			"review": {
+				"title": "📚 Báo Cáo Đánh Giá Học Tập",
+				"description": "Phân tích học tập {period} ngày qua",
+				"error": "Không thể tạo đánh giá học tập.",
+				"metrics": {
+					"title": "📊 Chỉ Số Cơ Bản",
+					"total": "Tổng Thời Gian Học: {hours}h",
+					"daysStudied": "Số Ngày Học: {days}/{total}",
+					"average": "Trung Bình Mỗi Ngày: {hours}h",
+					"consistency": "Điểm Đều Đặn: {score}%"
+				},
+				"analysis": {
+					"title": "📈 Phân Tích",
+					"trend": "Xu Hướng Học: {trend}",
+					"bestTime": "Thời Gian Học Tốt Nhất: {time}",
+					"consistencyGrade": "Xếp Hạng Đều Đặn: {grade}",
+					"varianceGrade": "Xếp Hạng Biến Động: {grade}"
+				},
+				"recommendations": {
+					"title": "💡 Đề Xuất",
+					"default": "Hãy tiếp tục cố gắng!"
+				},
+				"target": {
+					"title": "🎯 Tiến Độ Mục Tiêu",
+					"weekly": "Mục Tiêu Tuần: {hours}h",
+					"daily": "Tối Thiểu Mỗi Ngày: {hours}h",
+					"progress": "Tiến Độ: {progress}%"
+				},
+				"trends": {
+					"improving": "📈 Đang Cải Thiện",
+					"declining": "📉 Đang Giảm Sút",
+					"stable": "➡️ Ổn Định"
+				}
+			},
+			"setStudyTarget": {
+				"invalidInput": "Vui lòng cung cấp cả mục tiêu hàng tuần và số giờ tối thiểu mỗi ngày.",
+				"errorTitle": "Lỗi",
+				"invalidWeeklyHours": "Mục tiêu hàng tuần phải ít nhất gấp 7 lần số giờ tối thiểu mỗi ngày.",
+				"invalidWeeklyHoursMax": "Mục tiêu hàng tuần không thể vượt quá 168 giờ.",
+				"title": "Đặt Mục Tiêu Học Tập",
+				"description": "Mục tiêu học tập đã được đặt!\n- **Hàng tuần:** {weeklyHours} giờ\n- **Tối thiểu mỗi ngày:** {dailyMinHours} giờ",
+				"errorMessage": "Không thể đặt mục tiêu học tập. Vui lòng thử lại."
+			},
+			"streak": {
+				"title": "🔥 Chuỗi Học Tập ({period} Ngày Qua)",
+				"currentStreak": "Chuỗi Hiện Tại",
+				"longestStreak": "Chuỗi Dài Nhất",
+				"studySessions": "Phiên Học",
+				"goalsInProgress": "Mục Tiêu Đang Thực Hiện",
+				"totalStudyDays": "Tổng Số Ngày Học",
+				"averageHours": "Giờ Trung Bình/Ngày",
+				"daysValue": "{days} ngày",
+				"sessionsValue": "{count} phiên",
+				"goalsValue": "{count} mục tiêu",
+				"hoursValue": "{hours}h",
+				"calendar": {
+					"title": "Lịch Chuỗi Học ({period} Ngày Qua)",
+					"days": {
+						"sun": "CN",
+						"mon": "T2",
+						"tue": "T3",
+						"wed": "T4",
+						"thu": "T5",
+						"fri": "T6",
+						"sat": "T7"
+					},
+					"legend": "Giờ học: ⬜ 0h 🟨 <2h 🟧 <4h 🟥 4h+"
+				},
+				"achievements": {
+					"title": "🏆 Thành Tựu",
+					"weekWarrior": {
+						"name": "Chiến Binh Tuần",
+						"description": "Chuỗi học tập 7 ngày! Tiếp tục phát huy! 🎯"
+					},
+					"monthlyMaster": {
+						"name": "Bậc Thầy Tháng",
+						"description": "Chuỗi học tập 30 ngày tuyệt vời! 🌟"
+					},
+					"centuryClub": {
+						"name": "Câu Lạc Bộ Thế Kỷ",
+						"description": "100 ngày học tập! Sự kiên trì đáng kinh ngạc! 🏆"
+					}
+				},
+				"error": "Không thể lấy thông tin chuỗi học tập"
+			},
+			"studySession": {
+				"invalidTime": {
+					"title": "Thời Gian Lên Lịch Không Hợp Lệ",
+					"description": "Vui lòng sử dụng định dạng `YYYY-MM-DD HH:MM` (UTC+7).",
+					"description2": "Thời gian lên lịch phải ở tương lai."
+				},
+				"pendingSession": {
+					"title": "Phiên Học Đang Chờ",
+					"description": "Bạn đã có một phiên học được lên lịch đang chờ."
+				},
+				"sessionSchedule": {
+					"title": "Phiên Học Đã Lên Lịch",
+					"description": "✅ Phiên học đã được lên lịch vào lúc {time} (UTC+7). Bạn sẽ nhận được tin nhắn khi đến giờ bắt đầu."
+				},
+				"existingSession": {
+					"title": "Phiên Học Đang Diễn Ra",
+					"description": "Bạn đã có một phiên học đang diễn ra!"
+				},
+				"finishButton": "Hoàn Thành Phiên Học",
+				"sessionStart": {
+					"title": "Phiên Học Bắt Đầu",
+					"description": "📝 Phiên học đã bắt đầu! Nhấn nút bên dưới khi bạn hoàn thành."
+				},
+				"sessionTimeout": {
+					"title": "Phiên Học Hết Thời Gian",
+					"description": "⏰ Phiên học đã hết thời gian. Vui lòng bắt đầu một phiên mới."
+				},
+				"error": {
+					"title": "Lỗi",
+					"description": "Không thể quản lý phiên học. Vui lòng thử lại."
+				},
+				"sessionFinish": {
+					"title": "✅ Phiên Học Hoàn Thành",
+					"description": "Bạn đã học trong **{hours} giờ {minutes} phút {seconds} giây**. Làm tốt lắm! 🎉"
+				},
+				"sendUser": "🙌 Tiếp tục duy trì phong độ tuyệt vời! Sự kiên trì là chìa khóa để đạt được mục tiêu của bạn."
+			}
 		},
 		"tools": {
 			"insiderRegister": {
@@ -242,6 +441,46 @@
 			}
 		}
 	}, 
+	"events": {
+		"scheduler": {
+			"startStudyButton": "Bắt Đầu Phiên Học",
+			"scheduledStudySession": {
+				"title": "Phiên Học Đã Lên Lịch",
+				"description": "⏰ Phiên học đã lên lịch của bạn đang bắt đầu ngay bây giờ ({time} UTC+7). Nhấn nút bên dưới để bắt đầu phiên học của bạn."
+			},
+			"finishButton": "Hoàn Thành Phiên Học",
+			"studySessionStarted": {
+				"title": "Phiên Học Bắt Đầu",
+				"description": "📝 Phiên học đã bắt đầu! Nhấn nút bên dưới khi bạn hoàn thành."
+			},
+			"studySessionTimeout": {
+				"title": "Phiên Học Hết Thời Gian",
+				"description": "⏰ Phiên học đã hết thời gian. Vui lòng bắt đầu một phiên mới."
+			},
+			"missedStudySession": {
+				"title": "Phiên Học Bị Bỏ Lỡ",
+				"description": "⚠️ Bạn đã bỏ lỡ phiên học được lên lịch của mình."
+			},
+			"studySessionFinish": {
+				"title": "✅ Phiên Học Hoàn Thành",
+				"description": "Bạn đã học trong **{hours} giờ {minutes} phút {seconds} giây**. Làm tốt lắm! 🎉",
+				"userSend": "🙌 Tiếp tục duy trì phong độ tuyệt vời! Sự kiên trì là chìa khóa để đạt được mục tiêu của bạn."
+			}
+		},
+		"taskReminders": {
+			"title": "⚠️ Nhắc Nhở Công Việc",
+			"description": "Bạn có {length} công việc cần hoàn thành trong vòng 24 giờ:",
+			"due": "**Hạn Chót:**",
+			"priority": "**Ưu Tiên:**",
+			"category": "**Danh Mục:**",
+			"progress": "**Tiến Độ:**",
+			"subtasks": "**Các Công Việc Nhỏ:**",
+			"remaining": "còn lại",
+			"tags": "**Thẻ:**",
+			"note": "Ghi Chú",
+			"noteValue": "Sử dụng `/todo list` để xem tất cả các công việc của bạn."
+		}
+	},
 	"responses": {
 		"welcome": "Chào mừng bạn đến với server!",
 		"goodbye": "Tạm biệt!",

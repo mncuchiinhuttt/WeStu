@@ -1,20 +1,25 @@
 import { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType, EmbedBuilder } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySession';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function startPomodoro(interaction: any) {
+  const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.study.pomodoro;
+  
   try {
-    const studyDuration = (interaction.options.getInteger('duration') || 25) * 60000;
-    const breakDuration = (interaction.options.getInteger('break') || 5) * 60000;
-    const sessions = interaction.options.getInteger('sessions') || 1;
+    const studyDuration = (interaction.options.getInteger('duration') ?? 25) * 60000;
+    const breakDuration = (interaction.options.getInteger('break') ?? 5) * 60000;
+    const sessions = interaction.options.getInteger('sessions') ?? 1;
     let currentSession = 1;
 
-    // Create study session record
     const studySession = await TimeStudySession.create({
       userId: interaction.user.id,
       beginTime: new Date(),
       isPomodoro: true,
       pomodoroConfig: {
-        studyDuration: studyDuration / 60000, // Store in minutes
+        studyDuration: studyDuration / 60000,
         breakDuration: breakDuration / 60000,
         plannedSessions: sessions,
         completedSessions: 0
@@ -23,15 +28,23 @@ export async function startPomodoro(interaction: any) {
 
     const stopButton = new ButtonBuilder()
       .setCustomId('stop-pomodoro')
-      .setLabel('Stop Pomodoro')
+      .setLabel(strings.stop)
       .setStyle(ButtonStyle.Danger);
 
     const row = new ActionRowBuilder<ButtonBuilder>()
       .addComponents(stopButton);
 
     const embed = new EmbedBuilder()
-      .setTitle(`🍅 Starting Pomodoro Session ${currentSession}/${sessions}`)
-      .setDescription(`Study: ${studyDuration / 60000}min, Break: ${breakDuration / 60000}min`)
+      .setTitle(
+        strings.title
+        .replace('{currentSession}', currentSession.toString())
+        .replace('{sessions}', sessions.toString())
+      )
+      .setDescription(
+        strings.description
+        .replace('{studyDuration}', (studyDuration / 60000).toString())
+        .replace('{breakDuration}', (breakDuration / 60000).toString())
+      )
       .setColor(0xff0000);
 
     const response = await interaction.reply({
@@ -56,8 +69,11 @@ export async function startPomodoro(interaction: any) {
         });
 
         const stopEmbed = new EmbedBuilder()
-          .setTitle('⏹️ Pomodoro stopped')
-          .setDescription(`Pomodoro stopped after ${currentSession - 1} sessions.`)
+          .setTitle(strings.stopTitle)
+          .setDescription(
+            strings.stopMessage
+            .replace('{currentSession}', (currentSession - 1).toString())
+          )
           .setColor(0xff0000);
 
         await i.update({
@@ -69,7 +85,6 @@ export async function startPomodoro(interaction: any) {
 
     async function runPomodoroSession() {
       if (currentSession > sessions) {
-        // Update session when all sessions completed
         await TimeStudySession.findByIdAndUpdate(studySession._id, {
           finishTime: new Date(),
           duration: sessions * (studyDuration + breakDuration) / 1000,
@@ -77,7 +92,7 @@ export async function startPomodoro(interaction: any) {
         });
 
         const completeEmbed = new EmbedBuilder()
-          .setTitle('🎉 All Pomodoro sessions completed!')
+          .setTitle(strings.complete)
           .setColor(0x00ff00);
 
         await interaction.editReply({
@@ -89,14 +104,17 @@ export async function startPomodoro(interaction: any) {
 
       setTimeout(async () => {
         if (!collector.ended) {
-          // Update completed sessions after each study period
           await TimeStudySession.findByIdAndUpdate(studySession._id, {
             'pomodoroConfig.completedSessions': currentSession
           });
 
           const breakEmbed = new EmbedBuilder()
-            .setTitle(`⏰ Session ${currentSession}/${sessions}`)
-            .setDescription('Study time is up! Take a break!')
+            .setTitle(
+              strings.break.title
+              .replace('{currentSession}', currentSession.toString())
+              .replace('{sessions}', sessions.toString())
+            )
+            .setDescription(strings.break.description)
             .setColor(0xffff00);
 
           await interaction.followUp({
@@ -109,8 +127,12 @@ export async function startPomodoro(interaction: any) {
               currentSession++;
               if (currentSession <= sessions) {
                 const startEmbed = new EmbedBuilder()
-                  .setTitle(`⏰ Break time is over!`)
-                  .setDescription(`Starting session ${currentSession}/${sessions}`)
+                  .setTitle(strings.break.overTitle)
+                  .setDescription(
+                    strings.break.overMessage
+                    .replace('{currentSession}', currentSession.toString())
+                    .replace('{sessions}', sessions.toString())
+                  )
                   .setColor(0x00ff00);
 
                 await interaction.followUp({
@@ -126,7 +148,7 @@ export async function startPomodoro(interaction: any) {
                 });
 
                 const completeEmbed = new EmbedBuilder()
-                  .setTitle('🎉 All Pomodoro sessions completed!')
+                  .setTitle(strings.allComplete)
                   .setColor(0x00ff00);
 
                 await interaction.editReply({
@@ -145,7 +167,7 @@ export async function startPomodoro(interaction: any) {
   } catch (error) {
     console.error(error);
     await interaction.reply({
-      content: 'Failed to start Pomodoro timer',
+      content: strings.error,
       ephemeral: true
     });
   }

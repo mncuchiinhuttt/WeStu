@@ -6,7 +6,7 @@ async function run ({
 	interaction,
 }: any) {
 	const text = interaction.options.getString('text');
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Checking...');
 
 	const url = `https://www.stands4.com/services/v2/grammar.php?uid=${process.env.STANDS4_UID}&tokenid=${process.env.STANDS4_TOKEN}&text=${encodeURIComponent(text)}&format=json`;

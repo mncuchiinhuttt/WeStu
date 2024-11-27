@@ -1,9 +1,17 @@
 import { CommandInteraction, EmbedBuilder } from "discord.js";
 import { TimeStudySession } from "../../models/TimeStudySession";
 import { StudyTarget } from "../../models/StudyTarget";
+import { LanguageService } from '../../utils/LanguageService';
+
+let strings: any;
 
 export async function reviewStudy(interaction: any) {
   try {
+    const languageService = LanguageService.getInstance();
+    const userLang = await languageService.getUserLanguage(interaction.user.id);
+    const langStrings = require(`../../data/languages/${userLang}.json`);
+    strings = langStrings.commands.study.review;
+
     if (!interaction?.user?.id) {
       throw new Error('Invalid interaction object');
     }
@@ -37,7 +45,7 @@ export async function reviewStudy(interaction: any) {
     console.error('Error in reviewStudy:', error);
     if (interaction?.reply && !interaction.replied) {
       await interaction.reply({
-        content: "Failed to generate study review.",
+        content: strings.error,
         ephemeral: true
       });
     }
@@ -129,36 +137,36 @@ function generateRecommendations(metrics: Metrics, analysis: any, target: any) {
 }
 
 function createReviewEmbed(metrics: Metrics, analysis: any, recommendations: string[], target: any, period: number) {
-	const embed = new EmbedBuilder()
-		.setColor('#0099ff')
-		.setTitle('📚 Study Review Report')
-		.setDescription(`Last ${period} days study analysis`)
-		.addFields(
-			{ name: '📊 Basic Metrics', value: 
-				`Total Study Time: ${metrics.totalHours.toFixed(1)}h\n` +
-				`Days Studied: ${metrics.daysStudied}/${period}\n` +
-				`Average per Day: ${metrics.averageHoursPerDay.toFixed(1)}h\n` +
-				`Consistency Score: ${metrics.consistency.toFixed(1)}%`
-			},
-			{ name: '📈 Analysis', value:
-				`Study Trend: ${analysis.trend}\n` +
-				`Best Study Time: ${analysis.timeOfDay}\n` +
-				`Consistency Grade: ${analysis.consistencyGrade}\n` +
-				`Variance Grade: ${analysis.varianceGrade}`
-			},
-			{ name: '💡 Recommendations', value: recommendations.join('\n') || 'Keep up the good work!' }
-		);
+  const embed = new EmbedBuilder()
+    .setColor('#0099ff')
+    .setTitle(strings.title)
+    .setDescription(strings.description.replace('{period}', period))
+    .addFields(
+      { name: strings.metrics.title, value: 
+        strings.metrics.total.replace('{hours}', metrics.totalHours.toFixed(1)) + '\n' +
+        strings.metrics.daysStudied.replace('{days}', metrics.daysStudied).replace('{total}', period) + '\n' +
+        strings.metrics.average.replace('{hours}', metrics.averageHoursPerDay.toFixed(1)) + '\n' +
+        strings.metrics.consistency.replace('{score}', metrics.consistency.toFixed(1))
+      },
+      { name: strings.analysis.title, value:
+        strings.analysis.trend.replace('{trend}', analysis.trend) + '\n' +
+        strings.analysis.bestTime.replace('{time}', analysis.timeOfDay) + '\n' +
+        strings.analysis.consistencyGrade.replace('{grade}', analysis.consistencyGrade) + '\n' +
+        strings.analysis.varianceGrade.replace('{grade}', analysis.varianceGrade)
+      },
+      { name: strings.recommendations.title, value: recommendations.join('\n') || strings.recommendations.default }
+    );
 
-	if (target) {
-		embed.addFields({
-			name: '🎯 Target Progress',
-			value: `Weekly Target: ${target.weeklyTarget}h\n` +
-				   `Daily Minimum: ${target.dailyMinimum}h\n` +
-				   `Progress: ${((metrics.totalHours / target.weeklyTarget) * 100).toFixed(1)}%`
-		});
-	}
+  if (target) {
+    embed.addFields({
+      name: strings.target.title,
+      value: strings.target.weekly.replace('{hours}', target.weeklyTarget) + '\n' +
+             strings.target.daily.replace('{hours}', target.dailyMinimum) + '\n' +
+             strings.target.progress.replace('{progress}', ((metrics.totalHours / target.weeklyTarget) * 100).toFixed(1))
+    });
+  }
 
-	return embed;
+  return embed;
 }
 
 // Helper functions
@@ -212,9 +220,9 @@ function calculateTrend(sessions: any[]): string {
 	const firstHalf = trend.slice(0, 3).reduce((sum, h) => sum + h, 0);
 	const secondHalf = trend.slice(-3).reduce((sum, h) => sum + h, 0);
 	
-	if (secondHalf > firstHalf * 1.2) return "📈 Improving";
-	if (secondHalf < firstHalf * 0.8) return "📉 Declining";
-	return "➡️ Stable";
+	if (secondHalf > firstHalf * 1.2) return strings.trends.improving;
+	if (secondHalf < firstHalf * 0.8) return strings.trends.declining;
+	return strings.trends.stable;
 }
 
 function analyzeTimeOfDay(sessions: any[]): string {

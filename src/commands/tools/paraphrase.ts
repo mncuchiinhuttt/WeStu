@@ -6,7 +6,7 @@ async function run ({
 }: any) {
 	const text = interaction.options.getString('text')!;
 
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Paraphrasing...');
 
 	const url = 'https://rewriter-paraphraser-text-changer-multi-language.p.rapidapi.com/rewrite';

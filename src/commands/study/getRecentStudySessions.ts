@@ -7,16 +7,23 @@ import {
   EmbedBuilder 
 } from "discord.js";
 import { TimeStudySession } from "../../models/TimeStudySession";
+import { LanguageService } from "../../utils/LanguageService";
 
 const SESSIONS_PER_PAGE = 10;
+let strings: any;
 
 export async function getRecentStudySessions(interaction: any) {
+  const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+  strings = langStrings.commands.study.getRecentStudySessions;
+
   try {
     if (!interaction?.user?.id) {
       throw new Error('Invalid interaction object');
     }
 
-    const period = interaction.options.getString('period') || '7';
+    const period = interaction.options.getString('period') ?? '7';
     const daysAgo = new Date();
     daysAgo.setDate(daysAgo.getDate() - parseInt(period));
 
@@ -27,13 +34,12 @@ export async function getRecentStudySessions(interaction: any) {
 
     if (sessions.length === 0) {
       await interaction.reply({
-        content: `You haven't had any study sessions in the last ${period} days!`,
+        content: strings.noSessions.replace('{period}', period),
         ephemeral: true
       });
       return;
     }
 
-    // Calculate total study time
     const totalDuration = sessions.reduce((total, session) => {
       return total + (session.duration || 0);
     }, 0);
@@ -75,7 +81,7 @@ export async function getRecentStudySessions(interaction: any) {
     collector.on('collect', async (i: any) => {
       if (i.user.id !== interaction.user.id) {
         await i.reply({ 
-          content: 'These buttons are not for you!', 
+          content: strings.notUserButton, 
           ephemeral: true 
         });
         return;
@@ -87,11 +93,9 @@ export async function getRecentStudySessions(interaction: any) {
         currentPage++;
       }
 
-      // Update button states
       prevButton.setDisabled(currentPage === 0);
       nextButton.setDisabled(currentPage === totalPages - 1);
 
-      // Update embed
       const newEmbed = createPageEmbed(sessions, currentPage, totalPages, period, totalDuration);
 
       await i.update({
@@ -112,7 +116,7 @@ export async function getRecentStudySessions(interaction: any) {
     console.error('Error in getRecentStudySessions:', error);
     if (interaction?.reply && !interaction.replied) {
       await interaction.reply({
-        content: "Failed to fetch study sessions. Please try again.",
+        content: strings.error,
         ephemeral: true
       });
     }
@@ -131,16 +135,20 @@ function createPageEmbed(
 
   const embed = new EmbedBuilder()
     .setColor('#0099ff')
-    .setTitle(`Your Study Sessions (Last ${period} Days)`)
-    .setDescription(`Total study time: ${formatDuration(totalDuration)}`)
-    .setFooter({ text: `Page ${currentPage + 1}/${totalPages}` });
+    .setTitle(
+      strings.title.replace('{period}', period)
+    )
+    .setDescription(
+      strings.description.replace('{totalDuration}', formatDuration(totalDuration))
+    )
+    .setFooter({ text: `Page ${currentPage + 1}/${totalPages} 📄` });
 
   pageItems.forEach(session => {
     embed.addFields({
       name: formatDate(session.beginTime),
-      value: `Duration: ${formatDuration(session.duration || 0)}${
+      value: `${strings.duration}: ${formatDuration(session.duration || 0)}${
         session.isPomodoro 
-          ? `\nPomodoro: ${session.pomodoroConfig?.completedSessions}/${session.pomodoroConfig?.plannedSessions} sessions` 
+          ? `\nPomodoro: ${session.pomodoroConfig?.completedSessions}/${session.pomodoroConfig?.plannedSessions} ${strings.sessions}` 
           : ''
       }`,
       inline: false
@@ -176,5 +184,4 @@ function formatDate(date: Date): string {
   };
 
   return date.toLocaleString('en-US', options);
-  // Example output: "Mon, Mar 18, 14:30"
 }

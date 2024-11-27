@@ -1,8 +1,13 @@
 import { CommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySession';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function displayLeaderboard(interaction: CommandInteraction) {
-	// Fetch leaderboard data
+	const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.study.leaderboard;
+
 	const leaderboardData = await TimeStudySession.aggregate([
 		{ $match: { finishTime: { $exists: true } } },
 		{ 
@@ -17,7 +22,7 @@ export async function displayLeaderboard(interaction: CommandInteraction) {
 
 	if (leaderboardData.length === 0) {
 		await interaction.reply({
-			content: '🏆 No study data available for the leaderboard.',
+			content: strings.noData,
 			ephemeral: true,
 		});
 		return;
@@ -33,7 +38,7 @@ export async function displayLeaderboard(interaction: CommandInteraction) {
 		const currentData = leaderboardData.slice(start, end);
 
 		const embed = new EmbedBuilder()
-			.setTitle('🏆 Study Leaderboard')
+			.setTitle(strings.title)
 			.setColor('#FFD700')
 			.setFooter({ text: `Page ${page} of ${totalPages}` })
 			.setTimestamp();
@@ -42,7 +47,7 @@ export async function displayLeaderboard(interaction: CommandInteraction) {
 		for (let i = 0; i < currentData.length; i++) {
 			const rank = start + i + 1;
 			const user = interaction.client.users.cache.get(currentData[i]._id) || await interaction.client.users.fetch(currentData[i]._id).catch(() => null);
-			const username = user ? user.username : 'Unknown User';
+			const username = user ? user.username : strings.unknownUser;
 			const duration = formatDuration(currentData[i].totalDuration);
 			description += `${rank}. **${username}** - ${duration}\n`;
 		}

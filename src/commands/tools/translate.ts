@@ -8,7 +8,7 @@ async function run ({
 	const orginal_language = interaction.options.getString('orginal_language')!;
 	const target_language = interaction.options.getString('target_language')!;
 
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Translating...');
 
 	const url = 'https://deep-translate1.p.rapidapi.com/language/translate/v2';

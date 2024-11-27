@@ -7,7 +7,7 @@ async function run ({
 	const text = interaction.options.getString('text')!;
 	const mode = interaction.options.getString('mode')!;
 
-	await interaction.deferReply();
+	await interaction.deferReply({ ephemeral: true });
 	await interaction.editReply('Summarizing...');
 
 	const url = (mode === 'high') ? 'https://cheapest-gpt-ai-summarization.p.rapidapi.com/api/summarize' : 'https://cheapest-gpt-ai-summarization.p.rapidapi.com/api/summarize-simple';

@@ -1,11 +1,17 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySession';
 import moment from 'moment-timezone';
+import { LanguageService } from '../../utils/LanguageService';
 
 export async function dailyStudySummary(interaction: CommandInteraction) {
   const userId = interaction.user.id;
   const startOfDay = moment().tz('Asia/Bangkok').startOf('day').toDate();
   const endOfDay = moment().tz('Asia/Bangkok').endOf('day').toDate();
+
+  const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(userId);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+	const strings = langStrings.commands.study.dailySummary;
 
   const sessions = await TimeStudySession.find({
     userId: userId,
@@ -15,7 +21,7 @@ export async function dailyStudySummary(interaction: CommandInteraction) {
 
   if (sessions.length === 0) {
     await interaction.reply({
-      content: '📅 You have no study sessions today.',
+      content: strings.notFound,
       ephemeral: true,
     });
     return;
@@ -36,12 +42,12 @@ export async function dailyStudySummary(interaction: CommandInteraction) {
   const totalDuration = `${Math.floor(totalSeconds / 3600)}h ${Math.floor((totalSeconds % 3600) / 60)}m`;
 
   const embed = new EmbedBuilder()
-    .setTitle('📅 Daily Study Summary')
+    .setTitle(strings.title)
     .addFields(
-      { name: 'Date', value: moment().tz('Asia/Bangkok').format('YYYY-MM-DD'), inline: true },
-      { name: 'Total Study Time', value: totalDuration, inline: true },
-      { name: '\u200B', value: '\u200B' }, // Empty field for spacing
-      { name: 'Sessions', value: description },
+      { name: strings.date, value: moment().tz('Asia/Bangkok').format('YYYY-MM-DD'), inline: true },
+      { name: strings.totalStudyTime, value: totalDuration, inline: true },
+      { name: '\u200B', value: '\u200B' },
+      { name: strings.sessions, value: description },
     )
     .setColor('#1E90FF')
     .setTimestamp();

@@ -12,8 +12,16 @@ import moment from 'moment-timezone';
 import { TimeStudySession } from '../../models/TimeStudySession';
 import { updateUserStreak } from './streakService';
 import { checkAndAwardAchievements } from './achievementService';
+import { LanguageService } from '../../utils/LanguageService';
+
+let strings: any;
 
 export async function manageStudySession(interaction: any) {
+  const languageService = LanguageService.getInstance();
+	const userLang = await languageService.getUserLanguage(interaction.user.id);
+	const langStrings = require(`../../data/languages/${userLang}.json`);
+  strings = langStrings.commands.study.studySession;
+
   try {
     const userId = interaction.user.id;
     const scheduleInput = interaction.options.getString('schedule');
@@ -25,8 +33,8 @@ export async function manageStudySession(interaction: any) {
 
       if (!scheduledTime) {
         const embed = new EmbedBuilder()
-          .setTitle('Invalid Schedule Time')
-          .setDescription('Please use the format `YYYY-MM-DD HH:MM` (UTC+7).')
+          .setTitle(strings.invalidTime.title)
+          .setDescription(strings.invalidTime.description)
           .setColor('#ff0000');
 
         await interaction.reply({
@@ -39,8 +47,8 @@ export async function manageStudySession(interaction: any) {
       // Check if the scheduled time is in the past
       if (scheduledTime.getTime() <= Date.now()) {
         const embed = new EmbedBuilder()
-          .setTitle('Invalid Schedule Time')
-          .setDescription('Scheduled time must be in the future.')
+          .setTitle(strings.invalidTime)
+          .setDescription(strings.invalidTime.description2)
           .setColor('#ff0000');
 
         await interaction.reply({
@@ -60,8 +68,8 @@ export async function manageStudySession(interaction: any) {
 
       if (existingScheduledSession) {
         const embed = new EmbedBuilder()
-          .setTitle('Pending Scheduled Session')
-          .setDescription('You already have a scheduled study session pending.')
+          .setTitle(strings.pendingSession.title)
+          .setDescription(strings.pendingSession.description)
           .setColor('#ff0000');
 
         await interaction.reply({
@@ -79,8 +87,10 @@ export async function manageStudySession(interaction: any) {
       });
 
       const embed = new EmbedBuilder()
-        .setTitle('Study Session Scheduled')
-        .setDescription(`✅ Study session scheduled for ${moment(scheduledTime).tz('Asia/Bangkok').format('YYYY-MM-DD HH:mm')} (UTC+7). You will receive a DM when it's time to start.`)
+        .setTitle(strings.sessionSchedule.title)
+        .setDescription(
+          strings.sessionSchedule.description.replace('{time}', moment(scheduledTime).tz('Asia/Bangkok').format('YYYY-MM-DD HH:mm'))
+        )
         .setColor('#00ff00');
 
       await interaction.reply({
@@ -89,9 +99,6 @@ export async function manageStudySession(interaction: any) {
       });
 
     } else {
-      // Start an immediate study session
-
-      // Check for existing active session
       const existingSession = await TimeStudySession.findOne({
         userId: userId,
         finishTime: { $exists: false },
@@ -100,8 +107,8 @@ export async function manageStudySession(interaction: any) {
 
       if (existingSession) {
         const embed = new EmbedBuilder()
-          .setTitle('Active Study Session')
-          .setDescription('You already have an active study session!')
+          .setTitle(strings.existingSession.title)
+          .setDescription(strings.existingSession.description)
           .setColor('#ff0000');
 
         await interaction.reply({
@@ -114,7 +121,7 @@ export async function manageStudySession(interaction: any) {
       // Create finish button
       const finishButton = new ButtonBuilder()
         .setCustomId('finish-study')
-        .setLabel('Finish Study Session')
+        .setLabel(strings.finishButton)
         .setStyle(ButtonStyle.Primary);
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(finishButton);
@@ -126,8 +133,8 @@ export async function manageStudySession(interaction: any) {
       });
 
       const embed = new EmbedBuilder()
-        .setTitle('Study Session Started')
-        .setDescription('📝 Study session started! Click the button below when you\'re done.')
+        .setTitle(strings.sessionStart.title)
+        .setDescription(strings.sessionStart.description)
         .setColor('#00ff00');
 
       const response = await interaction.reply({
@@ -139,7 +146,7 @@ export async function manageStudySession(interaction: any) {
       // Create collector for button interaction
       const collector = response.createMessageComponentCollector({
         componentType: ComponentType.Button,
-        time: 24 * 60 * 60 * 1000, // 24 hours
+        time: 24 * 60 * 60 * 1000, 
       });
 
       collector.on('collect', async (i: MessageComponentInteraction) => {
@@ -154,15 +161,15 @@ export async function manageStudySession(interaction: any) {
           const session = await TimeStudySession.findById(newSession._id);
           if (!session?.finishTime) {
             const embed = new EmbedBuilder()
-              .setTitle('Study Session Timed Out')
-              .setDescription('⏰ Study session timed out. Please start a new session.')
+              .setTitle(strings.sessionTimeout.title)
+              .setDescription(strings.sessionTimeout.description)
               .setColor('#ff0000');
 
             await interaction.editReply({
               embeds: [embed],
               components: [],
             });
-            // Optionally, mark the session as timed out or remove it
+            
             await TimeStudySession.findByIdAndDelete(newSession._id);
           }
         }
@@ -172,8 +179,8 @@ export async function manageStudySession(interaction: any) {
   } catch (error) {
     console.error('Error in study session:', error);
     const embed = new EmbedBuilder()
-      .setTitle('Error')
-      .setDescription('Failed to manage study session. Please try again.')
+      .setTitle(strings.error.title)
+      .setDescription(strings.error.description)
       .setColor('#ff0000');
 
     await interaction.reply({
@@ -199,8 +206,13 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
   const seconds = duration % 60;
 
   const embed = new EmbedBuilder()
-    .setTitle('✅ Study Session Completed')
-    .setDescription(`You studied for **${hours}h ${minutes}m ${seconds}s**. Great job! 🎉`)
+    .setTitle(strings.sessionFinish.title)
+    .setDescription(
+      strings.sessionFinish.description
+      .replace('{hours}', hours.toString())
+      .replace('{minutes}', minutes.toString())
+      .replace('{seconds}', seconds.toString())
+    )
     .setColor('#00ff00')
     .setTimestamp();
 
@@ -215,7 +227,7 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
   // Send a follow-up motivational message
   try {
     const user = await interaction.user.fetch();
-    await user.send('🙌 Keep up the fantastic work! Consistency is key to achieving your goals.');
+    await user.send(strings.sendUser);
   } catch (error) {
     console.error('Error sending motivational message:', error);
   }
