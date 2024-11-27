@@ -50,7 +50,7 @@ export async function addTask(interaction: any) {
 			)
 			.setColor(0x00FF00);
 
-		await interaction.editReply({
+		await interaction.reply({
 			embeds: [embed],
 			ephemeral: true
 		});
