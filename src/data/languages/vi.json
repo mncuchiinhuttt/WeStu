@@ -618,6 +618,15 @@
 				"total": "Tổng Số Thẻ",
 				"example": "Định Dạng Ví Dụ",
 				"exmapleValue": "Q: Câu hỏi của bạn\nA: Câu trả lời của bạn\nT: Chủ đề (tùy chọn)\nV: public/private"
+			},
+			"exportFlashcards": {
+				"noFlashcards": "❌ Không tìm thấy flashcard nào để xuất",
+				"invalidFormat": "❌ Định dạng không hợp lệ",
+				"title": "📤 Flashcard Đã Được Xuất",
+				"description": "Đã xuất thành công {flashcards} flashcard",
+				"format": "Định Dạng",
+				"cardExport": "Thẻ Đã Được Xuất",
+				"error": "❌ Không thể xuất flashcard"
 			}
 		}
 	}, 

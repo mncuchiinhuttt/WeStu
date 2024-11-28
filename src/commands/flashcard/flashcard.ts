@@ -8,6 +8,7 @@ import { listFlashcards } from './listFlashcards';
 import { showFlashcard } from './showFlashcard';
 import { importHelp } from './importHelp';
 import { importFlashcards } from './importFlashcards';
+import { exportFlashcards } from './exportFlashcards';
 
 export async function run({ interaction }: any) {
 	const subcommand = interaction.options.getSubcommand();
@@ -35,6 +36,9 @@ export async function run({ interaction }: any) {
 			break;
 		case 'import':
 			importFlashcards(interaction);
+			break;
+		case 'export':
+			exportFlashcards(interaction);
 			break;
 	}
 }
@@ -238,6 +242,42 @@ export const data = new SlashCommandBuilder()
 		.setDescriptionLocalizations({
 			'vi': 'Hướng dẫn cách nhập flashcard từ file văn bản'
 		})
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('export')
+		.setDescription('Export flashcards to a file')
+		.setDescriptionLocalizations({
+			'vi': 'Xuất flashcard ra file'
+		})
+		.addStringOption(option =>
+			option
+			.setName('format')
+			.setDescription('The format to export the flashcards in')
+			.setDescriptionLocalizations({
+				'vi': 'Định dạng xuất flashcard'
+			})
+			.setRequired(true)
+			.addChoices(
+				{ name: 'Text File', value: 'txt' },
+				{ name: 'CSV', value: 'csv' },
+				{ name: 'Excel', value: 'xlsx' }
+			)
+		)
+		.addIntegerOption(option =>
+			option
+			.setName('visibility')
+			.setDescription('The visibility of the flashcards to export')
+			.setDescriptionLocalizations({
+				'vi': 'Loại flashcard cần xuất'
+			})
+			.setRequired(true)
+			.addChoices(
+				{ name: 'My flashcards', value: Visibility.Private },
+				{ name: 'Public flashcards', value: Visibility.Public },
+				{ name: 'All flashcards', value: -1 }
+			)
+		)
 	)
 
 export const options = {

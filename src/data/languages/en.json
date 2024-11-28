@@ -618,6 +618,15 @@
 				"total": "Total Cards",
 				"example": "Example Format",
 				"exmapleValue": "Q: Your question\nA: Your answer\nT: Topic (optional)\nV: public/private"
+			},
+			"exportFlashcards": {
+				"noFlashcards": "❌ No flashcards found to export",
+				"invalidFormat": "❌ Invalid format specified",
+				"title": "📤 Flashcards Exported",
+				"description": "Successfully exported {flashcards} flashcards",
+				"format": "Format",
+				"cardExport": "Cards Exported",
+				"error": "❌ Failed to export flashcards"
 			}
 		}
 	}, 
