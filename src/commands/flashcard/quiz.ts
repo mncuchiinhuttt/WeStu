@@ -1,6 +1,7 @@
-import { Flashcard, Visibility } from "../../models/Flashcard";
+import { Flashcard, Visibility, Difficulty } from "../../models/Flashcard";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction as Interaction, EmbedBuilder } from 'discord.js';
 import { LanguageService } from "../../utils/LanguageService";
+import { FlashcardTag } from "../../models/FlashcardTag";
 
 export async function quiz(interaction: Interaction) {
 	const topic = interaction.options.getString('topic') ?? null;
@@ -50,10 +51,34 @@ export async function quiz(interaction: Interaction) {
 		return;
 	}
 
+	const difficultyString = doc.difficulty === Difficulty.Easy ? strings.easy : doc.difficulty === Difficulty.Medium ? strings.medium : strings.hard;
+	
 	const embed = new EmbedBuilder()
 		.setTitle(`📝 ${strings.quiz}${topic ? ` ${strings.onTopic} \"${topic}\"` : ""}`)
 		.setDescription(`**❓ Q**: ${doc.question}`)
+		.addFields(
+			{ name: strings.difficulty, value: difficultyString, inline: true }
+		)
 		.setColor(0x00AE86);
+
+		if (doc.hints?.length) {
+			embed.addFields({ name: strings.hints, value: doc.hints.join('\n'), inline: true });
+		}
+
+		if (doc.examples?.length) {
+			embed.addFields({ name: strings.examples, value: doc.examples.join('\n'), inline: true });
+		}
+
+		if (doc.tag) {
+			const tagName = (await FlashcardTag.findById(doc.tag))?.name ?? strings.none;
+			embed.addFields({ name: strings.tag, value: tagName, inline: true });
+		}
+
+	if (doc.mediaUrl && doc.mediaType === 'image') {
+		embed.setImage(doc.mediaUrl);
+	} else if (doc.mediaUrl && doc.mediaType === 'audio') {
+		embed.addFields({ name: strings.audio, value: doc.mediaUrl });
+	}
 
 	const revealButton = new ButtonBuilder()
 		.setCustomId('flashcard-quiz-reveal-answer')

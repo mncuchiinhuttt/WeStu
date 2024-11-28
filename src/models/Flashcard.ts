@@ -7,6 +7,12 @@ export enum Visibility {
 	GroupShared = 3
 }
 
+export enum Difficulty {
+	Easy = 'easy',
+	Medium = 'medium',
+	Hard = 'hard'
+}
+
 const flashcardSchema = new mongoose.Schema({
 	question: { type: String, required: true },
 	answer: { type: String, required: true },
@@ -17,6 +23,12 @@ const flashcardSchema = new mongoose.Schema({
 	visibility: { type: Number, default: Visibility.Private, required: true },
 	approved: { type: Boolean, required: false },
 	groupIds: [{ type: String }],
+	mediaUrl: { type: String, required: false, default: null },
+	mediaType: { type: String, enum: ['image', 'audio', null], required: false, default: null },
+	hints: { type: [String], required: false, default: [] },
+	examples: { type: [String], required: false, default: [] },
+	tag: { type: String, required: false, default: null },
+	difficulty: { type: String, required: false, default: Difficulty.Medium }
 });
 
 export const Flashcard = mongoose.model('Flashcard', flashcardSchema);

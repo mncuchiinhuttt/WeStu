@@ -2,26 +2,52 @@ import { CommandInteraction, EmbedBuilder, AttachmentBuilder } from 'discord.js'
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function importHelp(interaction: any) {
-	const sampleContent = 
+  const sampleContent = 
 `# Flashcard Import Format Guide
-# Use Q: for questions, A: for answers
-# T: for topic (optional), V: for visibility (public/private)
+# Required fields:
+# Q: Question
+# A: Answer
+#
+# Optional fields:
+# T: Topic
+# V: Visibility (public/private)
+# D: Difficulty (easy/medium/hard)
+# H: Hints (separate multiple with semicolon)
+# E: Examples (separate multiple with semicolon)
+# G: Tag ID
+# M: Media URL (image or audio)
+# MT: Media Type (image/audio)
+#
 # Leave a blank line between cards
 
 Q: What is the capital of France?
 A: Paris
 T: Geography
 V: public
+D: easy
+H: Think of the Eiffel Tower; Most populated city in France
+E: The Louvre is in Paris; Paris hosts many international events
+G: 507f1f77bcf86cd799439011
+M: https://example.com/paris.jpg
+MT: image
 
-Q: What is 2+2?
-A: 4
-T: Math
-V: private
-
-Q: What is the main purpose of TypeScript?
-A: TypeScript adds static typing to JavaScript
+Q: What is TypeScript?
+A: A superset of JavaScript that adds static typing
 T: Programming
-V: public`;
+V: private
+D: medium
+H: Made by Microsoft; Compiles to JavaScript
+E: interface User { id: number; name: string; }
+G: 507f1f77bcf86cd799439012
+
+Q: What is the theory of relativity?
+A: E = mc²
+T: Physics
+V: public
+D: hard
+H: Developed by Einstein; Relates mass and energy
+E: Light bends near massive objects; Time dilation in space
+G: 507f1f77bcf86cd799439013`;
 
 	const buffer = Buffer.from(sampleContent, 'utf-8');
 	const attachment = new AttachmentBuilder(buffer, {
@@ -52,7 +78,7 @@ V: public`;
 			},
 			{
 				name: strings.example.title,
-				value: '```\nQ: What is TypeScript?\nA: A superset of JavaScript\nT: Programming\nV: public\n```'
+				value: '```\nQ: What is Git?\nA: A distributed version control system\nT: Programming\nV: public\nD: medium\nH: Created by Linus Torvalds\nE: git commit -m "example"\nG: 507f1f77bcf86cd799439014\n```'
 			}
 		)
 		.setColor('#00ff00')

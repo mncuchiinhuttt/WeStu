@@ -35,29 +35,42 @@ export async function exportFlashcards(interaction: any) {
 			case 'txt':
 				const txtContent = flashcards.map(card => {
 					return [
-						`Q: ${card.question}`,
-						`A: ${card.answer}`,
-						card.topic ? `T: ${card.topic}` : '',
-						`V: ${card.visibility === Visibility.Public ? 'public' : 'private'}`,
-						'',
+					`Q: ${card.question}`,
+					`A: ${card.answer}`,
+					card.topic ? `T: ${card.topic}` : '',
+					`V: ${card.visibility === Visibility.Public ? 'public' : 'private'}`,
+					`D: ${card.difficulty}`,
+					card.hints?.length ? `H: ${card.hints.join('; ')}` : '',
+					card.examples?.length ? `E: ${card.examples.join('; ')}` : '',
+					card.tag ? `G: ${card.tag}` : '',
+					card.mediaUrl ? `M: ${card.mediaUrl}` : '',
+					card.mediaType ? `MT: ${card.mediaType}` : '',
+					''
 					].filter(Boolean).join('\n');
 				}).join('\n');
-
 				buffer = Buffer.from(txtContent, 'utf-8');
 				filename = 'flashcards.txt';
 				break;
 
 			case 'csv':
-				const fields = ['question', 'answer', 'topic', 'visibility'];
-				const parser = new Parser({ fields });
+				const fields = [
+					'question', 'answer', 'topic', 'visibility', 'difficulty',
+					'hints', 'examples', 'tag', 'mediaUrl', 'mediaType'
+				];
 				const csvData = flashcards.map(card => ({
 					question: card.question,
 					answer: card.answer,
-					topic: card.topic || '',
-					visibility: card.visibility === Visibility.Public ? 'public' : 'private'
+					topic: card.topic ?? '',
+					visibility: card.visibility === Visibility.Public ? 'public' : 'private',
+					difficulty: card.difficulty,
+					hints: card.hints?.join('; ') ?? '',
+					examples: card.examples?.join('; ') ?? '',
+					tag: card.tag ?? '',
+					mediaUrl: card.mediaUrl ?? '',
+					mediaType: card.mediaType ?? ''
 				}));
-
-				buffer = Buffer.from(parser.parse(csvData), 'utf-8');
+				const json2csvParser = new Parser({ fields });
+				buffer = Buffer.from(json2csvParser.parse(csvData), 'utf-8');
 				filename = 'flashcards.csv';
 				break;
 
@@ -68,9 +81,14 @@ export async function exportFlashcards(interaction: any) {
 					Answer: card.answer,
 					Topic: card.topic ?? '',
 					Visibility: card.visibility === Visibility.Public ? 'public' : 'private',
+					Difficulty: card.difficulty,
+					Hints: card.hints ? card.hints.join('; ') : '',
+					Examples: card.examples ? card.examples.join('; ') : '',
+					Tags: card.tag ?? '',
+					MediaUrl: card.mediaUrl ?? '',
+					MediaType: card.mediaType ?? '',
 					Created: card.createdAt.toISOString()
 				})));
-
 				XLSX.utils.book_append_sheet(workbook, worksheet, 'Flashcards');
 				buffer = Buffer.from(XLSX.write(workbook, { type: 'buffer' }));
 				filename = 'flashcards.xlsx';

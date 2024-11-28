@@ -54,7 +54,7 @@ export async function addGroupMember(interaction: any) {
 		await member.send({
 			content: strings.dm
 			.replace('{group}', group.name)
-			.replace('{owner}', `<@${group.ownerId}>`)
+			.replace('{owner}', `@${group.ownerId}`)
 		});
 
 	} catch (error) {

@@ -515,7 +515,16 @@
 				"public": "Public",
 				"private": "Private",
 				"error": "❌ Error",
-				"errorDescription": "There was an error creating the flashcard. Please try again."
+				"errorDescription": "There was an error creating the flashcard. Please try again.",
+				"difficulty": "🌟 Difficulty",
+				"hints": "💡 Hints",
+				"examples": "📝 Examples",
+				"tag": "🏷️ Tags",
+				"tagNotFound": "❌ Tag not found",
+				"easy": "Easy",
+				"medium": "Medium",
+				"hard": "Hard",
+				"media": "🖼️ Media"
 			},
 			"quiz": {
 				"noFlashcards": {
@@ -525,7 +534,15 @@
 				"quiz": "Quiz",
 				"onTopic": "on topic",
 				"reveal": "Reveal Answer",
-				"answer": "Answer"
+				"answer": "Answer",
+				"difficulty": "🌟 Difficulty",
+				"easy": "Easy",
+				"medium": "Medium",
+				"hard": "Hard",
+				"hints":"💡 Hints",
+				"examples": "📝 Examples",
+				"tag": "🏷️ Tags",
+				"none": "None"
 			},
 			"deleteFlashcard": {
 				"notFound": "❌ Flashcard not found",
@@ -571,7 +588,14 @@
 				"author": "Created by",	
 				"created": "Created at",
 				"none": "None",
-				"error": "❌ Failed to show flashcard details"
+				"error": "❌ Failed to show flashcard details",
+				"difficulty": "🌟 Difficulty",
+				"hints": "💡 Hints",
+				"tag": "🏷️ Tags",
+				"examples": "📝 Examples",
+				"easy": "Easy",
+				"medium": "Medium",
+				"hard": "Hard"
 			},
 			"importHelp": {
 				"title": "📝 Flashcard Import Guide",
@@ -579,11 +603,19 @@
 				"format": {
 					"title": "📄 File Format",
 					"description": [
-						"• Use a simple `.txt` file",
-						"• Each card starts with a question (Q:)",
-						"• Followed by an answer (A:)",
-						"• Optionally add topic (T:)",
-						"• Set visibility with (V: public/private)",
+						"• Use a simple .txt file",
+						"• Required fields:",
+						"- Q: Question",
+						"- A: Answer",
+						"• Optional fields:",
+						"- T: Topic",
+						"- V: Visibility (public/private)",
+						"- D: Difficulty (easy/medium/hard)",
+						"- H: Hints (separate multiple with semicolon)",
+						"- E: Examples (separate multiple with semicolon)",
+						"- G: Tag ID (from /flashcard tags list)",
+						"- M: Media URL (image or audio link)",
+						"- MT: Media Type (image/audio)",
 						"• Leave a blank line between cards"
 					]
 				},
@@ -592,16 +624,23 @@
 					"description": [
 						"• Keep questions clear and concise",
 						"• Make sure each card has both Q: and A:",
-						"• Check file encoding is UTF-8",
-						"• Maximum 100 cards per import"
+						"• Use semicolons to separate multiple hints/examples",
+						"• Get Tag ID from /flashcard tags list command",
+						"• Media URLs must be publicly accessible",
+						"• Media Type must match the URL content",
+						"• Maximum 100 cards per import",
+						"• Check file encoding is UTF-8"
 					]
 				},
 				"issues": {
 					"title": "⚠️ Common Issues",
 					"description": [
-						"• Missing Q: or A: prefix",
+						"• Missing required Q: or A: prefix",
+						"• Invalid difficulty value (must be easy/medium/hard)",
+						"• Invalid tag ID",
+						"• Invalid media type (must be image/audio)",
+						"• Inaccessible media URL",
 						"• No blank line between cards",
-						"• Invalid visibility setting",
 						"• File too large"
 					]
 				},
@@ -627,6 +666,9 @@
 				"format": "Format",
 				"cardExport": "Cards Exported",
 				"error": "❌ Failed to export flashcards"
+			},
+			"tagManagement": {
+				"notAdmin": "❌ Only admins can manage tags"
 			}
 		}
 	}, 

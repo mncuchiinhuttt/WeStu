@@ -9,6 +9,12 @@ interface FlashcardImport {
 	answer: string;
 	topic?: string;
 	visibility: Visibility;
+	difficulty?: string;
+	hints?: string[];
+	examples?: string[];
+	tag?: string;
+	mediaUrl?: string;
+	mediaType?: string;
 }
 
 export async function importFlashcards(interaction: any) {
@@ -66,6 +72,24 @@ export async function importFlashcards(interaction: any) {
 					currentCard.visibility = value.toLowerCase() === 'public' ? 
 						Visibility.Public : Visibility.Private;
 					break;
+					case 'D':
+						currentCard.difficulty = value;
+						break;
+					case 'H':
+						currentCard.hints = value.split(';').map(h => h.trim());
+						break;
+					case 'E':
+						currentCard.examples = value.split(';').map(e => e.trim());
+						break;
+					case 'G':
+						currentCard.tag = value;
+						break;
+					case 'M':
+						currentCard.mediaUrl = value;
+						break;
+					case 'MT':
+						currentCard.mediaType = value;
+						break;
 			}
 		}
 
@@ -84,6 +108,12 @@ export async function importFlashcards(interaction: any) {
 				answer: card.answer,
 				topic: card.topic,
 				visibility: card.visibility,
+				difficulty: card.difficulty,
+				hints: card.hints,
+				examples: card.examples,
+				tag: card.tag,
+				mediaUrl: card.mediaUrl,
+				mediaType: card.mediaType,
 				user: interaction.user.id,
 				guild: interaction.guildId
 			})

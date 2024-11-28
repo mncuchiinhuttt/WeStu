@@ -510,12 +510,21 @@
 			"create_flashcard": {
 				"title": "📚 Flashcard Đã Được Tạo",
 				"topic": "📂 Chủ Đề",
-				"none": "Không có",
-				"visibility": "👁️ Chế độ Hiển Thị",
+				"none": "Không Có",
+				"visibility": "👁️ Quyền riêng tư",
 				"public": "Công Khai",
 				"private": "Riêng Tư",
 				"error": "❌ Lỗi",
-				"errorDescription": "Đã xảy ra lỗi khi tạo flashcard. Vui lòng thử lại."
+				"errorDescription": "Đã xảy ra lỗi khi tạo flashcard. Vui lòng thử lại.",
+				"difficulty": "🌟 Độ Khó",
+				"hints": "💡 Gợi Ý",
+				"examples": "📝 Ví Dụ",
+				"tag": "🏷️ Thẻ",
+				"tagNotFound": "❌ Không tìm thấy thẻ",
+				"easy": "Dễ",
+				"medium": "Trung Bình",
+				"hard": "Khó",
+				"media": "🖼️ Tệp đính Kèm"
 			},
 			"quiz": {
 				"noFlashcards": {
@@ -525,7 +534,15 @@
 				"quiz": "Câu Đố",
 				"onTopic": "thuộc chủ đề",
 				"reveal": "Hiện Đáp Án",
-				"answer": "Đáp Án"
+				"answer": "Đáp Án",
+				"difficulty": "🌟 Độ Khó",
+				"easy": "Dễ",
+				"medium": "Trung Bình",
+				"hard": "Khó",
+				"hints":"💡 Gợi Ý",
+				"examples": "📝 Ví Dụ",
+				"tag": "🏷️ Thẻ",
+				"none": "Không Có"
 			},
 			"deleteFlashcard": {
 				"notFound": "❌ Không tìm thấy flashcard",
@@ -571,7 +588,14 @@
 				"author": "Tạo Bởi",	
 				"created": "Tạo Lúc",
 				"none": "Không có",
-				"error": "❌ Không thể hiển thị chi tiết flashcard"
+				"error": "❌ Không thể hiển thị chi tiết flashcard",
+				"difficulty": "🌟 Độ Khó",
+				"hints": "💡 Gợi Ý",
+				"tag": "🏷️ Thẻ",
+				"examples": "📝 Ví Dụ",
+				"easy": "Dễ",
+				"medium": "Trung Bình",
+				"hard": "Khó"
 			},
 			"importHelp": {
 				"title": "📝 Hướng Dẫn Nhập Flashcard",
@@ -579,29 +603,44 @@
 				"format": {
 					"title": "📄 Định Dạng Tệp",
 					"description": [
-						"• Sử dụng tệp `.txt` đơn giản",
-						"• Mỗi thẻ bắt đầu bằng câu hỏi (Q:)",
-						"• Tiếp theo là câu trả lời (A:)",
-						"• Tùy chọn thêm chủ đề (T:)",
-						"• Cài đặt mức hiển thị với (V: public/private)",
-						"• Để một dòng trống giữa các thẻ"
+						"• Sử dụng tệp .txt đơn giản",
+						"• Các trường bắt buộc:",
+						"- Q: Câu Hỏi",
+						"- A: Câu Trả Lời",
+						"• Các trường tùy chọn:",
+						"- T: Chủ Đề",
+						"- V: Mức Hiển Thị (công khai/riêng tư)",
+						"- D: Độ Khó (dễ/trung bình/khó)",
+						"- H: Gợi Ý (phân tách bằng dấu chấm phẩy)",
+						"- E: Ví Dụ (phân tách bằng dấu chấm phẩy)",
+						"- G: ID Thẻ (lấy từ lệnh /flashcard tags list)",
+						"- M: URL Media (liên kết hình ảnh hoặc âm thanh)",
+						"- MT: Loại Media (hình ảnh/âm thanh)",
+						"• Để một dòng trống giữa các flashcard"
 					]
 				},
 				"tips": {
 					"title": "💡 Mẹo",
 					"description": [
-						"• Đặt câu hỏi rõ ràng và ngắn gọn",
-						"• Đảm bảo mỗi thẻ có cả Q: và A:",
-						"• Kiểm tra mã hóa tệp là UTF-8",
-						"• Tối đa 100 thẻ mỗi lần nhập"
+						"• Giữ câu hỏi rõ ràng và ngắn gọn",
+						"• Đảm bảo mỗi flashcard có cả Q: và A:",
+						"• Sử dụng dấu chấm phẩy để phân tách nhiều gợi ý/ví dụ",
+						"• Lấy ID Thẻ từ lệnh /flashcard tags list",
+						"• URL Media phải được truy cập công khai",
+						"• Loại Media phải phù hợp với nội dung URL",
+						"• Tối đa 100 flashcard mỗi lần nhập",
+						"• Kiểm tra mã hóa tệp là UTF-8"
 					]
 				},
 				"issues": {
 					"title": "⚠️ Các Vấn Đề Thường Gặp",
 					"description": [
-						"• Thiếu tiền tố Q: hoặc A:",
-						"• Không có dòng trống giữa các thẻ",
-						"• Cài đặt mức hiển thị không hợp lệ",
+						"• Thiếu Q: hoặc A: bắt buộc",
+						"• Giá trị độ khó không hợp lệ (phải là dễ/trung bình/khó)",
+						"• ID Thẻ không hợp lệ",
+						"• Loại Media không hợp lệ (phải là hình ảnh/âm thanh)",
+						"• URL Media không thể truy cập",
+						"• Không có dòng trống giữa các flashcard",
 						"• Tệp quá lớn"
 					]
 				},
@@ -627,6 +666,9 @@
 				"format": "Định Dạng",
 				"cardExport": "Thẻ Đã Được Xuất",
 				"error": "❌ Không thể xuất flashcard"
+			},
+			"tagManagement": {
+				"notAdmin": "❌ Chỉ quản trị viên mới có thể quản lý thẻ"
 			}
 		}
 	}, 

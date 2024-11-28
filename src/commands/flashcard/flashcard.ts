@@ -9,6 +9,8 @@ import { showFlashcard } from './showFlashcard';
 import { importHelp } from './importHelp';
 import { importFlashcards } from './importFlashcards';
 import { exportFlashcards } from './exportFlashcards';
+import { addTag, removeTag } from './tagManagement';
+import { Difficulty } from '../../models/Flashcard';
 
 export async function run({ interaction }: any) {
 	const subcommand = interaction.options.getSubcommand();
@@ -41,6 +43,21 @@ export async function run({ interaction }: any) {
 			exportFlashcards(interaction);
 			break;
 	}
+
+	const groupSubcommand = interaction.options.getSubcommandGroup(false);
+	switch (groupSubcommand) {
+		case 'tag':
+			const subcommand = interaction.options.getSubcommand();
+			switch (subcommand) {
+				case 'add':
+					addTag(interaction);
+					break;
+				case 'remove':
+					removeTag(interaction);
+					break;
+			}
+			break;
+	}
 }
 
 export const data = new SlashCommandBuilder()
@@ -55,42 +72,93 @@ export const data = new SlashCommandBuilder()
 			.setDescription('Create your own flashcard.')
 			.addStringOption(option =>
 				option
-					.setName('question')
-					.setDescription('The question for the flashcard')
-					.setDescriptionLocalizations({
-						'vi': 'Câu hỏi cho flashcard'
-					})
-					.setRequired(true)
-					.setMaxLength(900)
+				.setName('question')
+				.setDescription('The question for the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Câu hỏi cho flashcard'
+				})
+				.setRequired(true)
+				.setMaxLength(900)
 			)
 			.addStringOption(option =>
 				option
-					.setName('answer')
-					.setDescription('The answer for the flashcard')
-					.setDescriptionLocalizations({
-						'vi': 'Câu trả lời cho flashcard'
-					})
-					.setRequired(true)
-					.setMaxLength(900)
+				.setName('answer')
+				.setDescription('The answer for the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Câu trả lời cho flashcard'
+				})
+				.setRequired(true)
+				.setMaxLength(900)
 			)
 			.addBooleanOption(option =>
 				option
-					.setName('is_public')
-					.setDescription('Whether your flashcard is public or private.')
-					.setDescriptionLocalizations({
-						'vi': 'Flashcard của bạn là công khai hay cá nhân.'
-					})
-					.setRequired(true)
+				.setName('is_public')
+				.setDescription('Whether your flashcard is public or private.')
+				.setDescriptionLocalizations({
+					'vi': 'Flashcard của bạn là công khai hay cá nhân.'
+				})
+				.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
-					.setName('topic')
-					.setDescription('The topic for the flashcard')
-					.setDescriptionLocalizations({
-						'vi': 'Chủ đề cho flashcard'
-					})
-					.setRequired(false)
-					.setMaxLength(100)
+				.setName('topic')
+				.setDescription('The topic for the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Chủ đề cho flashcard'
+				})
+				.setRequired(false)
+				.setMaxLength(100)
+			)
+			.addStringOption(option =>
+				option
+				.setName('hints')
+				.setDescription('Comma-separated hints for the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Gợi ý cho flashcard, cách nhau bởi dấu phẩy'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('examples')
+				.setDescription('Comma-separated examples for the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Ví dụ cho flashcard, cách nhau bởi dấu phẩy'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('tag_id')
+				.setDescription('Select a tag for the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Chọn tag cho flashcard'
+				})
+				.setRequired(false)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('difficulty')
+				.setDescription('The difficulty of the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Độ khó của flashcard'
+				})
+				.setRequired(false)
+				.addChoices(
+					{ name: 'Easy', value: Difficulty.Easy },
+					{ name: 'Medium', value: Difficulty.Medium },
+					{ name: 'Hard', value: Difficulty.Hard }
+				)
+			)
+			.addAttachmentOption(option =>
+				option
+				.setName('media')
+				.setDescription('Attach an image or audio file to the flashcard')
+				.setDescriptionLocalizations({
+					'vi': 'Đính kèm hình ảnh hoặc file âm thanh cho flashcard'
+				})
+				.setRequired(false)
 			)
 	)
 	.addSubcommand(subcommand =>
@@ -276,6 +344,50 @@ export const data = new SlashCommandBuilder()
 				{ name: 'My flashcards', value: Visibility.Private },
 				{ name: 'Public flashcards', value: Visibility.Public },
 				{ name: 'All flashcards', value: -1 }
+			)
+		)
+	)
+	.addSubcommandGroup(group =>
+		group
+		.setName('tag')
+		.setDescription('Manage flashcard tags')
+		.setDescriptionLocalizations({
+			'vi': 'Quản lý tag flashcard'
+		})
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('add')
+			.setDescription('Add a tag')
+			.setDescriptionLocalizations({
+				'vi': 'Thêm tag'
+			})
+			.addStringOption(option =>
+				option
+				.setName('name')
+				.setDescription('The name of the tag')
+				.setDescriptionLocalizations({
+					'vi': 'Tên của tag'
+				})
+				.setRequired(true)
+				.setMaxLength(50)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('remove')
+			.setDescription('Remove a tag')
+			.setDescriptionLocalizations({
+				'vi': 'Xóa tag'
+			})
+			.addStringOption(option =>
+				option
+				.setName('tag_id')
+				.setDescription('The ID of the tag to remove')
+				.setDescriptionLocalizations({
+					'vi': 'ID của tag cần xóa'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
 			)
 		)
 	)
