@@ -11,6 +11,7 @@ import { importFlashcards } from './importFlashcards';
 import { exportFlashcards } from './exportFlashcards';
 import { addTag, removeTag } from './tagManagement';
 import { Difficulty } from '../../models/Flashcard';
+import { listTags } from './listTags';
 
 export async function run({ interaction }: any) {
 	const subcommand = interaction.options.getSubcommand();
@@ -54,6 +55,9 @@ export async function run({ interaction }: any) {
 					break;
 				case 'remove':
 					removeTag(interaction);
+					break;
+				case 'list':
+					listTags(interaction);
 					break;
 			}
 			break;
@@ -388,6 +392,23 @@ export const data = new SlashCommandBuilder()
 				})
 				.setRequired(true)
 				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('list')
+			.setDescription('List all tags')
+			.setDescriptionLocalizations({
+				'vi': 'Liệt kê tất cả tag'
+			})
+			.addIntegerOption(option =>
+				option
+				.setName('page')
+				.setDescription('Page number')
+				.setDescriptionLocalizations({
+					'vi': 'Số trang'
+				})
+				.setMinValue(1)
 			)
 		)
 	)

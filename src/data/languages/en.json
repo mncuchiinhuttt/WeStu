@@ -613,7 +613,7 @@
 						"- D: Difficulty (easy/medium/hard)",
 						"- H: Hints (separate multiple with semicolon)",
 						"- E: Examples (separate multiple with semicolon)",
-						"- G: Tag ID (from /flashcard tags list)",
+						"- G: Tag ID (from `/flashcard tag list`)",
 						"- M: Media URL (image or audio link)",
 						"- MT: Media Type (image/audio)",
 						"• Leave a blank line between cards"
@@ -625,7 +625,7 @@
 						"• Keep questions clear and concise",
 						"• Make sure each card has both Q: and A:",
 						"• Use semicolons to separate multiple hints/examples",
-						"• Get Tag ID from /flashcard tags list command",
+						"• Get Tag ID from `/flashcard tag list` command",
 						"• Media URLs must be publicly accessible",
 						"• Media Type must match the URL content",
 						"• Maximum 100 cards per import",
@@ -669,6 +669,17 @@
 			},
 			"tagManagement": {
 				"notAdmin": "❌ Only admins can manage tags"
+			},
+			"listTags": {
+				"title": "📑 Available Flashcard Tags",
+				"description": "Page {page} of {totalPages}",
+				"noTags": "No tags found",
+				"error": "Failed to list tags",
+				"usageCount": "Usage Count",
+				"createdBy": "Created By",
+				"createdAt": "Created At",
+				"none": "None",
+				"footer": "Use `/flashcard tag page:[1-{totalPages}]` to view more"
 			}
 		}
 	}, 

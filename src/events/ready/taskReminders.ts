@@ -1,6 +1,7 @@
 import { Client, EmbedBuilder } from 'discord.js';
 import { Task, TaskStatus } from '../../models/Task';
 import { LanguageService } from '../../utils/LanguageService';
+import { TimeStudySession } from '../../models/TimeStudySession';
 
 export default async (client: Client) => {
 	console.log('Task reminder system initialized');
@@ -45,6 +46,17 @@ async function checkAndSendTaskReminders(client: Client) {
 				const userLang = await languageService.getUserLanguage(userId);
 				const langStrings = require(`../../data/languages/${userLang}.json`);
 				const strings = langStrings.events.taskReminders;
+
+				const existingScheduledSession = await TimeStudySession.findOne({
+					userId: userId,
+					finishTime: { $exists: false },
+					scheduledTime: { $exists: true },
+					scheduledStartNotified: false,
+				});
+				
+				if (existingScheduledSession) {
+					continue;
+				}
 
 				const embed = new EmbedBuilder()
 					.setTitle(strings.title)

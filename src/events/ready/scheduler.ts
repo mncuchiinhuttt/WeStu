@@ -146,45 +146,48 @@ async function startScheduler(client: Client) {
 }
 
 async function finishStudySession(interaction: MessageComponentInteraction, session: any) {
-  const beginTime = session.beginTime ?? session.scheduledTime;
-  const finishTime = new Date();
-  const duration = Math.floor((finishTime.getTime() - session.beginTime.getTime()) / 1000);
+	const beginTime = session.beginTime ?? session.scheduledTime;
+	const finishTime = new Date();
+	const duration = Math.floor((finishTime.getTime() - session.beginTime.getTime()) / 1000);
 
-  await TimeStudySession.findByIdAndUpdate(session._id, {
-    beginTime,
-    finishTime,
-    duration,
-  });
+	await TimeStudySession.findByIdAndUpdate(session._id, {
+		beginTime,
+		finishTime,
+		duration,
+	});
 
 	const languageService = LanguageService.getInstance();
 	const userLang = await languageService.getUserLanguage(interaction.user.id);
 	const langStrings = require(`../../data/languages/${userLang}.json`);
 	const strings = langStrings.events.scheduler;
-  
-  const hours = Math.floor(duration / 3600);
-  const minutes = Math.floor((duration % 3600) / 60);
-  const seconds = duration % 60;
-  
-  const embed = new EmbedBuilder()
-  .setTitle(strings.studySessionFinish.title)
-  .setDescription(
+	
+	const hours = Math.floor(duration / 3600);
+	const minutes = Math.floor((duration % 3600) / 60);
+	const seconds = duration % 60;
+	
+	const embed = new EmbedBuilder()
+	.setTitle(strings.studySessionFinish.title)
+	.setDescription(
 		strings.studySessionFinish.description
 		.replace('{hours}', hours.toString())
 		.replace('{minutes}', minutes.toString())
 		.replace('{seconds}', seconds.toString())
 	)
-  .setColor('#00ff00')
-  .setTimestamp();
-  
-  await interaction.update({
-	  embeds: [embed],
-	  components: [],
+	.setColor('#00ff00')
+	.setTimestamp();
+	
+	await interaction.update({
+		embeds: [embed],
+		components: [],
 	});
 	
-  try {
-    const user = await interaction.user.fetch();
-    await user.send(strings.studySessionFinish.userSend);
-  } catch (error) {
-    console.error('Error sending motivational message:', error);
-  }
+	await updateUserStreak(session.userId, interaction.client);
+	await checkAndAwardAchievements(session.userId, interaction.client);
+
+	try {
+		const user = await interaction.user.fetch();
+		await user.send(strings.studySessionFinish.userSend);
+	} catch (error) {
+		console.error('Error sending motivational message:', error);
+	}
 }

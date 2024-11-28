@@ -613,7 +613,7 @@
 						"- D: Độ Khó (dễ/trung bình/khó)",
 						"- H: Gợi Ý (phân tách bằng dấu chấm phẩy)",
 						"- E: Ví Dụ (phân tách bằng dấu chấm phẩy)",
-						"- G: ID Thẻ (lấy từ lệnh /flashcard tags list)",
+						"- G: ID Thẻ (lấy từ lệnh `/flashcard tag list`)",
 						"- M: URL Media (liên kết hình ảnh hoặc âm thanh)",
 						"- MT: Loại Media (hình ảnh/âm thanh)",
 						"• Để một dòng trống giữa các flashcard"
@@ -625,7 +625,7 @@
 						"• Giữ câu hỏi rõ ràng và ngắn gọn",
 						"• Đảm bảo mỗi flashcard có cả Q: và A:",
 						"• Sử dụng dấu chấm phẩy để phân tách nhiều gợi ý/ví dụ",
-						"• Lấy ID Thẻ từ lệnh /flashcard tags list",
+						"• Lấy ID Thẻ từ lệnh `/flashcard tag list`",
 						"• URL Media phải được truy cập công khai",
 						"• Loại Media phải phù hợp với nội dung URL",
 						"• Tối đa 100 flashcard mỗi lần nhập",
@@ -669,6 +669,17 @@
 			},
 			"tagManagement": {
 				"notAdmin": "❌ Chỉ quản trị viên mới có thể quản lý thẻ"
+			},
+			"listTags": {
+				"title": "📑 Thẻ Flashcard Có Sẵn",
+				"description": "Trang {page} / {totalPages}",
+				"noTags": "Không tìm thấy thẻ nào",
+				"error": "Không thể liệt kê thẻ",
+				"usageCount": "Số Lần Sử Dụng",
+				"createdBy": "Tạo Bởi",
+				"createdAt": "Tạo Lúc",
+				"none": "Không có",
+				"footer": "Dùng `/flashcard tag page:[1-{totalPages}]` để xem thêm"
 			}
 		}
 	}, 
