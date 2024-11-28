@@ -680,6 +680,62 @@
 				"createdAt": "Tạo Lúc",
 				"none": "Không có",
 				"footer": "Dùng `/flashcard tag page:[1-{totalPages}]` để xem thêm"
+			},
+			"createTest": {
+				"testCreated": "✅ Đã tạo bài kiểm tra thành công",
+				"testCreatedDescription": "Bài kiểm tra \"{name}\" đã được tạo thành công!",
+				"title": "📝 Tiêu Đề",
+				"id": "🔑 ID",
+				"visibility": "👁️ Chế Độ Hiển Thị",
+				"public": "Công Khai",
+				"private": "Riêng Tư",
+				"privateAndPublic": "Riêng Tư và Công Khai",
+				"groupShared": "Chia Sẻ Trong Nhóm",
+				"creator": "👤 Người Tạo",
+				"description": "📝 Mô Tả"
+			}, 
+			"deleteTest": {
+				"deleted": "✅ Bài kiểm tra đã được xóa"
+			},
+			"addQuestion": {
+				"successTitle": "✅ Câu hỏi đã được thêm",
+				"successDescription": "Câu hỏi đã được thêm vào **{test}** thành công!"
+			},
+			"listQuestion": {
+				"successTitle": "📝 Câu Hỏi Bài Kiểm Tra",
+				"description": "**{test}** có {count} câu hỏi",
+				"noQuestions": "Không tìm thấy câu hỏi nào",
+				"question": "Câu hỏi {index}"
+			},
+			"changeSettings": {
+				"testNotFound": "❌ Không tìm thấy bài kiểm tra",
+				"success": "✅ Đã cập nhật cài đặt bài kiểm tra",
+				"settingsChange": "Cài đặt cho **{test}** đã được cập nhật thành công!",
+				"title": "📝 Tiêu Đề",
+				"description": "📝 Mô Tả",
+				"timeLimit": "⏱️ Giới Hạn Thời Gian",
+				"passingScore": "🎯 Điểm Đạt",
+				"tag": "🏷️ Thẻ",
+				"noTag": "Không có thẻ"
+			},
+			"takeTest": {
+				"testNotFound": "❌ Không tìm thấy bài kiểm tra",
+				"starting": "Bắt đầu làm bài kiểm tra",
+				"question": "📝 Câu Hỏi",
+				"correctAnswers": "✅ Câu trả lời đúng",
+				"incorrectAnswers": "❌ Câu trả lời sai",
+				"passed": "✅ Đã vượt qua bài kiểm tra",
+				"failed": "❌ Không vượt qua bài kiểm tra",
+				"isPassed": "🎯 Đã hoàn thành bài kiểm tra",
+				"score": "🎯 Điểm",
+				"percentage": "🎯 Phần trăm",
+				"timeSpent": "⏱️ Thời gian làm bài",
+				"seconds": "giây",
+				"correctAnswer": "✅ Câu trả lời đúng",
+				"incorrectAnswer": "❌ Câu trả lời sai",
+				"results": "📝 Kết Quả",
+				"resultsDescription": "Bạn đã hoàn thành bài kiểm tra. Dưới đây là kết quả của bạn:",
+				"start": "Bắt Đầu"
 			}
 		}
 	}, 
@@ -729,6 +785,7 @@
 		"error": "Đã xảy ra lỗi.",
 		"noPermission": "Bạn không có quyền sử dụng lệnh này.",
 		"languageChanged": "🇻🇳 Ngôn ngữ đã được thay đổi",
-		"languageChangedMessage": "Ngôn ngữ đã được thay đổi sang Tiếng Việt."
+		"languageChangedMessage": "Ngôn ngữ đã được thay đổi sang Tiếng Việt.",
+		"unknownInteraction": "Tính năng này không khả dụng."
 	}
 }

@@ -680,6 +680,62 @@
 				"createdAt": "Created At",
 				"none": "None",
 				"footer": "Use `/flashcard tag page:[1-{totalPages}]` to view more"
+			},
+			"createTest": {
+				"testCreated": "✅ Test created successfully",
+				"testCreatedDescription": "Test \"{name}\" has been created successfully!",
+				"title": "📝 Title",
+				"id": "🔑 ID",
+				"visibility": "👁️ Visibility",
+				"public": "Public",
+				"private": "Private",
+				"privateAndPublic": "Private and Public",
+				"groupShared": "Group Shared",
+				"creator": "👤 Creator",
+				"description": "📝 Description"
+			},
+			"deleteTest": {
+				"deleted": "✅ Test deleted successfully"
+			},
+			"addQuestion": {
+				"successTitle": "✅ Question Added",
+				"successDescription": "Question added to **{test}** successfully!"
+			}, 
+			"listQuestion": {
+				"successTitle": "📝 Test Questions",
+				"description": "**{test}** has {count} questions",
+				"noQuestions": "No questions found",
+				"question": "Question {index}"
+			},
+			"changeSettings": {
+				"testNotFound": "❌ Test not found",
+				"success": "✅ Test settings updated",
+				"settingsChange": "Settings for **{test}** have been updated successfully!",
+				"title": "📝 Title",
+				"description": "📝 Description",
+				"timeLimit": "⏱️ Time Limit",
+				"passingScore": "🎯 Passing Score",
+				"tag":"🏷️ Tag",
+				"noTag": "No tag"
+			},
+			"takeTest": {
+				"testNotFound":"❌ Test not found",
+				"starting": "Starting Test",
+				"question": "📝 Question",
+				"correctAnswers": "✅ Correct Answers",
+				"incorrectAnswers": "❌ Incorrect Answers",
+				"passed": "✅ Test Passed",
+				"failed": "❌ Test Failed",
+				"isPassed": "🎯 Test Passed",
+				"score": "🎯 Score",
+				"percentage": "🎯 Percentage",
+				"timeSpent": "⏱️ Time Spent",
+				"seconds": "seconds",
+				"correctAnswer": "✅ Correct Answer",
+				"incorrectAnswer": "❌ Incorrect Answer",
+				"results": "📝 Test Results",
+				"resultsDescription": "You have completed the test. Here are your results:",
+				"start": "Start Test"
 			}
 		}
 	}, 
@@ -729,6 +785,7 @@
 		"error": "An error occurred.",
 		"noPermission": "You do not have permission to use this command.",
 		"languageChanged": "🇺🇸 Language Changed",
-		"languageChangedMessage": "Language changed to English."
+		"languageChangedMessage": "Language changed to English.",
+		"unknownInteraction": "Unknown error. Please try again later."
 	}
 }

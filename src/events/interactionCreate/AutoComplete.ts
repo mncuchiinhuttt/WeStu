@@ -8,6 +8,7 @@ import { StudyResource } from '../../models/StudyResource';
 import { StudyGroup } from '../../models/StudyGroup';
 import { Flashcard, Visibility } from '../../models/Flashcard';
 import { FlashcardTag } from '../../models/FlashcardTag';
+import { Test } from '../../models/Test';
 
 const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo', 'group', 'flashcard'];
 
@@ -339,6 +340,25 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 		} catch (error) {
 			console.error('Error in tag autocomplete:', error);
 			return interaction.respond([]);
+		}
+	} else if (focusedValue.name === 'test_id') {
+		try {
+			const tests = await Test.find({
+				title: {
+					$regex: new RegExp(focusedValue.value, 'i')
+				},
+				creator: interaction.user.id
+			}).limit(25);
+
+			return interaction.respond(
+				tests.map((test: any) => ({
+					name: test.title,
+					value: test._id.toString()
+				}))
+			);
+		} catch (error) {
+			console.error('Error in test autocomplete:', error);
+			await interaction.respond([]);
 		}
 	}
 }

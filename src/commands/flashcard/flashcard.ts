@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction as Interaction } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import { create_flashcard } from './create-flashcard';
 import { Visibility } from '../../models/Flashcard';
 import { quiz } from './quiz';
@@ -12,8 +12,58 @@ import { exportFlashcards } from './exportFlashcards';
 import { addTag, removeTag } from './tagManagement';
 import { Difficulty } from '../../models/Flashcard';
 import { listTags } from './listTags';
+import { createTest } from './test/createTest';
+import { deleteTest } from './test/deleteTest';
+import { addQuestion } from './test/addQuestion';
+import { listQuestion } from './test/listQuestion';
+import { changeSettings } from './test/changeSettings';
+import { takeTest } from './test/takeTest';
 
 export async function run({ interaction }: any) {
+	const groupSubcommand = interaction.options.getSubcommandGroup(false);
+	switch (groupSubcommand) {
+		case 'tag':
+			const tagFunction = interaction.options.getSubcommand();
+			switch (tagFunction) {
+				case 'add':
+					addTag(interaction);
+					break;
+				case 'remove':
+					removeTag(interaction);
+					break;
+				case 'list':
+					listTags(interaction);
+					break;
+			}
+			break;
+
+		case 'test':
+			const testFunction = interaction.options.getSubcommand();
+			switch (testFunction) {
+				case 'create':
+					createTest(interaction);
+					break;
+				case 'delete':
+					deleteTest(interaction);
+					break;
+				case 'add-question':
+					addQuestion(interaction);
+					break;
+				case 'list-question':
+					listQuestion(interaction);
+					break;
+				case 'settings':
+					changeSettings(interaction);
+					break;
+				case 'do':
+					takeTest(interaction);
+					break;
+			}
+			break;
+	}
+
+	if (groupSubcommand) return;
+
 	const subcommand = interaction.options.getSubcommand();
 	switch (subcommand) {
 		case "create":
@@ -42,24 +92,6 @@ export async function run({ interaction }: any) {
 			break;
 		case 'export':
 			exportFlashcards(interaction);
-			break;
-	}
-
-	const groupSubcommand = interaction.options.getSubcommandGroup(false);
-	switch (groupSubcommand) {
-		case 'tag':
-			const subcommand = interaction.options.getSubcommand();
-			switch (subcommand) {
-				case 'add':
-					addTag(interaction);
-					break;
-				case 'remove':
-					removeTag(interaction);
-					break;
-				case 'list':
-					listTags(interaction);
-					break;
-			}
 			break;
 	}
 }
@@ -409,6 +441,246 @@ export const data = new SlashCommandBuilder()
 					'vi': 'Số trang'
 				})
 				.setMinValue(1)
+			)
+		)
+	)
+	.addSubcommandGroup(group =>
+		group
+		.setName('test')
+		.setDescription('All commands related to flashcard tests')
+		.setDescriptionLocalizations({
+			'vi': 'Tất cả các lệnh liên quan đến bài kiểm tra sử dụng flashcard'
+		})
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('create')
+			.setDescription('Create a test')
+			.setDescriptionLocalizations({
+				'vi': 'Tạo bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('title')
+				.setDescription('The title of the test')	
+				.setDescriptionLocalizations({
+					'vi': 'Tiêu đề của bài kiểm tra'
+				})
+				.setRequired(true)
+			)
+			.addIntegerOption(option =>
+				option
+				.setName('visibility')
+				.setDescription('The visibility of the test')
+				.setDescriptionLocalizations({
+					'vi': 'Loại bài kiểm tra'
+				})
+				.setRequired(true)
+				.addChoices(
+					{ name: 'Public', value: Visibility.Public },
+					{ name: 'Private', value: Visibility.Private }
+				)
+			)
+			.addStringOption(option =>
+				option
+				.setName('description')
+				.setDescription('The description of the test')
+				.setDescriptionLocalizations({
+					'vi': 'Mô tả của bài kiểm tra'
+				})
+				.setRequired(false)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('delete')
+			.setDescription('Delete a test')
+			.setDescriptionLocalizations({
+				'vi': 'Xóa bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to delete')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần xóa'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('add-question')
+			.setDescription('Add a question to a test')
+			.setDescriptionLocalizations({
+				'vi': 'Thêm câu hỏi vào bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to add a question to')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần thêm câu hỏi'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('flashcard_id')
+				.setDescription('The ID of the flashcard to add as a question')
+				.setDescriptionLocalizations({
+					'vi': 'ID của flashcard cần thêm làm câu hỏi'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addIntegerOption(option =>
+				option
+				.setName('points')
+				.setDescription('The points for the question (1 - 10)')
+				.setDescriptionLocalizations({
+					'vi': 'Số điểm cho câu hỏi (1 - 10)'
+				})
+				.setRequired(true)
+				.setMinValue(1)
+				.setMaxValue(10)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice1')
+				.setDescription('The first choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ nhất cho câu hỏi'
+				})
+				.setRequired(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice2')
+				.setDescription('The second choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ hai cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice3')
+				.setDescription('The third choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ ba cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice4')
+				.setDescription('The fourth choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ tư cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('list-question')
+			.setDescription('List all questions in a test')
+			.setDescriptionLocalizations({
+				'vi': 'Liệt kê tất cả câu hỏi trong bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')	
+				.setDescription('The ID of the test to list questions')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần liệt kê câu hỏi'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('settings')
+			.setDescription('Change test settings')
+			.setDescriptionLocalizations({
+				'vi': 'Thay đổi cài đặt bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to change settings')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần thay đổi cài đặt'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('title')
+				.setDescription('The title of the test')
+				.setDescriptionLocalizations({
+					'vi': 'Tiêu đề của bài kiểm tra'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('description')
+				.setDescription('The description of the test')
+				.setDescriptionLocalizations({
+					'vi': 'Mô tả của bài kiểm tra'
+				})
+				.setRequired(false)
+			)
+			.addIntegerOption(option =>
+				option
+				.setName('time_limit')
+				.setDescription('The time limit for the test (in minutes)')
+				.setDescriptionLocalizations({
+					'vi': 'Thời gian giới hạn cho bài kiểm tra (tính bằng phút)'
+				})
+				.setRequired(false)
+			)
+			.addIntegerOption(option =>
+				option
+				.setName('passing_score')
+				.setDescription('The passing score for the test')
+				.setDescriptionLocalizations({
+					'vi': 'Điểm qua môn cho bài kiểm tra'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('tag_id')
+				.setDescription('The tag for the test')
+				.setDescriptionLocalizations({
+					'vi': 'Tag cho bài kiểm tra'
+				})
+				.setRequired(false)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('do')
+			.setDescription('Take a test')
+			.setDescriptionLocalizations({
+				'vi': 'Tham gia bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to take')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần tham gia'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
 			)
 		)
 	)
