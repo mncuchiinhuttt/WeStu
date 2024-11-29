@@ -18,6 +18,12 @@ import { addQuestion } from './test/addQuestion';
 import { listQuestion } from './test/listQuestion';
 import { changeSettings } from './test/changeSettings';
 import { takeTest } from './test/takeTest';
+import { listTest } from './test/listTest';
+import { testStats } from './test/testStats';
+import { removeQuestion } from './test/removeQuestion';
+import { editQuestion } from './test/editQuestion';
+import { eachTestStats } from './test/eachTestStats';
+import { incorrectReview } from './test/incorrectReview';
 
 export async function run({ interaction }: any) {
 	const groupSubcommand = interaction.options.getSubcommandGroup(false);
@@ -57,6 +63,24 @@ export async function run({ interaction }: any) {
 					break;
 				case 'do':
 					takeTest(interaction);
+					break;
+				case 'list':
+					listTest(interaction);
+					break;
+				case 'stats':
+					testStats(interaction);
+					break;
+				case 'remove-question':
+					removeQuestion(interaction);
+					break;
+				case 'edit-question':
+					editQuestion(interaction);
+					break;
+				case 'test-stats':
+					eachTestStats(interaction);
+					break;
+				case 'incorrect-review':
+					incorrectReview(interaction);
 					break;
 			}
 			break;
@@ -678,6 +702,159 @@ export const data = new SlashCommandBuilder()
 				.setDescription('The ID of the test to take')
 				.setDescriptionLocalizations({
 					'vi': 'ID của bài kiểm tra cần tham gia'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('list')
+			.setDescription('List all tests')	
+			.setDescriptionLocalizations({
+				'vi': 'Liệt kê tất cả bài kiểm tra'
+			})
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('stats')
+			.setDescription('View your test stats')
+			.setDescriptionLocalizations({
+				'vi': 'Xem thống kê bài kiểm tra'
+			})
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('remove-question')
+			.setDescription('Remove a question from a test')
+			.setDescriptionLocalizations({
+				'vi': 'Xóa câu hỏi khỏi bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to remove a question from')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần xóa câu hỏi'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('question_id')
+				.setDescription('The ID of the question to remove')
+				.setDescriptionLocalizations({
+					'vi': 'ID của câu hỏi cần xóa'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('edit-question')
+			.setDescription('Edit a question in a test')
+			.setDescriptionLocalizations({
+				'vi': 'Chỉnh sửa câu hỏi trong bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to edit a question in')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần chỉnh sửa câu hỏi'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('question_id')
+				.setDescription('The ID of the question to edit')
+				.setDescriptionLocalizations({
+					'vi': 'ID của câu hỏi cần chỉnh sửa'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addIntegerOption(option =>
+				option
+				.setName('points')
+				.setDescription('The points for the question (1 - 10)')
+				.setDescriptionLocalizations({
+					'vi': 'Số điểm cho câu hỏi (1 - 10)'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice1')
+				.setDescription('The first choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ nhất cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice2')
+				.setDescription('The second choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ hai cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice3')
+				.setDescription('The third choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ ba cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+				.setName('choice4')
+				.setDescription('The fourth choice for the question')
+				.setDescriptionLocalizations({
+					'vi': 'Lựa chọn thứ tư cho câu hỏi'
+				})
+				.setRequired(false)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('test-stats')
+			.setDescription('View your test stats')
+			.setDescriptionLocalizations({
+				'vi': 'Xem thống kê bài kiểm tra'
+			})
+			.addStringOption(option =>
+				option
+				.setName('test_id')
+				.setDescription('The ID of the test to view stats')
+				.setDescriptionLocalizations({
+					'vi': 'ID của bài kiểm tra cần xem thống kê'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('incorrect-review')
+			.setDescription('Review incorrect answers')
+			.setDescriptionLocalizations({
+				'vi': 'Xem lại câu trả lời sai'
+			})
+			.addStringOption(option =>
+				option
+				.setName('session_id')
+				.setDescription('The ID of the test session to review')
+				.setDescriptionLocalizations({
+					'vi': 'ID của lần làm bài cần xem lại'
 				})
 				.setRequired(true)
 				.setAutocomplete(true)

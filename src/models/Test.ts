@@ -29,10 +29,6 @@ const testSchema = new mongoose.Schema({
       required: true 
     },
     options: [String],
-    matchingPairs: [{
-      left: String,
-      right: String
-    }],
     points: { type: Number, default: 1 }
   }],
   totalPoints: { type: Number, default: 0 },

@@ -61,7 +61,7 @@ async function checkAndSendTaskReminders(client: Client) {
 				const embed = new EmbedBuilder()
 					.setTitle(strings.title)
 					.setDescription(
-						strings.title
+						strings.description
 						.replace('{length}', tasks.length)
 					)
 					.setColor('#FF0000')

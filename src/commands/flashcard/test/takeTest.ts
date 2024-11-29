@@ -187,6 +187,12 @@ export async function takeTest (interaction: any) {
 				{ name: strings.timeSpent, value: `${testSession.timeSpent} ${strings.seconds}` }
 			)
 			.setColor(testSession.passed ? '#00FF00' : '#FF0000');
+		
+		if (incorrectAnswersList.length > 0) {
+			finalEmbed.addFields(
+				{ name: strings.incorrectAnswersList, value: incorrectAnswersList.map((answer, index) => `**${index + 1}** - **Q: **${answer.questionText}\n**${strings.userAnswer}:** ${answer.userAnswer}\n**${strings.systemAnswer}:** ${answer.answer}`).join('\n') }
+			)
+		}
 
 		await interaction.editReply({ 
 			embeds: [finalEmbed], 

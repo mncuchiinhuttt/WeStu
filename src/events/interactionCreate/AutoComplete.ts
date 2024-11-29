@@ -8,7 +8,9 @@ import { StudyResource } from '../../models/StudyResource';
 import { StudyGroup } from '../../models/StudyGroup';
 import { Flashcard, Visibility } from '../../models/Flashcard';
 import { FlashcardTag } from '../../models/FlashcardTag';
-import { Test } from '../../models/Test';
+import { Test, ITestQuestion } from '../../models/Test';
+import { LanguageService } from '../../utils/LanguageService';
+import { TestSession } from '../../models/TestSession';
 
 const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo', 'group', 'flashcard'];
 
@@ -221,7 +223,10 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'flashcard_id') {
 		try {
 			const flashcards = await Flashcard.find({ 
-				user: interaction.user.id 
+				$or: [
+					{ user: interaction.user.id },
+					{ visibility: Visibility.Public }
+				]
 			}).sort({ 
 				createdAt: -1 
 			}).limit(25);
@@ -343,22 +348,113 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 		}
 	} else if (focusedValue.name === 'test_id') {
 		try {
-			const tests = await Test.find({
-				title: {
-					$regex: new RegExp(focusedValue.value, 'i')
-				},
-				creator: interaction.user.id
-			}).limit(25);
+				const tests = await Test.find({
+						$or: [
+								{ creator: interaction.user.id },
+								{ visibility: Visibility.Public }
+						],
+						title: {
+								$regex: new RegExp(focusedValue.value, 'i')
+						}
+				})
+				.sort({ createdAt: -1 })
+				.limit(25);
 
-			return interaction.respond(
-				tests.map((test: any) => ({
-					name: test.title,
-					value: test._id.toString()
-				}))
+				const results = tests.map(test => {
+						const visibility = test.creator === interaction.user.id ? '🔒' : '🌐';
+						const questionCount = test.questions.length;
+						const timeString = test.timeLimit ? `⏱️${test.timeLimit}m` : '⏱️∞';
+						
+						return {
+								name: `${visibility} ${test.title} (${questionCount}Q, ${timeString}, ${test.passingScore}%)`,
+								value: test._id.toString()
+						};
+				});
+
+				await interaction.respond(
+						results.filter(test => 
+								test.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+						).slice(0, 25)
+				);
+
+		} catch (error) {
+				console.error('Error in test autocomplete:', error);
+				await interaction.respond([]);
+		}
+	} else if (focusedValue.name === 'question_id') {
+		try {
+			const languageService = LanguageService.getInstance();
+			const userLang = await languageService.getUserLanguage(interaction.user.id);
+			const langStrings = require(`../../data/languages/${userLang}.json`);
+			const strings = langStrings.events.interactionCreate.autoComplete.flashcard.question;
+
+			const test_id = interaction.options.getString('test_id', true);
+			if (!test_id) return interaction.respond([]);
+			const test = await Test.findById(test_id);
+			if (!test || !test.questions.length) 
+				return interaction.respond([]);
+			const questionsWithDetails = await Promise.all(
+				test.questions.map(async (question: ITestQuestion, index: number) => {
+						const flashcard = await Flashcard.findById(question.flashcardId);
+						return {
+							index: index + 1,
+							id: question.flashcardId,
+							question: flashcard?.question ?? strings.unknownQuestion,
+							points: question.points
+						};
+				})
+			);
+
+			const results = questionsWithDetails.map(q => ({
+					name: `Q${q.index}: ${q.question.substring(0, 50)}... (${q.points}pts)`,
+					value: q.id.toString()
+			}));
+
+			await interaction.respond(
+					results.filter(q => 
+							q.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+					).slice(0, 25)
 			);
 		} catch (error) {
-			console.error('Error in test autocomplete:', error);
+			console.log('Error in question autocomplete:', error);
 			await interaction.respond([]);
+		}
+	} else if (focusedValue.name === 'session_id') {
+		try {
+				const sessions = await TestSession.find({ 
+						userId: interaction.user.id 
+				})
+				.sort({ startTime: -1 })
+				.limit(25);
+
+				const sessionsWithDetails = await Promise.all(
+						sessions.map(async (session) => {
+								const test = await Test.findById(session.testId);
+								return {
+										id: session._id,
+										testTitle: test?.title ?? 'Unknown Test',
+										score: session.score,
+										percentage: session.percentage,
+										date: session.startTime.toLocaleDateString(),
+										passed: session.passed
+								};
+						})
+				);
+
+				const results = sessionsWithDetails.map(session => ({
+						name: `${session.passed ? '✅' : '❌'} ${session.testTitle} - ${session.percentage}% (${session.date})`,
+						value: session.id.toString()
+				}));
+
+				await interaction.respond(
+						results.filter(session => 
+								session.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+						).slice(0, 25)
+				);
+
+		} catch (error) {
+				console.error('Error in session autocomplete:', error);
+				await interaction.respond([]);
 		}
 	}
 }

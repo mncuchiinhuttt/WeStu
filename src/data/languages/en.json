@@ -739,11 +739,71 @@
 				"resultsDescription": "You have completed the test. Here are your results:",
 				"start": "Start Test",
 				"timeExpired": "⏰ Time's up!",
-				"timeExpiredDescription": "You just have 30 seconds for each question."
+				"timeExpiredDescription": "You just have 30 seconds for each question.",
+				"incorrectAnswersList": "❌ Incorrect Answers",
+				"userAnswer": "Your Answer",
+				"systemAnswer": "Correct Answer"
+			},
+			"listTest": {
+				"noTests": "❌ No tests found",
+				"title": "📝 Available Tests",
+				"questions": "Questions",
+				"timeLimit": "Time Limit",
+				"noLimit": "No Limit",
+				"passingScore": "Passing Score"
+			},
+			"testStats": {
+				"title": "📊 Test Statistics",
+				"totalTests": "Total Tests",
+				"totalQuestions": "Total Questions",
+				"averageScore": "Average Score",
+				"testsCompleted": "Tests Completed",
+				"highestScore": "Highest Score",
+				"averageTime": "Average Time",
+				"error": "Failed to fetch test statistics",
+				"minutes": "minutes"
+			},
+			"removeQuestion": {
+				"successTitle": "✅ Question Removed",
+				"successDescription": "Question removed from **{test}** successfully!",
+				"error": "❌ Failed to remove question"
+			},
+			"editQuestion": {
+				"testNotFound":"❌ Test not found",
+				"questionNotFound": "❌ Question not found",
+				"questionNotUpdated": "❌ Question not updated",
+				"questionUpdated": "✅ Question updated",
+				"questionUpdatedDesc": "Question updated successfully!"
+			},
+			"eachTestStats": {
+				"title": "📊 Test Statistics of **{name}**",
+				"totalSessions": "📈 Total Sessions",
+				"averageScore": "🎯 Average Score",
+				"testsCompleted": "✅ Tests Completed",
+				"highestScore": "🏆 Highest Score",
+				"averageTime": "⏱️ Average Time",
+				"minutes": "minutes"
+			},
+			"incorrectReview": {
+				"title": "📝 Incorrect Answers Review",
+				"description": "Review {number} incorrect answers from the selected session",
+				"question":"📖 Question",
+				"answer": "🔑 Answer",
+				"noQuestion": "No Question",
+				"noAnswer": "No Answer"
 			}
 		}
 	}, 
 	"events": {
+		"interactionCreate": {
+			"autoComplete": {
+				"flashcard": {
+					"question": {
+						"unknownQuestion": "❌ Unknown question"
+					}
+				}
+			}
+		},
 		"scheduler": {
 			"startStudyButton": "Start Study Session",
 			"scheduledStudySession": {
