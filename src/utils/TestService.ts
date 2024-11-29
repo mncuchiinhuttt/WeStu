@@ -131,4 +131,17 @@ export class TestService {
 			}
 		);
 	}
+
+	static async groupDeleted (
+		group_id: string
+	) {
+		return await Test.updateMany(
+			{},
+			{
+				$pull: {
+					groupIds: group_id
+				}
+			}
+		);
+	}
 }

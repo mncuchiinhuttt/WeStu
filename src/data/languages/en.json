@@ -494,7 +494,8 @@
 					"description": "Group \"{name}\" has been deleted successfully!"
 				},
 				"error": "❌ Failed to delete group",
-				"groupDeletedMessage": "Group \"{name}\" has been deleted by {owner}."
+				"groupDeletedMessage": "⛓️‍💥 Group \"{name}\" has been deleted",
+				"groupDeletedMessageDesc": "Group \"{name}\" has been deleted by {owner}."
 			},
 			"listGroup": {
 				"noGroups": "❌ You are not a member of any study groups",

@@ -1,6 +1,8 @@
 import { EmbedBuilder } from 'discord.js';
 import { StudyGroup } from '../../models/StudyGroupModel';
 import { LanguageService } from '../../utils/LanguageService';
+import { TestService } from '../../utils/TestService';
+import { Flashcard } from '../../models/FlashcardModel';
 
 export async function deleteGroup(interaction: any) {
 	const groupId = interaction.options.getString('group_id', true);
@@ -41,20 +43,38 @@ export async function deleteGroup(interaction: any) {
 
 		await interaction.reply({ embeds: [embed] });
 
+		const DM_embed = new EmbedBuilder()
+			.setTitle(
+				strings.groupDeletedMessage
+					.replace('{name}', group.name)
+			)
+			.setDescription(
+				strings.groupDeletedMessageDesc
+					.replace('{owner}', interaction.user.username)
+					.replace('{name}', group.name)
+			)
+			.setColor('#ff0000')
+			.setTimestamp();
+
 		for (const memberId of memberIds) {
 			try {
 				const user = await interaction.client.users.fetch(memberId);
 				if (user) {
 					await user.send(
-						strings.groupDeletedMessage
-						.replace('{name}', group.name)
-						.replace('{owner}', interaction.user.username)
+						{ embeds: [DM_embed] }
 					);
 				}
 			} catch (err) {
 				console.error(`Failed to send message to user ${memberId}:`, err);
 			}
 		}
+
+		await TestService.groupDeleted(groupId);
+
+		await Flashcard.updateMany(
+			{ groupIds: groupId },
+			{ $pull: { groupIds: groupId } }
+		);
 
 	} catch (error) {
 		console.error('Error deleting group:', error);

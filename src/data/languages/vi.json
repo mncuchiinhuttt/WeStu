@@ -494,7 +494,8 @@
 					"description": "Nhóm \"{name}\" đã được xóa thành công!"
 				},
 				"error": "❌ Không thể xóa nhóm",
-				"groupDeletedMessage": "Nhóm \"{name}\" đã bị xóa bởi {owner}."
+				"groupDeletedMessage": "⛓️‍💥 Nhóm \"{name}\" đã bị xóa",
+				"groupDeletedMessageDesc": "Nhóm \"{name}\" đã bị xóa bởi {owner}."
 			},
 			"listGroup": {
 				"noGroups": "❌ Bạn không phải là thành viên của bất kỳ nhóm học tập nào",
