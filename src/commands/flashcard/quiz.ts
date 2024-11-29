@@ -92,6 +92,7 @@ export async function quiz(interaction: Interaction) {
 	const response = await interaction.reply({
 		embeds: [embed],
 		components: [row],
+		ephemeral: true
 	});
 
 	const userFilter = ((i: any) => i.user.id === interaction.user.id);
