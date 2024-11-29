@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Visibility } from './Flashcard';
+import { Visibility } from './FlashcardModel';
 
 export enum QuestionType {
   MultipleChoice = 'multiple_choice',

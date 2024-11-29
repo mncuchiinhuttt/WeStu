@@ -1,6 +1,6 @@
-import { Test, QuestionType, ITestQuestion } from "../models/Test";
+import { Test, QuestionType, ITestQuestion } from "../models/TestModel";
 import { LanguageService } from "./LanguageService";
-import { Visibility } from "../models/Flashcard";
+import { Visibility } from "../models/FlashcardModel";
 
 export class TestService {
 	static async createTest (
@@ -100,6 +100,34 @@ export class TestService {
 			test_id,
 			{
 				$set: settings
+			}
+		);
+	}
+
+	static async shareTest (
+		test_id: string,
+		group_id: string
+	) {
+		return await Test.findByIdAndUpdate(
+			test_id,
+			{
+				$push: {
+					groupIds: group_id
+				}
+			}
+		);
+	}
+
+	static async unshareTest (
+		test_id: string,
+		group_id: string
+	) {
+		return await Test.findByIdAndUpdate(
+			test_id,
+			{
+				$pull: {
+					groupIds: group_id
+				}
 			}
 		);
 	}

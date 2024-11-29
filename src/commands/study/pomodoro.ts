@@ -1,5 +1,5 @@
 import { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType, EmbedBuilder } from 'discord.js';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function startPomodoro(interaction: any) {

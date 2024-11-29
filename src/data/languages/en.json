@@ -439,6 +439,21 @@
 			}
 		},
 		"group": {
+			"showMembers": {
+				"groupNotFound": "❌ Group not found",
+				"members": {
+					"title": "👥 Members of",
+					"description": "Showing page {page} of {totalPages}"
+				},
+				"fields": {
+					"joinedAt": "Joined at",
+					"role": "Role",
+					"owner": "Owner",
+					"member": "Member"
+				},
+				"footer": "Use `/group members page:[1-{totalPages}]` to view other pages",
+				"error": "❌ Failed to fetch group members"
+			},
 			"createGroup": {
 				"successTitle": "✨ Study Group Created",
 				"description": "Group \"{name}\" has been created successfully!",
@@ -791,6 +806,20 @@
 				"answer": "🔑 Answer",
 				"noQuestion": "No Question",
 				"noAnswer": "No Answer"
+			}, 
+			"shareTest": {
+				"testShared": "✅ Test shared successfully",
+				"testSharedDescription": "Test **{name}** has been shared with group **{group}** successfully!",
+				"testNotFound":"❌ Test not found",
+				"testSharedDescriptionDM": "Test **{name}** has been shared with group **{group}** by **{user}**.",
+				"testAlreadyShared": "❌ Test already shared with this group"
+			},
+			"unshareTest": {
+				"testNotShared": "❌ Test not shared with this group",
+				"testNotFound":"❌ Test not found",
+				"testUnshared": "✅ Test unshared successfully",
+				"testUnsharedDescription": "Test **{name}** has been unshared with group **{group}** successfully!",
+				"testUnsharedDescriptionDM": "Test **{name}** has been unshared with group **{group}** by **{user}**."
 			}
 		}
 	}, 

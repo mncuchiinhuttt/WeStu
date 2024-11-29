@@ -1,6 +1,6 @@
 import { CommandInteraction, EmbedBuilder } from "discord.js";
-import { TimeStudySession } from "../../models/TimeStudySession";
-import { StudyTarget } from "../../models/StudyTarget";
+import { TimeStudySession } from "../../models/TimeStudySessionModel";
+import { StudyTarget } from "../../models/StudyTargetModel";
 import { LanguageService } from '../../utils/LanguageService';
 
 let strings: any;

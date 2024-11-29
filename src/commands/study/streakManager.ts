@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import { StudyGoalTarget } from '../../models/StudyGoalTarget';
 import { LanguageService } from '../../utils/LanguageService';
 

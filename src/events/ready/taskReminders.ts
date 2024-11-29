@@ -1,7 +1,7 @@
 import { Client, EmbedBuilder } from 'discord.js';
-import { Task, TaskStatus } from '../../models/Task';
+import { Task, TaskStatus } from '../../models/TaskModel';
 import { LanguageService } from '../../utils/LanguageService';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 
 export default async (client: Client) => {
 	console.log('Task reminder system initialized');

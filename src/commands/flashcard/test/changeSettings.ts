@@ -1,8 +1,8 @@
 import { LanguageService } from "../../../utils/LanguageService";
 import { TestService } from "../../../utils/TestService";
 import { EmbedBuilder } from "discord.js";
-import { Test } from "../../../models/Test";
-import { FlashcardTag } from "../../../models/FlashcardTag";
+import { Test } from "../../../models/TestModel";
+import { FlashcardTag } from "../../../models/FlashcardTagModel";
 
 export async function changeSettings (interaction: any) {
 	const languageService = LanguageService.getInstance();

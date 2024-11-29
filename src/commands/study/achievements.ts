@@ -1,5 +1,5 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
-import { Achievement } from '../../models/Achievement';
+import { Achievement } from '../../models/AchievementModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function displayAchievements(interaction: CommandInteraction) {

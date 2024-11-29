@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from '../../models/Task';
+import { Task, TaskStatus } from '../../models/TaskModel';
 import { LanguageService } from '../../utils/LanguageService';
 import { replacePlaceholders } from '../../utils/replacePlaceholders';
 

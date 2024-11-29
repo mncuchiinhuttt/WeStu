@@ -1,4 +1,4 @@
-import { UserStreak } from '../../models/UserStreak';
+import { UserStreak } from '../../models/UserStreakModel';
 import { Client } from 'discord.js';
 import moment from 'moment-timezone';
 

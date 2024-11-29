@@ -6,7 +6,7 @@ import {
   CommandInteraction, 
   EmbedBuilder 
 } from "discord.js";
-import { TimeStudySession } from "../../models/TimeStudySession";
+import { TimeStudySession } from "../../models/TimeStudySessionModel";
 import { LanguageService } from "../../utils/LanguageService";
 
 const SESSIONS_PER_PAGE = 10;

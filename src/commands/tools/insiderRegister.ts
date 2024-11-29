@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { InsiderUser } from '../../models/InsiderUser';
+import { InsiderUser } from '../../models/InsiderUserModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export const data = new SlashCommandBuilder()

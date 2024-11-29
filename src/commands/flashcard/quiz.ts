@@ -1,7 +1,7 @@
-import { Flashcard, Visibility, Difficulty } from "../../models/Flashcard";
+import { Flashcard, Visibility, Difficulty } from "../../models/FlashcardModel";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction as Interaction, EmbedBuilder } from 'discord.js';
 import { LanguageService } from "../../utils/LanguageService";
-import { FlashcardTag } from "../../models/FlashcardTag";
+import { FlashcardTag } from "../../models/FlashcardTagModel";
 
 export async function quiz(interaction: Interaction) {
 	const topic = interaction.options.getString('topic') ?? null;

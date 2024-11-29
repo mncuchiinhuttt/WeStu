@@ -1,6 +1,6 @@
 import { EmbedBuilder } from 'discord.js';
-import { Flashcard, Visibility } from '../../models/Flashcard';
-import { StudyGroup } from '../../models/StudyGroup';
+import { Flashcard, Visibility } from '../../models/FlashcardModel';
+import { StudyGroup } from '../../models/StudyGroupModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function shareFlashcard(interaction: any) {

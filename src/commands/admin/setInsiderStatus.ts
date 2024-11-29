@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { InsiderStatus } from '../../models/InsiderStatus';
+import { InsiderStatus } from '../../models/InsiderStatusModel';
 
 export const data = new SlashCommandBuilder()
 	.setName('setinsiderstatus')

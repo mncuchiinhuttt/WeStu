@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { StudyGroup } from '../../models/StudyGroup';
+import { StudyGroup } from '../../models/StudyGroupModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function deleteGroup(interaction: any) {

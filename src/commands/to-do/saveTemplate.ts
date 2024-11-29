@@ -1,7 +1,7 @@
-import { Task } from '../../models/Task';
+import { Task } from '../../models/TaskModel';
 import { EmbedBuilder } from 'discord.js';
 import { LanguageService } from '../../utils/LanguageService';
-import { TaskPriority } from '../../models/Task';
+import { TaskPriority } from '../../models/TaskModel';
 
 export async function saveTemplate(interaction: any) {
 	const languageService = LanguageService.getInstance();

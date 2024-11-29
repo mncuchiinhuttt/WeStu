@@ -1,5 +1,5 @@
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
-import { Flashcard, Visibility } from '../../models/Flashcard';
+import { Flashcard, Visibility } from '../../models/FlashcardModel';
 import { Parser } from 'json2csv';
 import * as XLSX from 'xlsx';
 import { LanguageService } from '../../utils/LanguageService';

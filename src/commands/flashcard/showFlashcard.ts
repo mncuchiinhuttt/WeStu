@@ -1,9 +1,9 @@
 import { EmbedBuilder } from "discord.js";
-import { Flashcard, Visibility, Difficulty } from "../../models/Flashcard";
-import { StudyGroup } from "../../models/StudyGroup";
+import { Flashcard, Visibility, Difficulty } from "../../models/FlashcardModel";
+import { StudyGroup } from "../../models/StudyGroupModel";
 import moment from 'moment';
 import { LanguageService } from "../../utils/LanguageService";
-import { FlashcardTag } from "../../models/FlashcardTag";
+import { FlashcardTag } from "../../models/FlashcardTagModel";
 
 export async function showFlashcard(interaction: any) {
 	const flashcardId = interaction.options.getString('flashcard_id_show', true);

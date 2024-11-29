@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { FlashcardTag } from '../../models/FlashcardTag';
+import { FlashcardTag } from '../../models/FlashcardTagModel';
 import { LanguageService } from '../../utils/LanguageService';
 import config from '../../config.json';
 

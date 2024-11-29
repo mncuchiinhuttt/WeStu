@@ -1,5 +1,5 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
-import { StudyResource } from '../../models/StudyResource';
+import { StudyResource } from '../../models/StudyResourceModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 let strings: any;

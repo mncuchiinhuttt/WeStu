@@ -1,5 +1,5 @@
 import { CommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } from 'discord.js';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function displayLeaderboard(interaction: CommandInteraction) {

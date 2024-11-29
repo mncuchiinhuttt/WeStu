@@ -1,7 +1,7 @@
-import { Flashcard, Visibility, Difficulty } from "../../models/Flashcard";
+import { Flashcard, Visibility, Difficulty } from "../../models/FlashcardModel";
 import { ChatInputCommandInteraction as Interaction, EmbedBuilder } from 'discord.js';
 import { LanguageService } from "../../utils/LanguageService";
-import { FlashcardTag } from "../../models/FlashcardTag";
+import { FlashcardTag } from "../../models/FlashcardTagModel";
 
 export async function create_flashcard(interaction: Interaction) {
 	const languageService = LanguageService.getInstance();

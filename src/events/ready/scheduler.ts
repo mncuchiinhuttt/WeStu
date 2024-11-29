@@ -7,7 +7,7 @@ import {
 	ComponentType, 
 	EmbedBuilder 
 } from 'discord.js';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import moment from 'moment-timezone';
 import { updateUserStreak } from '../../commands/study/streakService';
 import { checkAndAwardAchievements } from '../../commands/study/achievementService';

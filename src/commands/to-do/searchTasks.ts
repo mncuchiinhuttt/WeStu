@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { Task } from '../../models/Task';
+import { Task } from '../../models/TaskModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function searchTasks(interaction: any) {

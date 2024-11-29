@@ -1,12 +1,12 @@
 import { LanguageService } from "../../../utils/LanguageService";
 import { Component, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } from "discord.js";
-import { Test } from "../../../models/Test";
-import { TestSession } from "../../../models/TestSession";
-import { Flashcard } from "../../../models/Flashcard";
+import { Test } from "../../../models/TestModel";
+import { TestSession } from "../../../models/TestSessionModel";
+import { Flashcard } from "../../../models/FlashcardModel";
 
 async function sleep (ms: number) {
 	let start = Date.now();
-	for (let i = 0; i < 1e9; i++) {
+	for (let i = 0; i < 1e10; i++) {
 		if ((Date.now() - start) > ms) {
 			break;
 		}

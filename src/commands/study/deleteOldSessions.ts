@@ -1,5 +1,5 @@
 import { CommandInteraction } from "discord.js";
-import { TimeStudySession } from "../../models/TimeStudySession";
+import { TimeStudySession } from "../../models/TimeStudySessionModel";
 import config from "../../config.json";
 
 export async function deleteOldSessions({ interaction }: { interaction: CommandInteraction }) {

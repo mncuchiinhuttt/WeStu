@@ -3,14 +3,14 @@ import { Interaction } from 'discord.js';
 import { elementNameOptions, elementSymbolOptions } from '../../data/chemical-elements/elementNameCommandOptions';
 import Trivia_API_Categories from '../../data/trivia-api-categories.json';
 import Deep_Translate_Languages from '../../data/deep-translate-language.json';
-import { Task } from '../../models/Task';
-import { StudyResource } from '../../models/StudyResource';
-import { StudyGroup } from '../../models/StudyGroup';
-import { Flashcard, Visibility } from '../../models/Flashcard';
-import { FlashcardTag } from '../../models/FlashcardTag';
-import { Test, ITestQuestion } from '../../models/Test';
+import { Task } from '../../models/TaskModel';
+import { StudyResource } from '../../models/StudyResourceModel';
+import { StudyGroup } from '../../models/StudyGroupModel';
+import { Flashcard, Visibility } from '../../models/FlashcardModel';
+import { FlashcardTag } from '../../models/FlashcardTagModel';
+import { Test, ITestQuestion } from '../../models/TestModel';
 import { LanguageService } from '../../utils/LanguageService';
-import { TestSession } from '../../models/TestSession';
+import { TestSession } from '../../models/TestSessionModel';
 
 const autoCompleteCommandName = ['lookup', 'element', 'study', 'translate', 'todo', 'group', 'flashcard'];
 
@@ -284,11 +284,9 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 		}
 	} else if (focusedValue.name === 'flashcard_id_show') {
 		try {
-			// Get user's groups
 			const userGroups = await StudyGroup.find({ members: interaction.user.id });
 			const groupIds = userGroups.map((g: any) => g._id.toString());
 
-			// Query all accessible flashcards
 			const flashcards = await Flashcard.find({
 				$or: [
 					{ user: interaction.user.id },
@@ -303,7 +301,6 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 			.limit(25);
 
 			const results = flashcards.map(card => {
-				// Add visibility icon
 				const visibility = card.user === interaction.user.id ? '🔒' : 
 												 card.visibility === Visibility.Public ? '🌐' : '👥';
 				
@@ -367,6 +364,39 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 						
 						return {
 								name: `${visibility} ${test.title} (${questionCount}Q, ${timeString}, ${test.passingScore}%)`,
+								value: test._id.toString()
+						};
+				});
+
+				await interaction.respond(
+						results.filter(test => 
+								test.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+						).slice(0, 25)
+				);
+
+		} catch (error) {
+				console.error('Error in test autocomplete:', error);
+				await interaction.respond([]);
+		}
+	} else if (focusedValue.name === 'your_test_id') {
+		try {
+				const tests = await Test.find({
+						$or: [
+								{ creator: interaction.user.id },
+						],
+						title: {
+								$regex: new RegExp(focusedValue.value, 'i')
+						}
+				})
+				.sort({ createdAt: -1 })
+				.limit(25);
+
+				const results = tests.map(test => {
+						const questionCount = test.questions.length;
+						const timeString = test.timeLimit ? `⏱️${test.timeLimit}m` : '⏱️∞';
+						
+						return {
+								name: `🔒 ${test.title} (${questionCount}Q, ${timeString}, ${test.passingScore}%)`,
 								value: test._id.toString()
 						};
 				});

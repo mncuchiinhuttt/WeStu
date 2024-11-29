@@ -1,5 +1,5 @@
 import { LanguageService } from "../../../utils/LanguageService";
-import { TestSession } from "../../../models/TestSession";
+import { TestSession } from "../../../models/TestSessionModel";
 import { EmbedBuilder } from "discord.js";
 
 export async function eachTestStats (interaction: any) {

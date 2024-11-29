@@ -1,4 +1,4 @@
-import { ITestQuestion, QuestionType, Test } from "../../../models/Test";
+import { ITestQuestion, QuestionType, Test } from "../../../models/TestModel";
 import { LanguageService } from "../../../utils/LanguageService";
 import { TestService } from "../../../utils/TestService";
 import { EmbedBuilder } from "discord.js";

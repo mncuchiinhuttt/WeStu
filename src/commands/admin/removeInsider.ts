@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { InsiderUser } from '../../models/InsiderUser';
+import { InsiderUser } from '../../models/InsiderUserModel';
 
 export const data = new SlashCommandBuilder()
 	.setName('removeinsider')

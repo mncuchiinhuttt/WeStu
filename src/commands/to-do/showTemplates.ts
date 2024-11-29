@@ -1,4 +1,4 @@
-import { Task } from '../../models/Task';
+import { Task } from '../../models/TaskModel';
 import { EmbedBuilder, APIEmbedField } from 'discord.js';
 import { LanguageService } from '../../utils/LanguageService';
 

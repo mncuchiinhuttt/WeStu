@@ -1,5 +1,5 @@
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
-import { Flashcard, Visibility } from '../../models/Flashcard';
+import { Flashcard, Visibility } from '../../models/FlashcardModel';
 import * as fs from 'fs';
 import * as readline from 'readline';
 import { LanguageService } from '../../utils/LanguageService';

@@ -1,7 +1,7 @@
 import { LanguageService } from "../../../utils/LanguageService";
 import { TestService } from "../../../utils/TestService";
 import { EmbedBuilder } from "discord.js";
-import { Test } from "../../../models/Test";
+import { Test } from "../../../models/TestModel";
 
 export async function editQuestion (interaction: any) {
 	const languageService = LanguageService.getInstance();

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { create_flashcard } from './create-flashcard';
-import { Visibility } from '../../models/Flashcard';
+import { Visibility } from '../../models/FlashcardModel';
 import { quiz } from './quiz';
 import { deleteFlashcard } from './deleteFlashcard';
 import { shareFlashcard } from './shareFlashcard';
@@ -10,7 +10,7 @@ import { importHelp } from './importHelp';
 import { importFlashcards } from './importFlashcards';
 import { exportFlashcards } from './exportFlashcards';
 import { addTag, removeTag } from './tagManagement';
-import { Difficulty } from '../../models/Flashcard';
+import { Difficulty } from '../../models/FlashcardModel';
 import { listTags } from './listTags';
 import { createTest } from './test/createTest';
 import { deleteTest } from './test/deleteTest';
@@ -24,6 +24,8 @@ import { removeQuestion } from './test/removeQuestion';
 import { editQuestion } from './test/editQuestion';
 import { eachTestStats } from './test/eachTestStats';
 import { incorrectReview } from './test/incorrectReview';
+import { shareTest } from './test/shareTest';
+import { unshareTest } from './test/unshareTest';
 
 export async function run({ interaction }: any) {
 	const groupSubcommand = interaction.options.getSubcommandGroup(false);
@@ -81,6 +83,12 @@ export async function run({ interaction }: any) {
 					break;
 				case 'incorrect-review':
 					incorrectReview(interaction);
+					break;
+				case 'share':
+					shareTest(interaction);
+					break;
+				case 'unshare':
+					unshareTest(interaction);
 					break;
 			}
 			break;
@@ -855,6 +863,62 @@ export const data = new SlashCommandBuilder()
 				.setDescription('The ID of the test session to review')
 				.setDescriptionLocalizations({
 					'vi': 'ID của lần làm bài cần xem lại'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('share')
+			.setDescription('Share the test with your group')
+			.setDescriptionLocalizations({
+				'vi': 'Chia sẻ bài kiểm tra với nhóm của bạn'
+			})
+			.addStringOption(option =>
+				option
+				.setName('your_test_id')
+				.setDescription('Your test ID')
+				.setDescriptionLocalizations({
+					'vi': 'ID bài test của bạn'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('group_id')
+				.setDescription('Your group ID')
+				.setDescriptionLocalizations({
+					'vi': 'ID nhóm của bạn'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+			.setName('unshare')
+			.setDescription('Unshare the test with your group')
+			.setDescriptionLocalizations({
+				'vi': 'Bỏ chia sẻ bài kiểm tra với nhóm của bạn'
+			})
+			.addStringOption(option =>
+				option
+				.setName('your_test_id')
+				.setDescription('Your test ID')
+				.setDescriptionLocalizations({
+					'vi': 'ID bài test của bạn'
+				})
+				.setRequired(true)
+				.setAutocomplete(true)
+			)
+			.addStringOption(option =>
+				option
+				.setName('group_id')
+				.setDescription('Your group ID')
+				.setDescriptionLocalizations({
+					'vi': 'ID nhóm của bạn'
 				})
 				.setRequired(true)
 				.setAutocomplete(true)

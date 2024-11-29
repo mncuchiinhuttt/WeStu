@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction as Interaction, EmbedBuilder } from 'discord.js';
-import { StudyTarget } from "../../models/StudyTarget";
+import { StudyTarget } from "../../models/StudyTargetModel";
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function setStudyTarget(interaction: Interaction) {

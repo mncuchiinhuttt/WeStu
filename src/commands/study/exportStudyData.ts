@@ -1,5 +1,5 @@
 import { CommandInteraction, AttachmentBuilder, EmbedBuilder } from 'discord.js';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import { createReadStream, writeFileSync } from 'fs';
 import { join } from 'path';
 import { generatePDFReport } from '../../utils/generatePDFReport';

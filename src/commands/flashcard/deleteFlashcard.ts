@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { Flashcard } from '../../models/Flashcard';
+import { Flashcard } from '../../models/FlashcardModel';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function deleteFlashcard(interaction: any) {

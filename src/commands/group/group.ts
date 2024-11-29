@@ -4,6 +4,7 @@ import { addGroupMember } from './addGroupMember';
 import { removeGroupMember } from './removeGroupMember';
 import { deleteGroup } from './deleteGroup';
 import { getGroups } from './listGroup';
+import { showMembers } from './showMembers';
 
 async function run ({
 	interaction,
@@ -14,7 +15,8 @@ async function run ({
 		'add': addGroupMember,
 		'remove': removeGroupMember,
 		'delete': deleteGroup,
-		'list': getGroups
+		'list': getGroups,
+		'show-members': showMembers
 	};
 
 	try {
@@ -145,6 +147,24 @@ const data = new SlashCommandBuilder()
 			.setDescriptionLocalizations({
 				'vi': 'Số thứ tự trang'
 			})
+		)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+		.setName('show-members')
+		.setDescription('Show members of a study group')
+		.setDescriptionLocalizations({
+			'vi': 'Hiển thị thành viên của nhóm học'
+		})
+		.addStringOption(option =>
+			option
+			.setName('group_id')
+			.setDescription('ID of the study group')
+			.setDescriptionLocalizations({
+				'vi': 'ID của nhóm học'
+			})
+			.setRequired(true)
+			.setAutocomplete(true)
 		)
 	)
 

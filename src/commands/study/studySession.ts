@@ -9,7 +9,7 @@ import {
 	EmbedBuilder,
 } from 'discord.js';
 import moment from 'moment-timezone';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import { updateUserStreak } from './streakService';
 import { checkAndAwardAchievements } from './achievementService';
 import { LanguageService } from '../../utils/LanguageService';

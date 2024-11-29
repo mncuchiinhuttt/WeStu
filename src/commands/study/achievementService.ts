@@ -1,6 +1,6 @@
-import { Achievement, IAchievement } from '../../models/Achievement';
-import { TimeStudySession } from '../../models/TimeStudySession';
-import { UserStreak } from '../../models/UserStreak';
+import { Achievement, IAchievement } from '../../models/AchievementModel';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
+import { UserStreak } from '../../models/UserStreakModel';
 import { achievementsList, AchievementCriteria } from '../../data/achievementsList';
 import { Client } from 'discord.js';
 import { LanguageService } from '../../utils/LanguageService';

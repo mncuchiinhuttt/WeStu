@@ -1,4 +1,4 @@
-import { UserLanguage } from '../models/UserLanguage';
+import { UserLanguage } from '../models/UserLanguageModel';
 
 export class LanguageService {
 	private static instance: LanguageService;

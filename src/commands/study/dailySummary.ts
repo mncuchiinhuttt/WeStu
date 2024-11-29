@@ -1,5 +1,5 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
-import { TimeStudySession } from '../../models/TimeStudySession';
+import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import moment from 'moment-timezone';
 import { LanguageService } from '../../utils/LanguageService';
 

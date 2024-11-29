@@ -1,5 +1,5 @@
 import { CommandInteraction, EmbedBuilder } from 'discord.js';
-import { FlashcardTag } from '../../models/FlashcardTag';
+import { FlashcardTag } from '../../models/FlashcardTagModel';
 import moment from 'moment-timezone';
 import { LanguageService } from '../../utils/LanguageService';
 

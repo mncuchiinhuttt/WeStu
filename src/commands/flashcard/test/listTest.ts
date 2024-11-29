@@ -1,8 +1,8 @@
-import { ITestQuestion, QuestionType, Test } from "../../../models/Test";
+import { ITestQuestion, QuestionType, Test } from "../../../models/TestModel";
 import { LanguageService } from "../../../utils/LanguageService";
 import { TestService } from "../../../utils/TestService";
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, InteractionCollector } from "discord.js";
-import { Flashcard } from "../../../models/Flashcard";
+import { Flashcard } from "../../../models/FlashcardModel";
 
 export async function listTest(interaction: any) {
 	const languageService = LanguageService.getInstance();

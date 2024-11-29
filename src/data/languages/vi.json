@@ -439,6 +439,21 @@
 			}
 		},
 		"group": {
+			"showMembers": {
+				"groupNotFound": "❌ Không tìm thấy nhóm",
+				"members": {
+					"title": "👥 Thành viên của",
+					"description": "Hiển thị trang {page} trên tổng số {totalPages}"
+				},
+				"fields": {
+					"joinedAt": "Tham gia lúc",
+					"role": "Vai trò",
+					"owner": "Chủ nhóm",
+					"member": "Thành viên"
+				},
+				"footer": "Sử dụng `/group members page:[1-{totalPages}]` để xem các trang khác",
+				"error": "❌ Không thể lấy danh sách thành viên nhóm"
+			},
 			"createGroup": {
 				"successTitle": "✨ Nhóm Học Đã Được Tạo",
 				"description": "Nhóm \"{name}\" đã được tạo thành công!",
@@ -791,6 +806,20 @@
 				"answer": "🔑 Đáp án",
 				"noQuestion": "Không có câu hỏi",
 				"noAnswer": "Không có đáp án"
+			},
+			"shareTest": {
+				"testShared": "✅ Chia sẻ bài kiểm tra thành công",
+				"testSharedDescription": "Bài kiểm tra **{name}** đã được chia sẻ với nhóm **{group}** thành công!",
+				"testNotFound": "❌ Không tìm thấy bài kiểm tra",
+				"testSharedDescriptionDM": "Bài kiểm tra **{name}** đã được chia sẻ với nhóm **{group}** bởi **{user}**.",
+				"testAlreadyShared": "❌ Bài kiểm tra đã được chia sẻ với nhóm này"
+			},
+			"unshareTest": {
+				"testNotShared": "❌ Bài kiểm tra chưa được chia sẻ với nhóm này",
+				"testNotFound": "❌ Không tìm thấy bài kiểm tra",
+				"testUnshared": "✅ Hủy chia sẻ bài kiểm tra thành công",
+				"testUnsharedDescription": "Bài kiểm tra **{name}** đã được hủy chia sẻ với nhóm **{group}** thành công!",
+				"testUnsharedDescriptionDM": "Bài kiểm tra **{name}** đã được hủy chia sẻ với nhóm **{group}** bởi **{user}**."
 			}
 		}
 	}, 

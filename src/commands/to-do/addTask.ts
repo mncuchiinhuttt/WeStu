@@ -1,4 +1,4 @@
-import { Task, TaskPriority } from '../../models/Task';
+import { Task, TaskPriority } from '../../models/TaskModel';
 import { EmbedBuilder } from 'discord.js';
 import { LanguageService } from '../../utils/LanguageService';
 
