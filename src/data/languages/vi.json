@@ -732,10 +732,14 @@
 				"timeSpent": "⏱️ Thời gian làm bài",
 				"seconds": "giây",
 				"correctAnswer": "✅ Câu trả lời đúng",
+				"correct": "Làm tốt lắm! 🎉",
 				"incorrectAnswer": "❌ Câu trả lời sai",
+				"incorrect": "Không sao, hãy thử lại! 💪",
 				"results": "📝 Kết Quả",
 				"resultsDescription": "Bạn đã hoàn thành bài kiểm tra. Dưới đây là kết quả của bạn:",
-				"start": "Bắt Đầu"
+				"start": "Bắt Đầu",
+				"timeExpired": "⏰ Quá thời gian",
+				"timeExpiredDescription": "Bạn chỉ có 30 giây cho mỗi câu hỏi."
 			}
 		}
 	}, 

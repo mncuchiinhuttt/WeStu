@@ -4,6 +4,15 @@ import { Test } from "../../../models/Test";
 import { TestSession } from "../../../models/TestSession";
 import { Flashcard } from "../../../models/Flashcard";
 
+async function sleep (ms: number) {
+	let start = Date.now();
+	for (let i = 0; i < 1e9; i++) {
+		if ((Date.now() - start) > ms) {
+			break;
+		}
+	}
+}
+
 export async function takeTest (interaction: any) {
 	const languageService = LanguageService.getInstance();
 	const userLang = await languageService.getUserLanguage(interaction.user.id);
@@ -31,7 +40,7 @@ export async function takeTest (interaction: any) {
 		
 		const questions = test.questions;
 
-		await interaction.deferReply();
+		await interaction.deferReply({ ephemeral: true });
 
 		const initialEmbed = new EmbedBuilder()
 			.setTitle(strings.question)
@@ -48,7 +57,7 @@ export async function takeTest (interaction: any) {
 		const initialMessage = await interaction.editReply({
 			embeds: [initialEmbed],
 			components: [initialRow],
-			ephermal: true
+			ephemeral: true
 		});
 
 		const userFilter = ((i: any) => i.user.id === interaction.user.id);
@@ -136,13 +145,18 @@ export async function takeTest (interaction: any) {
 					});
 				}
 
-				await new Promise(resolve => setTimeout(resolve, 2000));
+				await sleep(2000);
 			} catch (e) {
+				const timeExpiredEmbed = new EmbedBuilder()
+					.setTitle(strings.timeExpired)
+					.setDescription(strings.timeExpiredDescription)
+					.setColor('#FF0000');
+
 				await interaction.editReply({ 
-					content: strings.timeExpired, 
+					embeds: [timeExpiredEmbed],
 					ephemeral: true 
 				});
-				await new Promise(resolve => setTimeout(resolve, 2000));
+				await sleep(2000);
 			}
 		}
 

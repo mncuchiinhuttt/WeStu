@@ -732,10 +732,14 @@
 				"timeSpent": "⏱️ Time Spent",
 				"seconds": "seconds",
 				"correctAnswer": "✅ Correct Answer",
+				"correct": "Good job! 🎉",
 				"incorrectAnswer": "❌ Incorrect Answer",
+				"incorrect": "Better luck next time! 🍀",
 				"results": "📝 Test Results",
 				"resultsDescription": "You have completed the test. Here are your results:",
-				"start": "Start Test"
+				"start": "Start Test",
+				"timeExpired": "⏰ Time's up!",
+				"timeExpiredDescription": "You just have 30 seconds for each question."
 			}
 		}
 	}, 
