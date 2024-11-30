@@ -1,6 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 import { Flashcard } from '../../models/FlashcardModel';
 import { LanguageService } from '../../utils/LanguageService';
+import { Test } from '../../models/TestModel';
 
 export async function deleteFlashcard(interaction: any) {
   const flashcardId = interaction.options.getString('flashcard_id', true);
@@ -30,6 +31,10 @@ export async function deleteFlashcard(interaction: any) {
     }
 
     await Flashcard.findByIdAndDelete(flashcardId);
+    await Test.updateMany(
+      { 'questions.flashcardId': flashcardId },
+      { $pull: { questions: { flashcardId: flashcardId } } }
+    );
 
 		const embed = new EmbedBuilder()
 			.setTitle(strings.deleted.title)

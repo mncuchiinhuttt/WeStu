@@ -732,7 +732,9 @@
 				"timeLimit": "⏱️ Giới Hạn Thời Gian",
 				"passingScore": "🎯 Điểm Đạt",
 				"tag": "🏷️ Thẻ",
-				"noTag": "Không có thẻ"
+				"noTag": "Không có thẻ",
+				"noTimeLimit": "Không giới hạn thời gian",
+				"noPassingScore": "Không cần điểm đạt"
 			},
 			"takeTest": {
 				"testNotFound": "❌ Không tìm thấy bài kiểm tra",

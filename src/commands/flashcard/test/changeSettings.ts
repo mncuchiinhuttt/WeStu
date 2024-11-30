@@ -49,8 +49,8 @@ export async function changeSettings (interaction: any) {
 			.addFields(
 				{ name: strings.title, value: title },
 				{ name: strings.description, value: description },
-				{ name: strings.timeLimit, value: (time_limit.toString() + 'm') },
-				{ name: strings.passingScore, value: passing_score.toString() },
+				{ name: strings.timeLimit, value: time_limit ? (time_limit.toString() + 'm') : strings.noTimeLimit },
+				{ name: strings.passingScore, value: passing_score ? passing_score.toString() : strings.noPassingScore },
 				{ name: strings.tag, value: tagName }
 			)
 			.setTimestamp(Date.now());

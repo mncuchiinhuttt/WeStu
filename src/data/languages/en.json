@@ -732,7 +732,9 @@
 				"timeLimit": "⏱️ Time Limit",
 				"passingScore": "🎯 Passing Score",
 				"tag":"🏷️ Tag",
-				"noTag": "No tag"
+				"noTag": "No tag",
+				"noTimeLimit": "No time limit",
+				"noPassingScore": "No passing score"
 			},
 			"takeTest": {
 				"testNotFound":"❌ Test not found",

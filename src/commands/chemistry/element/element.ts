@@ -300,10 +300,10 @@ export function run({ interaction }: { interaction: Interaction; }) {
 	}
 
 	(async () => {
-		await interaction.reply(pages[0]);
+		await interaction.reply({ content: pages[0], ephemeral: true });
 		if (replyArray.length() >= 2) {
 			for (let i = 1; i < replyArray.length(); ++i) {
-				await interaction.followUp(pages[i]);
+				await interaction.followUp({ content: pages[i], ephemeral: true });
 			}
 		}
 	})();

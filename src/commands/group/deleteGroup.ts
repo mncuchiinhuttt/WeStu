@@ -41,7 +41,7 @@ export async function deleteGroup(interaction: any) {
 			.setColor('#ff0000')
 			.setTimestamp();
 
-		await interaction.reply({ embeds: [embed] });
+		await interaction.reply({ embeds: [embed], ephemeral: true });
 
 		const DM_embed = new EmbedBuilder()
 			.setTitle(
