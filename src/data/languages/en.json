@@ -833,6 +833,9 @@
 				"flashcard": {
 					"question": {
 						"unknownQuestion": "❌ Unknown question"
+					},
+					"session_id": {
+						"deletedTest": "Deleted test"
 					}
 				}
 			}

@@ -13,7 +13,6 @@ import { manageTags } from './manageTags';
 import { manageSubtasks } from './manageSubtasks';
 import { updateProgress } from './updateProgress';
 import { shareTask } from './shareTask';
-import { manageCategories } from './manageCategories';
 import { addComment } from './addComment';
 import { showComments } from './showComments';
 import { createFromTemplate } from './createFromTemplate';
@@ -24,22 +23,21 @@ import { deleteOldTasks } from './deleteOldTasks';
 async function run ({ interaction }: any) {
 	const subCommand = interaction.options.getSubcommand();
 	const handlers: { [key: string]: Function } = {
-		add: addTask, 
-		list: listTasks,
-		complete: completeTask,
-		stats: taskStats,
-		delete: deleteTask,
-		suggest: suggestTaskOrder,
-		edit: editTask,
-		search: searchTasks,
-		recurring: createRecurringTask,
-		export: exportTasks,
-		tags: manageTags,
-		subtask: manageSubtasks,
-		progress: updateProgress,
-		share: shareTask,
-		category: manageCategories,
-		comment: addComment,
+		'add': addTask, 
+		'list': listTasks,
+		'complete': completeTask,
+		'stats': taskStats,
+		'delete': deleteTask,
+		'suggest': suggestTaskOrder,
+		'edit': editTask,
+		'search': searchTasks,
+		'recurring': createRecurringTask,
+		'export': exportTasks,
+		'tags': manageTags,
+		'subtask': manageSubtasks,
+		'progress': updateProgress,
+		'share': shareTask,
+		'comment': addComment,
 		'show-comments': showComments,
 		'save-template': saveTemplate,
 		'from-template': createFromTemplate,
@@ -421,36 +419,6 @@ const data = new SlashCommandBuilder()
 			.setDescription('User to share with')
 			.setDescriptionLocalizations({
 				'vi': 'Người dùng cần chia sẻ'
-			})
-			.setRequired(true)
-		)
-	)
-	.addSubcommand(subcommand =>
-		subcommand
-		.setName('category')
-		.setDescription('Manage task categories')
-		.setDescriptionLocalizations({
-			'vi': 'Quản lý danh mục công việc'
-		})
-		.addStringOption(option =>
-			option
-			.setName('action')
-			.setDescription('Action to perform')
-			.setDescriptionLocalizations({
-				'vi': 'Hành động cần thực hiện'
-			})
-			.setRequired(true)
-			.addChoices(
-				{ name: 'Create category', value: 'create' },
-				{ name: 'Move task to category', value: 'move' }
-			)
-		)
-		.addStringOption(option =>
-			option
-			.setName('name')
-			.setDescription('Category name')
-			.setDescriptionLocalizations({
-				'vi': 'Tên danh mục'
 			})
 			.setRequired(true)
 		)

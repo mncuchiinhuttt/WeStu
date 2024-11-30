@@ -833,6 +833,9 @@
 				"flashcard": {
 					"question": {
 						"unknownQuestion": "❌ Không tìm thấy câu hỏi"
+					},
+					"session_id": {
+						"deletedTest": "Bài kiểm tra đã bị xóa"
 					}
 				}
 			}

@@ -132,12 +132,11 @@ async function translateAutoComplete (interaction: any, focusedValue: any) {
 async function todoAutoComplete (interaction: any, focusedValue: any) {
 	if (focusedValue.name === 'task_id') {
 		try {
-			// Get user's tasks, prioritize pending ones
 			const tasks = await Task.find({ 
 				userId: interaction.user.id 
 			}).sort({ 
-				status: 1, // Pending first
-				deadline: 1  // Earlier deadlines first
+				status: 1,
+				deadline: 1 
 			}).limit(25);
 
 			const results = tasks.map(task => {
@@ -452,36 +451,40 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 		}
 	} else if (focusedValue.name === 'session_id') {
 		try {
-				const sessions = await TestSession.find({ 
-						userId: interaction.user.id 
-				})
+			const sessions = await TestSession.find({ userId: interaction.user.id })
 				.sort({ startTime: -1 })
-				.limit(25);
+				.limit(25)
+				.populate('testId');
 
-				const sessionsWithDetails = await Promise.all(
-						sessions.map(async (session) => {
-								const test = await Test.findById(session.testId);
-								return {
-										id: session._id,
-										testTitle: test?.title ?? 'Unknown Test',
-										score: session.score,
-										percentage: session.percentage,
-										date: session.startTime.toLocaleString(),
-										passed: session.passed
-								};
-						})
-				);
+			const languageService = LanguageService.getInstance();
+			const userLang = await languageService.getUserLanguage(interaction.user.id);
+			const langStrings = require(`../../data/languages/${userLang}.json`);
+			const strings = langStrings.events.interactionCreate.autoComplete.flashcard.session_id;
 
-				const results = sessionsWithDetails.map(session => ({
-						name: `${session.passed ? '✅' : '❌'} ${session.testTitle} - ${session.percentage}% (${session.date})`,
-						value: session.id.toString()
-				}));
+			const sessionsWithDetails = await Promise.all(
+					sessions.map(async (session) => {
+							const test = await Test.findById(session.testId);
+							return {
+									id: session._id,
+									testTitle: test?.title ?? strings.deletedTest,
+									score: session.score,
+									percentage: session.percentage,
+									date: session.startTime.toLocaleString(),
+									passed: session.passed
+							};
+					})
+			);
 
-				await interaction.respond(
-						results.filter(session => 
-								session.name.toLowerCase().includes(focusedValue.value.toLowerCase())
-						).slice(0, 25)
-				);
+			const results = sessionsWithDetails.map(session => ({
+					name: `${session.passed ? '✅' : '❌'} ${session.testTitle} - ${session.percentage}% (${session.date})`,
+					value: session.id.toString()
+			}));
+
+			await interaction.respond(
+					results.filter(session => 
+							session.name.toLowerCase().includes(focusedValue.value.toLowerCase())
+					).slice(0, 25)
+			);
 
 		} catch (error) {
 				console.error('Error in session autocomplete:', error);
