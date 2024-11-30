@@ -91,9 +91,9 @@ export class TestService {
 		settings: {
 			title?: string,
 			description?: string,
-			time_limit?: number,
-			passing_score?: number,
-			tag?: string
+			timeLimit?: number,
+			passingScore?: number,
+			tags?: string
 		}
 	) {
 		return await Test.findByIdAndUpdate(

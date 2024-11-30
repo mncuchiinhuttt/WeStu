@@ -24,19 +24,19 @@ export async function changeSettings (interaction: any) {
 
 		const title = interaction.options.getString('title') ?? test.title;
 		const description = interaction.options.getString('description') ?? test.description;
-		const time_limit = interaction.options.getInteger('time_limit') ?? test.timeLimit;
-		const passing_score = interaction.options.getInteger('passing_score') ?? test.passingScore;
-		const tag = interaction.options.getString('tag_id') ?? test.tags;
+		const timeLimit = interaction.options.getInteger('time_limit') ?? test.timeLimit;
+		const passingScore = interaction.options.getInteger('passing_score') ?? test.passingScore;
+		const tags = interaction.options.getString('tag_id') ?? test.tags;
 
 		await TestService.updateTestSettings(test_id, {
 			title,
 			description,
-			time_limit,
-			passing_score,
-			tag
+			timeLimit,
+			passingScore,
+			tags
 		});
 
-		const Tag = await FlashcardTag.findById(tag);
+		const Tag = await FlashcardTag.findById(tags);
 		const tagName = Tag ? Tag.name : strings.noTag;
 
 		const embed = new EmbedBuilder()
@@ -49,8 +49,8 @@ export async function changeSettings (interaction: any) {
 			.addFields(
 				{ name: strings.title, value: title },
 				{ name: strings.description, value: description },
-				{ name: strings.timeLimit, value: time_limit ? (time_limit.toString() + 'm') : strings.noTimeLimit },
-				{ name: strings.passingScore, value: passing_score ? passing_score.toString() : strings.noPassingScore },
+				{ name: strings.timeLimit, value: timeLimit ? (timeLimit.toString() + 'm') : strings.noTimeLimit },
+				{ name: strings.passingScore, value: passingScore ? passingScore.toString() : strings.noPassingScore },
 				{ name: strings.tag, value: tagName }
 			)
 			.setTimestamp(Date.now());
