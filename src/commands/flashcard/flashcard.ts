@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, CommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { create_flashcard } from './create-flashcard';
 import { Visibility } from '../../models/FlashcardModel';
 import { quiz } from './quiz';

@@ -361,9 +361,10 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 						const visibility = test.creator === interaction.user.id ? '🔒' : '🌐';
 						const questionCount = test.questions.length;
 						const timeString = test.timeLimit ? `⏱️${test.timeLimit}m` : '⏱️∞';
+						const test_id = test._id.toString();
 						
 						return {
-								name: `${visibility} ${test.title} (${questionCount}Q, ${timeString}, ${test.passingScore}%)`,
+								name: `${visibility} ${test.title} (${questionCount}Q, ${timeString}, ${test.passingScore}%) - 🔑 ${test_id}`,
 								value: test._id.toString()
 						};
 				});
