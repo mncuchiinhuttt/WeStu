@@ -1,6 +1,7 @@
 import { LanguageService } from "../../../utils/LanguageService";
 import { TestSession } from "../../../models/TestSessionModel";
 import { EmbedBuilder } from "discord.js";
+import { Test } from "../../../models/TestModel";
 
 export async function eachTestStats (interaction: any) {
 	const languageService = LanguageService.getInstance();
@@ -25,15 +26,21 @@ export async function eachTestStats (interaction: any) {
 				Math.round(sessions.reduce((acc, s) => acc + s.timeSpent, 0) / sessions.length) : 0
 		};
 
+		const test = await Test.findById(test_id);
+		const title = test ? test.title : strings.testNotFound;
+
 		const embed = new EmbedBuilder()
-			.setTitle(strings.title)
+			.setTitle(
+				strings.title
+					.replace('{name}', title)
+			)
 			.setColor('#0099ff')
 			.addFields(
 				{ name: strings.totalSessions, value: stats.totalSessions.toString() },
 				{ name: strings.averageScore, value: `${stats.averageScore}` },
 				{ name: strings.testsCompleted, value: stats.testsCompleted.toString() },
 				{ name: strings.highestScore, value: `${stats.highestScore}` },
-				{ name: strings.averageTime, value: `${stats.averageCompletionTime} ${strings.minutes}` }
+				{ name: strings.averageTime, value: `${stats.averageCompletionTime} ${strings.seconds}` }
 			)
 				
 		await interaction.editReply({ embeds: [embed] });

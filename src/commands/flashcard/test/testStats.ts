@@ -36,7 +36,7 @@ export async function testStats (interaction: any) {
 							{ name: strings.averageScore, value: `${stats.averageScore}` },
 							{ name: strings.testsCompleted, value: stats.testsCompleted.toString() },
 							{ name: strings.highestScore, value: `${stats.highestScore}` },
-							{ name: strings.averageTime, value: `${stats.averageCompletionTime} ${strings.minutes}` }
+							{ name: strings.averageTime, value: `${stats.averageCompletionTime} ${strings.seconds}` }
 					)
 					.setTimestamp();
 

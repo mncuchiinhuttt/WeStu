@@ -104,6 +104,12 @@ export async function takeTest (interaction: any) {
 
 			const userFilter = ((i: any) => i.user.id === interaction.user.id);
 
+			if (flashcard.mediaUrl && flashcard.mediaType === 'image') {
+				embed.setImage(flashcard.mediaUrl);
+			} else if (flashcard.mediaUrl && flashcard.mediaType === 'audio') {
+				embed.addFields({ name: strings.audio, value: flashcard.mediaUrl });
+			}
+
 			const response = await interaction.editReply({
 				embeds: [embed],
 				components: [row],

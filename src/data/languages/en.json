@@ -734,7 +734,8 @@
 				"tag":"🏷️ Tag",
 				"noTag": "No tag",
 				"noTimeLimit": "No time limit",
-				"noPassingScore": "No passing score"
+				"noPassingScore": "No passing score",
+				"tagNotFound": "❌ Tag not found"
 			},
 			"takeTest": {
 				"testNotFound":"❌ Test not found",
@@ -779,7 +780,7 @@
 				"highestScore": "Highest Score",
 				"averageTime": "Average Time",
 				"error": "Failed to fetch test statistics",
-				"minutes": "minutes"
+				"seconds": "seconds"
 			},
 			"removeQuestion": {
 				"successTitle": "✅ Question Removed",
@@ -800,7 +801,7 @@
 				"testsCompleted": "✅ Tests Completed",
 				"highestScore": "🏆 Highest Score",
 				"averageTime": "⏱️ Average Time",
-				"minutes": "minutes"
+				"seconds": "seconds"
 			},
 			"incorrectReview": {
 				"title": "📝 Incorrect Answers Review",

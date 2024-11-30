@@ -28,6 +28,19 @@ export async function changeSettings (interaction: any) {
 		const passingScore = interaction.options.getInteger('passing_score') ?? test.passingScore;
 		const tags = interaction.options.getString('tag_id') ?? test.tags;
 
+		const Tag = await FlashcardTag.findById(tags);
+		if (tags && !Tag) {
+			const noTagEmbed = new EmbedBuilder()
+				.setTitle(strings.tagNotFound)
+				.setColor('#ff0000')
+				.setTimestamp(Date.now());
+			await interaction.reply({
+				embeds: [noTagEmbed],
+				ephemeral: true
+			});
+			return;
+		}
+
 		await TestService.updateTestSettings(test_id, {
 			title,
 			description,
@@ -36,7 +49,6 @@ export async function changeSettings (interaction: any) {
 			tags
 		});
 
-		const Tag = await FlashcardTag.findById(tags);
 		const tagName = Tag ? Tag.name : strings.noTag;
 
 		const embed = new EmbedBuilder()
