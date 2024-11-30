@@ -465,7 +465,7 @@ async function flashcardAutoComplete(interaction: any, focusedValue: any) {
 										testTitle: test?.title ?? 'Unknown Test',
 										score: session.score,
 										percentage: session.percentage,
-										date: session.startTime.toLocaleDateString(),
+										date: session.startTime.toLocaleString(),
 										passed: session.passed
 								};
 						})

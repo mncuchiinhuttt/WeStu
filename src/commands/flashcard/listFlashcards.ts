@@ -1,23 +1,22 @@
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'discord.js';
 import { Flashcard, Visibility } from '../../models/FlashcardModel';
 import { StudyGroup } from '../../models/StudyGroupModel';
 import moment from 'moment-timezone';
 import { LanguageService } from '../../utils/LanguageService';
 
 export async function listFlashcards(interaction: any) {
-	const page = interaction.options.getInteger('page') ?? 1;
+	const initialPage = interaction.options.getInteger('page') ?? 1;
 	const visibility = interaction.options.getInteger('visibility');
 	const limit = 5;
-	const skip = (page - 1) * limit;
 
 	const languageService = LanguageService.getInstance();
 	const userLang = await languageService.getUserLanguage(interaction.user.id);
 	const langStrings = require(`../../data/languages/${userLang}.json`);
 	const strings = langStrings.commands.flashcard.listFlashcards;
 
-	try {
+	async function generateEmbed(page: number) {
+		const skip = (page - 1) * limit;
 		let query = Flashcard.find();
-
 		switch (visibility) {
 			case Visibility.Private:
 				query.where('user').equals(interaction.user.id);
@@ -52,8 +51,8 @@ export async function listFlashcards(interaction: any) {
 			.setTitle(strings.title)
 			.setDescription(
 				strings.description
-				.replace('{page}', page)
-				.replace('{totalPages}', totalPages)
+					.replace('{page}', page.toString())
+					.replace('{totalPages}', totalPages.toString())
 			)
 			.setColor('#00ff00')
 			.setTimestamp();
@@ -74,10 +73,77 @@ export async function listFlashcards(interaction: any) {
 		});
 
 		if (totalPages > 1) {
-			embed.setFooter({ text: strings.footer.replace('{totalPages}', totalPages) });
+			embed.setFooter({ text: strings.footer.replace('{totalPages}', totalPages.toString()) });
 		}
 
-		await interaction.reply({ embeds: [embed], ephemeral: true });
+		return { embed, totalPages };
+	}
+
+	try {
+		const { embed, totalPages } = await generateEmbed(initialPage);
+		
+		const row = new ActionRowBuilder<ButtonBuilder>()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId('previous')
+					.setLabel('◀')
+					.setStyle(ButtonStyle.Primary)
+					.setDisabled(initialPage === 1),
+				new ButtonBuilder()
+					.setCustomId('next')
+					.setLabel('▶')
+					.setStyle(ButtonStyle.Primary)
+					.setDisabled(initialPage === totalPages)
+			);
+
+		const response = await interaction.reply({
+			embeds: [embed],
+			components: [row],
+			ephemeral: true
+		});
+
+		const collector = response.createMessageComponentCollector({
+			componentType: ComponentType.Button,
+			time: 60000
+		});
+
+		let currentPage = initialPage;
+
+		collector.on('collect', async (i: any) => {
+			if (i.user.id !== interaction.user.id) {
+				await i.reply({ content: strings.notYourButtons, ephemeral: true });
+				return;
+			}
+
+			currentPage = i.customId === 'previous' ? currentPage - 1 : currentPage + 1;
+			const { embed, totalPages } = await generateEmbed(currentPage);
+
+			const newRow = new ActionRowBuilder<ButtonBuilder>()
+				.addComponents(
+					new ButtonBuilder()
+						.setCustomId('previous')
+						.setLabel('◀')
+						.setStyle(ButtonStyle.Primary)
+						.setDisabled(currentPage === 1),
+					new ButtonBuilder()
+						.setCustomId('next')
+						.setLabel('▶')
+						.setStyle(ButtonStyle.Primary)
+						.setDisabled(currentPage === totalPages)
+				);
+
+			await i.update({
+				embeds: [embed],
+				components: [newRow]
+			});
+		});
+
+		collector.on('end', () => {
+			row.components.forEach(component => component.setDisabled(true));
+			interaction.editReply({
+				components: [row]
+			}).catch(console.error);
+		});
 
 	} catch (error) {
 		console.error('Error listing flashcards:', error);
