@@ -132,18 +132,50 @@ export async function manageStudySession(interaction: any) {
 				beginTime: new Date(),
 			});
 
+			const beginTime = new Date();
+
 			const embed = new EmbedBuilder()
 				.setTitle(strings.sessionStart.title)
-				.setDescription(strings.sessionStart.description)
+				.setDescription(
+					strings.sessionStart.description
+						.replace('{hour}', '0')
+						.replace('{min}', '0')
+				)
 				.setColor('#00ff00');
 
 			const response = await interaction.reply({
 				embeds: [embed],
-				components: [row],
-				ephemeral: true,
+				components: [row]
 			});
 
-			// Create collector for button interaction
+			const client = interaction.client;
+			const guildId = interaction.guildId;
+			const channelId = interaction.channelId;
+			const messageId = await interaction.fetchReply().then((msg: any) => msg.id);
+
+			const interval = setInterval(async() => {
+				const guild = await client.guilds.fetch(guildId);
+				const channel = await guild.channels.fetch(channelId);
+				if (channel?.isTextBased()) {
+					const message = await channel.messages.fetch(messageId);
+					if (message) {
+						const duration = Math.floor((Date.now() - beginTime.getTime()) / 60_000);
+						const new_embed = new EmbedBuilder()
+							.setTitle(strings.sessionStart.title)
+							.setDescription(
+								strings.sessionStart.description
+									.replace('{hour}', Math.floor(duration / 60).toString())
+									.replace('{min}', (duration % 60).toString())
+							)
+
+						await message.edit({
+							embeds: [new_embed],
+							components: [row]
+						});
+					}
+				}
+			}, 60_000);
+
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
 				time: 24 * 60 * 60 * 1000, 
@@ -151,6 +183,7 @@ export async function manageStudySession(interaction: any) {
 
 			collector.on('collect', async (i: MessageComponentInteraction) => {
 				if (i.customId === 'finish-study') {
+					clearInterval(interval);
 					await finishStudySession(i, newSession);
 					collector.stop();
 				}

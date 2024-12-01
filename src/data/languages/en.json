@@ -421,7 +421,7 @@
 				"finishButton": "Finish Study Session",
 				"sessionStart": {
 					"title": "Study Session Started",
-					"description": "📝 Study session started! Click the button below when you're done."
+					"description": "📝 Study session started! Click the button below when you're done.\n**Your current study time:** {hour}h {min}m"
 				},
 				"sessionTimeout": {
 					"title": "Study Session Timed Out",

@@ -421,7 +421,7 @@
 				"finishButton": "Hoàn Thành Phiên Học",
 				"sessionStart": {
 					"title": "Phiên Học Bắt Đầu",
-					"description": "📝 Phiên học đã bắt đầu! Nhấn nút bên dưới khi bạn hoàn thành."
+					"description": "📝 Phiên học đã bắt đầu! Nhấn nút bên dưới khi bạn hoàn thành.\n**Tổng thời gian học hiện tại:** {hour}h {min}m"
 				},
 				"sessionTimeout": {
 					"title": "Phiên Học Hết Thời Gian",
