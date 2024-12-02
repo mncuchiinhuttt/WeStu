@@ -401,6 +401,7 @@
 				"error": "Failed to fetch streak information"
 			},
 			"studySession": {
+				"notYourButton": "🔒 You are not allowed to use this button!",
 				"invalidTime": {
 					"title": "Invalid Schedule Time",
 					"description": "Please use the format `YYYY-MM-DD HH:MM` (UTC+7).",
@@ -849,7 +850,7 @@
 			"finishButton": "Finish Study Session",
 			"studySessionStarted": {
 				"title": "Study Session Started",
-				"description": "📝 Study session started! Click the button below when you're done."
+				"description": "📝 Study session started! Click the button below when you're done.\n**Your current study time:** {hour}h {min}m"
 			},
 			"studySessionTimeout": {
 				"title": "Study Session Timed Out",

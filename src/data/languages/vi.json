@@ -401,6 +401,7 @@
 				"error": "Không thể lấy thông tin chuỗi học tập"
 			},
 			"studySession": {
+				"notYourButton": "🔒 Bạn không thể sử dụng nút này!",
 				"invalidTime": {
 					"title": "Thời Gian Lên Lịch Không Hợp Lệ",
 					"description": "Vui lòng sử dụng định dạng `YYYY-MM-DD HH:MM` (UTC+7).",
@@ -849,7 +850,7 @@
 			"finishButton": "Hoàn Thành Phiên Học",
 			"studySessionStarted": {
 				"title": "Phiên Học Bắt Đầu",
-				"description": "📝 Phiên học đã bắt đầu! Nhấn nút bên dưới khi bạn hoàn thành."
+				"description": "📝 Phiên học đã bắt đầu! Nhấn nút bên dưới khi bạn hoàn thành.\n**Tổng thời gian học hiện tại:** {hour}h {min}m"
 			},
 			"studySessionTimeout": {
 				"title": "Phiên Học Hết Thời Gian",

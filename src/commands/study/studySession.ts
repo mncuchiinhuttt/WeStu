@@ -1,11 +1,10 @@
 import {
-	CommandInteraction,
 	ButtonBuilder,
 	ButtonStyle,
 	ActionRowBuilder,
 	ComponentType,
 	MessageComponentInteraction,
-	User,
+	DMChannel,
 	EmbedBuilder,
 } from 'discord.js';
 import moment from 'moment-timezone';
@@ -44,10 +43,9 @@ export async function manageStudySession(interaction: any) {
 				return;
 			}
 
-			// Check if the scheduled time is in the past
 			if (scheduledTime.getTime() <= Date.now()) {
 				const embed = new EmbedBuilder()
-					.setTitle(strings.invalidTime)
+					.setTitle(strings.invalidTime.title)
 					.setDescription(strings.invalidTime.description2)
 					.setColor('#ff0000');
 
@@ -58,7 +56,6 @@ export async function manageStudySession(interaction: any) {
 				return;
 			}
 
-			// Check for existing scheduled sessions
 			const existingScheduledSession = await TimeStudySession.findOne({
 				userId: userId,
 				finishTime: { $exists: false },
@@ -118,7 +115,6 @@ export async function manageStudySession(interaction: any) {
 				return;
 			}
 
-			// Create finish button
 			const finishButton = new ButtonBuilder()
 				.setCustomId('finish-study')
 				.setLabel(strings.finishButton)
@@ -126,7 +122,6 @@ export async function manageStudySession(interaction: any) {
 
 			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(finishButton);
 
-			// Start new session
 			const newSession = await TimeStudySession.create({
 				userId: userId,
 				beginTime: new Date(),
@@ -152,29 +147,36 @@ export async function manageStudySession(interaction: any) {
 			const guildId = interaction.guildId;
 			const channelId = interaction.channelId;
 			const messageId = await interaction.fetchReply().then((msg: any) => msg.id);
-
+			const type = await interaction.fetchReply().then((msg: any) => msg.channel instanceof DMChannel ? 0 : 1);
+			
 			const interval = setInterval(async() => {
-				const guild = await client.guilds.fetch(guildId);
-				const channel = await guild.channels.fetch(channelId);
-				if (channel?.isTextBased()) {
-					const message = await channel.messages.fetch(messageId);
-					if (message) {
-						const duration = Math.floor((Date.now() - beginTime.getTime()) / 60_000);
-						const new_embed = new EmbedBuilder()
-							.setTitle(strings.sessionStart.title)
-							.setDescription(
-								strings.sessionStart.description
-									.replace('{hour}', Math.floor(duration / 60).toString())
-									.replace('{min}', (duration % 60).toString())
-							)
+				let message;
+				if (type === 0) {
+					const guild = await client.guilds.fetch(guildId);
+					const channel = await guild.channels.fetch(channelId);
+					message = await channel.messages.fetch(messageId);
+				} else {
+					const channel = await client.channels.fetch(channelId);
+					message = await channel.messages.fetch(messageId);
+				}
+				if (message) {
+					const duration = Math.floor((Date.now() - beginTime.getTime()) / 60_000);
+					const new_embed = new EmbedBuilder()
+						.setTitle(strings.sessionStart.title)
+						.setDescription(
+							strings.sessionStart.description
+								.replace('{hour}', Math.floor(duration / 60).toString())
+								.replace('{min}', (duration % 60).toString())
+						)
+						.setColor('#00ff00');
 
-						await message.edit({
-							embeds: [new_embed],
-							components: [row]
-						});
-					}
+					await message.edit({
+						embeds: [new_embed],
+						components: [row]
+					});
 				}
 			}, 60_000);
+
 
 			const collector = response.createMessageComponentCollector({
 				componentType: ComponentType.Button,
@@ -183,6 +185,13 @@ export async function manageStudySession(interaction: any) {
 
 			collector.on('collect', async (i: MessageComponentInteraction) => {
 				if (i.customId === 'finish-study') {
+					if (i.user.id !== userId) {
+						await i.reply({
+							content: strings.notYourButton,
+							ephemeral: true,
+						});
+						return;
+					}
 					clearInterval(interval);
 					await finishStudySession(i, newSession);
 					collector.stop();

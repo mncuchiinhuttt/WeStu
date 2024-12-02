@@ -5,7 +5,8 @@ import {
 	ButtonStyle, 
 	ActionRowBuilder, 
 	ComponentType, 
-	EmbedBuilder 
+	EmbedBuilder,
+	DMChannel
 } from 'discord.js';
 import { TimeStudySession } from '../../models/TimeStudySessionModel';
 import moment from 'moment-timezone';
@@ -73,8 +74,8 @@ async function startScheduler(client: Client) {
 			collector.on('collect', async (i: MessageComponentInteraction) => {
 				if (i.customId === `start-scheduled-study-${session._id}`) {
 					session.beginTime = new Date();
+					const beginTime = session.beginTime;
 					await session.save();
-
 					const finishButton = new ButtonBuilder()
 						.setCustomId(`finish-study-${session._id}`)
 						.setLabel(strings.finishButton)
@@ -84,13 +85,39 @@ async function startScheduler(client: Client) {
 
 					const newEmbed = new EmbedBuilder()
 						.setTitle(strings.studySessionStarted.title)
-						.setDescription(strings.studySessionStarted.description)
+						.setDescription(
+							strings.studySessionStarted.description
+							.replace('{hour}', '0')
+							.replace('{min}', '0')
+						)
 						.setColor(0x0000FF);
 
 					await i.update({
 						embeds: [newEmbed],
 						components: [newRow],
 					});
+
+					const channelId = dm.channelId;
+					const messageId = dm.id;
+
+					const interval = setInterval(async () => {
+						const duration = Math.floor((Date.now() - beginTime.getTime()) / 60_000);
+						const new_embed = new EmbedBuilder()
+							.setTitle(strings.studySessionStarted.title)
+							.setDescription(
+								strings.studySessionStarted.description
+									.replace('{hour}', Math.floor(duration / 60).toString())
+									.replace('{min}', (duration % 60).toString())
+							)
+							.setColor('#00ff00');
+						const channel = await client.channels.fetch(channelId);
+						if (!(channel instanceof DMChannel)) return;
+						const message = await channel.messages.fetch(messageId);
+						await message.edit({
+							embeds: [new_embed],
+							components: [newRow]
+						});
+					}, 1_000);
 
 					const finishCollector = dm.channel?.createMessageComponentCollector({
 						filter: (i: any) => i.customId === `finish-study-${session._id}` && i.user.id === session.userId,
@@ -101,6 +128,7 @@ async function startScheduler(client: Client) {
 					finishCollector?.on('collect', async (i: MessageComponentInteraction) => {
 						if (i.customId === `finish-study-${session._id}`) {
 							await finishStudySession(i, session);
+							clearInterval(interval);
 							finishCollector.stop();
 						}
 					});
