@@ -5,6 +5,7 @@ import {
 	ComponentType,
 	MessageComponentInteraction,
 	DMChannel,
+	TextChannel,
 	EmbedBuilder,
 } from 'discord.js';
 import moment from 'moment-timezone';
@@ -149,18 +150,16 @@ export async function manageStudySession(interaction: any) {
 			const guildId = interaction.guildId;
 			const channelId = interaction.channelId;
 			const messageId = await interaction.fetchReply().then((msg: any) => msg.id);
-			const type = await interaction.fetchReply().then((msg: any) => msg.channel instanceof DMChannel ? 0 : 1);
 			
 			const interval = setInterval(async () => {
-				let message;
-				if (type === 0) {
+				let channel;
+				if (guildId != null) {
 					const guild = await client.guilds.fetch(guildId);
-					const channel = await guild.channels.fetch(channelId);
-					message = await channel.messages.fetch(messageId);
+					channel = await guild.channels.fetch(channelId);
 				} else {
-					const channel = await client.channels.fetch(channelId);
-					message = await channel.messages.fetch(messageId);
+					channel = await client.channels.fetch(channelId);
 				}
+				const message = await channel.messages.fetch(messageId);
 				if (message) {
 					const duration = Math.floor((Date.now() - beginTime.getTime()) / 60_000);
 					const new_embed = new EmbedBuilder()
