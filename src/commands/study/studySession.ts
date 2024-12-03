@@ -76,7 +76,6 @@ export async function manageStudySession(interaction: any) {
 				return;
 			}
 
-			// Create a new scheduled session
 			const newSession = await TimeStudySession.create({
 				userId: userId,
 				scheduledTime: scheduledTime,
@@ -115,17 +114,20 @@ export async function manageStudySession(interaction: any) {
 				return;
 			}
 
-			const finishButton = new ButtonBuilder()
-				.setCustomId('finish-study')
-				.setLabel(strings.finishButton)
-				.setStyle(ButtonStyle.Primary);
-
-			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(finishButton);
-
+			
 			const newSession = await TimeStudySession.create({
 				userId: userId,
 				beginTime: new Date(),
 			});
+
+			const sessionId = newSession._id;
+
+			const finishButton = new ButtonBuilder()
+				.setCustomId(`finish-study-${sessionId}`)
+				.setLabel(strings.finishButton)
+				.setStyle(ButtonStyle.Primary);
+
+			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(finishButton);
 
 			const beginTime = new Date();
 
@@ -149,7 +151,7 @@ export async function manageStudySession(interaction: any) {
 			const messageId = await interaction.fetchReply().then((msg: any) => msg.id);
 			const type = await interaction.fetchReply().then((msg: any) => msg.channel instanceof DMChannel ? 0 : 1);
 			
-			const interval = setInterval(async() => {
+			const interval = setInterval(async () => {
 				let message;
 				if (type === 0) {
 					const guild = await client.guilds.fetch(guildId);
@@ -179,12 +181,13 @@ export async function manageStudySession(interaction: any) {
 
 
 			const collector = response.createMessageComponentCollector({
+				filter: (i: MessageComponentInteraction) => i.customId === `finish-study-${sessionId}` && i.user.id === userId,
 				componentType: ComponentType.Button,
 				time: 24 * 60 * 60 * 1000, 
 			});
 
 			collector.on('collect', async (i: MessageComponentInteraction) => {
-				if (i.customId === 'finish-study') {
+				if (i.customId === `finish-study-${sessionId}`) {
 					if (i.user.id !== userId) {
 						await i.reply({
 							content: strings.notYourButton,
@@ -266,7 +269,6 @@ async function finishStudySession(interaction: MessageComponentInteraction, sess
 	await updateUserStreak(session.userId, interaction.client);
 	await checkAndAwardAchievements(session.userId, interaction.client);
 
-	// Send a follow-up motivational message
 	try {
 		const user = await interaction.user.fetch();
 		await user.send(strings.sendUser);

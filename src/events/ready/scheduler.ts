@@ -120,15 +120,15 @@ async function startScheduler(client: Client) {
 					}, 1_000);
 
 					const finishCollector = dm.channel?.createMessageComponentCollector({
-						filter: (i: any) => i.customId === `finish-study-${session._id}` && i.user.id === session.userId,
+						filter: (i: MessageComponentInteraction) => i.customId === `finish-study-${session._id}` && i.user.id === session.userId,
 						componentType: ComponentType.Button,
 						time: 24 * 60 * 60 * 1000, 
 					});
 
 					finishCollector?.on('collect', async (i: MessageComponentInteraction) => {
 						if (i.customId === `finish-study-${session._id}`) {
-							await finishStudySession(i, session);
 							clearInterval(interval);
+							await finishStudySession(i, session);
 							finishCollector.stop();
 						}
 					});
