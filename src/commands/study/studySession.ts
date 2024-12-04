@@ -178,7 +178,6 @@ export async function manageStudySession(interaction: any) {
 				}
 			}, 60_000);
 
-
 			const collector = response.createMessageComponentCollector({
 				filter: (i: MessageComponentInteraction) => i.customId === `finish-study-${sessionId}` && i.user.id === userId,
 				componentType: ComponentType.Button,

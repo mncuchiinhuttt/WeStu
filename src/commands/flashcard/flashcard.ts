@@ -138,6 +138,9 @@ export const data = new SlashCommandBuilder()
 		subcommand
 			.setName('create')
 			.setDescription('Create your own flashcard.')
+			.setDescriptionLocalizations({
+				'vi': 'Tạo flashcard của bạn'
+			})
 			.addStringOption(option =>
 				option
 				.setName('question')
